@@ -3,13 +3,11 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import org.emergent.bzr4j.commandline.commands.options.Option;
 import org.emergent.bzr4j.commandline.syntax.IInitOptions;
-import org.emergent.bzr4j.commandline.internal.ExecResult;
-import org.emergent.bzr4j.core.BazaarException;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * @author Guillermo Gonzalez

@@ -3,22 +3,21 @@
  */
 package org.emergent.bzr4j.commandline.internal;
 
-import static org.emergent.bzr4j.utils.StringUtil.shellQuote;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.emergent.bzr4j.commandline.CmdLineClientTexts;
 import org.emergent.bzr4j.commandline.CommandLineException;
 import org.emergent.bzr4j.commandline.ICommand;
 import org.emergent.bzr4j.commandline.commands.options.Option;
-import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarClientPreferences;
+import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarPreference;
 import org.emergent.bzr4j.utils.BzrUtil;
+import static org.emergent.bzr4j.utils.StringUtil.shellQuote;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract base class for command requests. Provides a framework for

@@ -3,9 +3,9 @@
  */
 package org.emergent.bzr4j.commandline;
 
-import java.util.Date;
-
 import org.emergent.bzr4j.core.IBazaarInfo;
+
+import java.util.Date;
 
 /**
  * @author Guillermo Gonzalez

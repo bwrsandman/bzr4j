@@ -1,12 +1,11 @@
 package org.emergent.bzr4j.intellij;
 
-import static org.emergent.bzr4j.intellij.utils.IJUtil.root;
-import org.emergent.bzr4j.intellij.utils.IJUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.history.VcsFileRevision;
-import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IBazaarLogMessage;
+import org.emergent.bzr4j.intellij.utils.IJUtil;
 
 import java.io.File;
 import java.io.IOException;

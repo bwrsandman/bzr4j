@@ -3,13 +3,13 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
+import org.emergent.bzr4j.commandline.syntax.ILogOptions;
+import org.emergent.bzr4j.core.BranchLocation;
+
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.emergent.bzr4j.commandline.syntax.ILogOptions;
-import org.emergent.bzr4j.core.BranchLocation;
 
 /**
  * @author Guillermo Gonzalez

@@ -3,18 +3,18 @@
  */
 package org.emergent.bzr4j.commandline.parser;
 
+import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IBazaarLogMessage;
+import org.kxml2.io.KXmlParser;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.kxml2.io.KXmlParser;
-import org.emergent.bzr4j.core.IBazaarLogMessage;
-import org.emergent.bzr4j.core.BazaarException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * @author Guillermo Gonzalez <guillo.gonzo@gmail.com>

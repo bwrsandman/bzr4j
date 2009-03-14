@@ -1,9 +1,9 @@
 package org.emergent.bzr4j.commandline.parser;
 
-import java.io.File;
-
 import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParser;
+
+import java.io.File;
 
 public abstract class XMLParser
 {

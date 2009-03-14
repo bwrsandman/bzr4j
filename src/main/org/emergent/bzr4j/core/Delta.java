@@ -9,10 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.emergent.bzr4j.core.IBazaarLogMessage;
-import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.IDelta;
-
 /**
  * @author Guillermo Gonzalez <guillo.gonzo AT gmail DOT com>
  *

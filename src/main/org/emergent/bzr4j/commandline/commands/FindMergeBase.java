@@ -1,10 +1,10 @@
 package org.emergent.bzr4j.commandline.commands;
 
-import java.util.List;
-
 import org.emergent.bzr4j.commandline.internal.Command;
 import org.emergent.bzr4j.commandline.syntax.IFindMergeBaseOptions;
 import org.emergent.bzr4j.core.BranchLocation;
+
+import java.util.List;
 
 public class FindMergeBase extends Command implements IFindMergeBaseOptions
 {

@@ -32,6 +32,12 @@ public abstract class Commander
 
     public abstract String getBzrExePath();
 
+    public Cmd rawCmd( String name )
+    {
+        Cmd retval = new Cmd( getDefaultWorkDir(), getBzrExePath(), name );
+        return retval.addOpts( m_stdArgs );
+    }
+
     public Cmd cat()
     {
         Cmd retval = new Cmd( getDefaultWorkDir(), getBzrExePath(), "cat" );

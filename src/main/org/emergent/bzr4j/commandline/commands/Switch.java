@@ -3,11 +3,11 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
-import java.io.File;
-import java.util.List;
-
 import org.emergent.bzr4j.commandline.syntax.ISwitchOptions;
 import org.emergent.bzr4j.core.BranchLocation;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author Guillermo Gonzalez <guillo.gonzo at gmail dot com>

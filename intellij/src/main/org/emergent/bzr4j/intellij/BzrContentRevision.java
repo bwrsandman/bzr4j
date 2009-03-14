@@ -1,16 +1,15 @@
 package org.emergent.bzr4j.intellij;
 
-import static org.emergent.bzr4j.intellij.utils.IJUtil.root;
-import org.emergent.bzr4j.intellij.utils.IJUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
-import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.changes.ContentRevision;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarRevision;
+import org.emergent.bzr4j.intellij.utils.IJUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;

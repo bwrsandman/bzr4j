@@ -24,10 +24,10 @@ import com.intellij.openapi.vcs.merge.MergeProvider;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsRunnable;
 import com.intellij.vcsUtil.VcsUtil;
+import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IBazaarClient;
 import org.emergent.bzr4j.intellij.BzrVcs;
 import org.jetbrains.annotations.NotNull;
-import org.emergent.bzr4j.core.IBazaarClient;
-import org.emergent.bzr4j.core.BazaarException;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,17 +1,15 @@
 package org.emergent.bzr4j.intellij.gui;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.components.ServiceManager;
+import org.emergent.bzr4j.intellij.BzrVcsSettings;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-
-import org.emergent.bzr4j.intellij.gui.BzrConfigurationPanel;
-import org.emergent.bzr4j.intellij.BzrVcsSettings;
 
 /**
  * @author Patrik Beno

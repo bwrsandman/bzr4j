@@ -18,11 +18,11 @@ import com.intellij.openapi.vcs.diff.ItemLatestState;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.emergent.bzr4j.core.BazaarRevision;
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.intellij.BzrVcs;
-import org.emergent.bzr4j.intellij.BzrRevisionNumber;
+import org.emergent.bzr4j.core.BazaarRevision;
 import org.emergent.bzr4j.intellij.BzrContentRevision;
+import org.emergent.bzr4j.intellij.BzrRevisionNumber;
+import org.emergent.bzr4j.intellij.BzrVcs;
 import org.emergent.bzr4j.intellij.utils.IJUtil;
 
 public class BzrDiffProvider implements DiffProvider

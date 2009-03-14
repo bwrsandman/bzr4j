@@ -1,22 +1,21 @@
 package org.emergent.bzr4j.intellij.providers;
 
-import static org.emergent.bzr4j.intellij.utils.IJUtil.root;
-import org.emergent.bzr4j.intellij.utils.IJUtil;
-import org.emergent.bzr4j.intellij.BzrVcs;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.Change;
-import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.ChangeList;
+import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
+import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.intellij.BzrVcs;
+import org.emergent.bzr4j.intellij.utils.IJUtil;
+import org.emergent.bzr4j.utils.BzrUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
-import org.emergent.bzr4j.utils.BzrUtil;
-import org.emergent.bzr4j.core.BazaarException;
 
 import java.io.File;
 import java.util.ArrayList;

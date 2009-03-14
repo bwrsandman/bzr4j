@@ -3,10 +3,10 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
+import org.emergent.bzr4j.commandline.syntax.IIgnoreOptions;
+
 import java.io.File;
 import java.util.List;
-
-import org.emergent.bzr4j.commandline.syntax.IIgnoreOptions;
 
 /**
  * @author Guillermo Gonzalez

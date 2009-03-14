@@ -1,8 +1,8 @@
 package org.emergent.bzr4j.utils;
 
-import java.util.Properties;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * @author Patrick Woodworth

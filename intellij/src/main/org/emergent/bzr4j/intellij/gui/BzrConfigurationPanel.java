@@ -1,21 +1,23 @@
 package org.emergent.bzr4j.intellij.gui;
 
-import org.emergent.bzr4j.intellij.BzrVcsSettings;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-
+import org.emergent.bzr4j.commandline.internal.Commander;
 import org.emergent.bzr4j.core.BazaarClientPreferences;
 import org.emergent.bzr4j.core.BazaarPreference;
+import org.emergent.bzr4j.intellij.BzrVcsSettings;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.*;
+import java.io.File;
 
 /**
  * @author Patrik Beno
@@ -51,6 +53,40 @@ public class BzrConfigurationPanel
 
     private void testConnection()
     {
+        Commander commander = new Commander()
+        {
+            public File getDefaultWorkDir()
+            {
+                return null;
+            }
+
+            public String getBzrExePath()
+            {
+                return pathField.getText();
+            }
+        };
+
+        try
+        {
+            commander.rawCmd( "plugins" ).exec( true );
+        }
+        catch (Exception ignored)
+        {
+            Messages.showErrorDialog( project, "Failed to invoke bzr!", "Bzr Test Result" );
+            return;
+        }
+
+        try
+        {
+            commander.rawCmd( "xmlplugins" ).exec( true );
+        }
+        catch (Exception ignored) 
+        {
+            Messages.showErrorDialog( project, "You seem to be missing the xmloutput plugin for bzr!", "Bzr Test Result" );
+            return;
+        }
+
+        Messages.showInfoMessage( project, "Test Passed!", "Bzr Test Result" );
     }
 
     public JComponent getPanel()

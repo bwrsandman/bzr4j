@@ -1,19 +1,18 @@
 package org.emergent.bzr4j.commandline.parser;
 
+import org.emergent.bzr4j.core.BazaarItemInfo;
+import org.emergent.bzr4j.core.BazaarItemKind;
+import org.emergent.bzr4j.core.BazaarStatusKind;
+import org.emergent.bzr4j.core.IBazaarItemInfo;
+import org.emergent.bzr4j.utils.LogUtil;
+import org.kxml2.io.KXmlParser;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.kxml2.io.KXmlParser;
-import org.emergent.bzr4j.core.BazaarItemInfo;
-import org.emergent.bzr4j.core.BazaarItemKind;
-import org.emergent.bzr4j.core.IBazaarItemInfo;
-import org.emergent.bzr4j.core.BazaarStatusKind;
-import org.emergent.bzr4j.utils.LogUtil;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import java.util.logging.Logger;
 
 public class XMLLsParser extends XMLParser
 {

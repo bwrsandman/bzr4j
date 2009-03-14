@@ -35,25 +35,26 @@ package org.emergent.bzr4j.intellij.action;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.*;
+import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.AbstractVcsHelper;
+import com.intellij.openapi.vcs.FilePath;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
-import org.emergent.bzr4j.intellij.BzrVcs;
+import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.BazaarStatusKind;
+import org.emergent.bzr4j.core.BazaarTreeStatus;
+import org.emergent.bzr4j.core.IBazaarStatus;
 import org.emergent.bzr4j.intellij.BzrBundle;
+import org.emergent.bzr4j.intellij.BzrVcs;
 import org.emergent.bzr4j.intellij.providers.BzrMergeProvider;
+import org.emergent.bzr4j.utils.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.BazaarTreeStatus;
-import org.emergent.bzr4j.core.BazaarStatusKind;
-import org.emergent.bzr4j.utils.LogUtil;
-
-import java.util.logging.Logger;
 
 public class ResolveAction extends BasicAction
 {

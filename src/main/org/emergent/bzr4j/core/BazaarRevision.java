@@ -3,7 +3,6 @@
  */
 package org.emergent.bzr4j.core;
 
-import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.utils.BazaarRuntimeException;
 
 import java.text.DateFormat;

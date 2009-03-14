@@ -1,16 +1,3 @@
-
-When submitting bugs, please include your latest log files which can be found at:
-
-<ul>
-<li>${idea.system.path}/log/idea.log
-<li>${idea.system.path}/log/bzr4j.0.log
-</ul>
-
-which in the 8.0.x (Diana) EAP series maps on Windows to something like this:
-
-<ul>
-<li>C:\Documents and Settings\username\.IntelliJIdea8x\system\log\idea.log
-<li>C:\Documents and Settings\username\.IntelliJIdea8x\system\log\bzr4j.0.log
-</ul>
-
-    
+<h3>1.0</h3>
+-- First public release<br/>
+-- Requires the Bzr CLI client and xmloutput plugin.<br/>

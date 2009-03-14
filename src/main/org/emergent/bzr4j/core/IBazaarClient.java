@@ -3,18 +3,16 @@
  */
 package org.emergent.bzr4j.core;
 
+import org.emergent.bzr4j.commandline.commands.options.Option;
+import org.emergent.bzr4j.commandline.syntax.IMergeOptions;
+import org.emergent.bzr4j.commandline.syntax.IMissingOptions;
+import org.emergent.bzr4j.commandline.syntax.IRemoveOptions;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
-import org.emergent.bzr4j.commandline.commands.options.Option;
-import org.emergent.bzr4j.commandline.syntax.IMergeOptions;
-import org.emergent.bzr4j.commandline.syntax.IMissingOptions;
-import org.emergent.bzr4j.commandline.syntax.IRemoveOptions;
-import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BranchLocation;
 
 /**
  * @author Guillermo Gonzalez

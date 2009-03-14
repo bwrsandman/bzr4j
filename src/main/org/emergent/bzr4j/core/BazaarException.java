@@ -50,13 +50,13 @@ public class BazaarException extends Exception
 
     public BazaarException( ExecResult res )
     {
-        this( res.toString() );
-        sm_logger.error( "Command failed.", this );
+        this( "exitCode==" + res.getExitCode() + " ; stderr: " + res.getStderr() );
+//        sm_logger.error( "Command failed.", this );
     }
 
     public BazaarException( ExecResult res, Throwable e )
     {
-        this( res.toString(), e );
-        sm_logger.error( "Command failed.", this );
+        this( "exitCode==" + res.getExitCode() + " ; stderr: " + res.getStderr(), e );
+//        sm_logger.error( "Command failed.", this );
     }
 }

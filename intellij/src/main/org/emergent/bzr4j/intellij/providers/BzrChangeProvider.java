@@ -1,5 +1,6 @@
 package org.emergent.bzr4j.intellij.providers;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
@@ -23,7 +24,6 @@ import org.emergent.bzr4j.intellij.BzrContentRevision;
 import org.emergent.bzr4j.intellij.BzrVcs;
 import org.emergent.bzr4j.intellij.utils.IJConstants;
 import org.emergent.bzr4j.intellij.utils.IJUtil;
-import org.emergent.bzr4j.utils.LogUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public class BzrChangeProvider implements ChangeProvider
 {
-    private static final LogUtil sm_logger = LogUtil.getLogger( BzrChangeProvider.class );
+    private static final Logger LOG = Logger.getInstance( "Bzr4IntelliJ" );
 
     private BzrVcs m_bzr;
 
@@ -63,7 +63,7 @@ public class BzrChangeProvider implements ChangeProvider
                 Set<FilePath> paths = roots.get( root );
                 if ( root == null )
                 {
-                    sm_logger.warn( String.format( "Ignoring path %s", root ) );
+                    LOG.warn( String.format( "Ignoring path %s", root ) );
                     continue;
                 }
 
@@ -115,6 +115,7 @@ public class BzrChangeProvider implements ChangeProvider
             }
             catch ( BazaarException e )
             {
+                LOG.error( e );
                 throw new VcsException( e );
             }
         }
@@ -211,18 +212,18 @@ public class BzrChangeProvider implements ChangeProvider
 //            VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath( fpath.getPath() );
             VirtualFile virtualFile = fpath.getVirtualFile();
             processUnversioned( rootCtx, virtualFile );
-//            sm_logger.info( "Marking UNKNOWN: " + fpath );
+//            LOG.info( "Marking UNKNOWN: " + fpath );
         }
         else if (change.getFileStatus() == FileStatus.IGNORED)
         {
 //            String fpath = afterRevFile.getPath();
             VirtualFile virtualFile = fpath.getVirtualFile();
             builder.processIgnoredFile( virtualFile );
-//            sm_logger.info( "Marking IGNORED: " + fpath );
+//            LOG.info( "Marking IGNORED: " + fpath );
         }
         else
         {
-//            sm_logger.info( "Marking CHANGED: " + fpath );
+//            LOG.info( "Marking CHANGED: " + fpath );
             builder.processChange( change );
         }
         rootCtx.paths.remove( fpath );

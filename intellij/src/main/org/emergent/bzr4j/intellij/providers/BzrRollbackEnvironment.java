@@ -6,15 +6,15 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.rollback.DefaultRollbackEnvironment;
 import com.intellij.openapi.vcs.rollback.RollbackProgressListener;
-import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.commandline.syntax.IRevertOptions;
+import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.intellij.BzrVcs;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 public class BzrRollbackEnvironment extends DefaultRollbackEnvironment
 {

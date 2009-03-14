@@ -3,17 +3,17 @@
  */
 package org.emergent.bzr4j.commandline.parser;
 
+import org.emergent.bzr4j.commandline.CommandLinePlugin;
+import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IPlugin;
+import org.kxml2.io.KXmlParser;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.kxml2.io.KXmlParser;
-import org.emergent.bzr4j.core.IPlugin;
-import org.emergent.bzr4j.commandline.CommandLinePlugin;
-import org.emergent.bzr4j.core.BazaarException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * I'm a parser for the output of: 'bzr plugins --xml' command. <br>

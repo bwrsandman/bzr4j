@@ -16,13 +16,11 @@
 package org.emergent.bzr4j.commandline.internal;
 
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BazaarStatus;
-import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.emergent.bzr4j.core.BazaarTreeStatus;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.utils.IOUtil;
 import org.emergent.bzr4j.utils.BzrUtil;
+import org.emergent.bzr4j.utils.IOUtil;
 
 import java.io.File;
 import java.util.ArrayList;

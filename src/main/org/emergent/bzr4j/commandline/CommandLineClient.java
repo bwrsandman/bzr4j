@@ -3,34 +3,6 @@
  */
 package org.emergent.bzr4j.commandline;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.emergent.bzr4j.core.BazaarClient;
-import org.emergent.bzr4j.core.BazaarRevision;
-import org.emergent.bzr4j.core.BazaarRevisionRange;
-import org.emergent.bzr4j.core.BazaarTreeStatus;
-import org.emergent.bzr4j.core.BazaarVersionInfo;
-import org.emergent.bzr4j.core.IBazaarAnnotation;
-import org.emergent.bzr4j.core.IBazaarInfo;
-import org.emergent.bzr4j.core.IBazaarItemInfo;
-import org.emergent.bzr4j.core.IBazaarLogMessage;
-import org.emergent.bzr4j.core.IBazaarNotifyListener;
-import org.emergent.bzr4j.core.IBazaarPromptUserPassword;
-import org.emergent.bzr4j.core.IBazaarRevisionSpec;
-import org.emergent.bzr4j.core.IBzrLogMessageHandler;
-import org.emergent.bzr4j.core.BazaarRevision.Prefix;
 import org.emergent.bzr4j.commandline.commands.Add;
 import org.emergent.bzr4j.commandline.commands.Annotate;
 import org.emergent.bzr4j.commandline.commands.Bind;
@@ -76,11 +48,37 @@ import org.emergent.bzr4j.commandline.parser.XMLStatusParser;
 import org.emergent.bzr4j.commandline.syntax.ILogOptions;
 import org.emergent.bzr4j.commandline.syntax.ILsOptions;
 import org.emergent.bzr4j.commandline.syntax.IVersionInfoOptions;
+import org.emergent.bzr4j.core.BazaarClient;
 import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.BazaarRevision;
+import org.emergent.bzr4j.core.BazaarRevision.Prefix;
+import org.emergent.bzr4j.core.BazaarRevisionRange;
+import org.emergent.bzr4j.core.BazaarTreeStatus;
+import org.emergent.bzr4j.core.BazaarVersionInfo;
 import org.emergent.bzr4j.core.BranchLocation;
+import org.emergent.bzr4j.core.IBazaarAnnotation;
+import org.emergent.bzr4j.core.IBazaarInfo;
+import org.emergent.bzr4j.core.IBazaarItemInfo;
+import org.emergent.bzr4j.core.IBazaarLogMessage;
+import org.emergent.bzr4j.core.IBazaarNotifyListener;
+import org.emergent.bzr4j.core.IBazaarPromptUserPassword;
+import org.emergent.bzr4j.core.IBazaarRevisionSpec;
+import org.emergent.bzr4j.core.IBzrLogMessageHandler;
 import org.emergent.bzr4j.utils.LogUtil;
 
-import java.util.logging.Logger;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * <p>

@@ -3,17 +3,17 @@
  */
 package org.emergent.bzr4j.commandline;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import org.emergent.bzr4j.core.BazaarRevision;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarStatus;
 import org.emergent.bzr4j.utils.BazaarRuntimeException;
 import org.emergent.bzr4j.utils.StringUtil;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Guillermo Gonzalez

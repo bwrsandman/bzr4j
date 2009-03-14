@@ -3,11 +3,11 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
+import org.emergent.bzr4j.commandline.internal.Command;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.emergent.bzr4j.commandline.internal.Command;
 
 /**
  * <p>

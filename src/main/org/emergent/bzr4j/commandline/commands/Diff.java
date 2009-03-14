@@ -3,9 +3,9 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
-import java.io.File;
-
 import org.emergent.bzr4j.commandline.syntax.IDiffOptions;
+
+import java.io.File;
 
 /**
  * @author Guillermo Gonzalez

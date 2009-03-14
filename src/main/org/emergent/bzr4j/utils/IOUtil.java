@@ -1,7 +1,5 @@
 package org.emergent.bzr4j.utils;
 
-import java.util.logging.Logger;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;

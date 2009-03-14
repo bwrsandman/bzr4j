@@ -3,14 +3,13 @@
  */
 package org.emergent.bzr4j.commandline.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.emergent.bzr4j.commandline.CommandLineException;
 import org.emergent.bzr4j.commandline.internal.Command;
-import org.emergent.bzr4j.commandline.internal.ExecResult;
 import org.emergent.bzr4j.commandline.syntax.IPluginsOptions;
 import org.emergent.bzr4j.core.BazaarException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Guillermo Gonzalez <guillo.gonzo AT gmail DOT com>

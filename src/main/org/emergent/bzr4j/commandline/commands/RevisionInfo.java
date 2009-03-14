@@ -1,8 +1,8 @@
 package org.emergent.bzr4j.commandline.commands;
 
-import java.io.File;
-
 import org.emergent.bzr4j.commandline.syntax.IRevisionInfoOptions;
+
+import java.io.File;
 
 public class RevisionInfo extends SingleFileCommand implements IRevisionInfoOptions
 {

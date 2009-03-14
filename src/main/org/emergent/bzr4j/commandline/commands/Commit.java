@@ -4,7 +4,6 @@
 package org.emergent.bzr4j.commandline.commands;
 
 import org.emergent.bzr4j.commandline.CommandLineException;
-import org.emergent.bzr4j.commandline.internal.ExecResult;
 import org.emergent.bzr4j.commandline.syntax.ICommitOptions;
 import org.emergent.bzr4j.core.BazaarException;
 

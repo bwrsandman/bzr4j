@@ -3,16 +3,6 @@
  */
 package org.emergent.bzr4j.commandline.parser;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import org.kxml2.io.KXmlParser;
-import org.emergent.bzr4j.core.IBazaarInfo;
 import org.emergent.bzr4j.commandline.CommandLineInfo;
 import org.emergent.bzr4j.commandline.CommandLineInfo.CmdLineBranchHistory;
 import org.emergent.bzr4j.commandline.CommandLineInfo.CmdLineLocations;
@@ -20,9 +10,19 @@ import org.emergent.bzr4j.commandline.CommandLineInfo.CmdLineRelatedBranches;
 import org.emergent.bzr4j.commandline.CommandLineInfo.CmdLineRepositoryStats;
 import org.emergent.bzr4j.commandline.CommandLineInfo.CmdLineWorkingTreeStats;
 import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IBazaarInfo;
 import org.emergent.bzr4j.utils.StringUtil;
+import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Guillermo Gonzalez

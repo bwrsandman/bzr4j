@@ -4,13 +4,13 @@
 package org.emergent.bzr4j.core;
 
 import org.emergent.bzr4j.utils.BzrConstants;
-import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * A singleton for handling some preferences and environment variables for bzr

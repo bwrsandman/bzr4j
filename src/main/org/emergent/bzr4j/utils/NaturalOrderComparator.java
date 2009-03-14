@@ -23,7 +23,7 @@ misrepresented as being the original software.
 */
 package org.emergent.bzr4j.utils;
 
-import java.util.*;
+import java.util.Comparator;
 
 public class NaturalOrderComparator implements Comparator
 {

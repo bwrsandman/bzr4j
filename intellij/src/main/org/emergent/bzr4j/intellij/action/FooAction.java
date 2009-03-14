@@ -12,7 +12,6 @@ import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.diff.ItemLatestState;
 import com.intellij.openapi.vfs.VirtualFile;
-import java.util.logging.Logger;
 import org.emergent.bzr4j.intellij.utils.IJConstants;
 import org.emergent.bzr4j.utils.LogUtil;
 

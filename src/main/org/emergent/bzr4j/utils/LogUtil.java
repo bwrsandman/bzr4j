@@ -1,13 +1,10 @@
 package org.emergent.bzr4j.utils;
 
-import org.emergent.bzr4j.commandline.internal.ExecResult;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
-import java.util.Properties;
 import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Patrick Woodworth
@@ -50,6 +47,7 @@ public class LogUtil
                     PatternFormatter patForm = new PatternFormatter();
                     patForm.setTimeFormat( "yyyy-MM-dd HH:mm:ss" );
                     patForm.setLogPattern( "%TIME% - %LEVEL% -- %SOURCECLASS%#%SOURCEMETHOD%: %MESSAGE%\n" );
+                    patForm.setExceptionPattern( "%TIME% - %LEVEL% -- %MESSAGE% \nException in %SOURCECLASS%: %EXCEPTION% \n%STACKTRACE%" );
 //                    patForm.setLogPattern( "%2s - %1s -- %4s#%5s: %3s\n" );
                     fh.setFormatter( patForm );
                     LOG.addHandler( fh );

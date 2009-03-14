@@ -1,7 +1,7 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin url="http://code.google.com/p/bzr4j/">
     <id>bzr4intellij</id>
-    <name>Bzr4Intellij</name>
+    <name>Bzr4IntelliJ</name>
     <version>@BZR4INTELLIJ_VERSION@</version>
     <category>VCS Integration</category>
     <idea-version since-build="9164"/>
