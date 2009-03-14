@@ -1,0 +1,9 @@
+# Tests properties
+bzr.test.reports=./tests-reports
+bzr.test.rootDir=./tests
+bzr.test.clientType=
+
+# Environment dependant properties
+bzr.user.name=<username>
+bzr.user.mail=user@mail.net
+bzr.executable=<path to bzr executable>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<status workingtree_root="/Users/guillermo/Projects/BazaarEclipse/bzr-eclipse/dev/">
+	<removed>
+		<file fid="bzr_logo_trans.png-20070314121258-jk6m96n2yi0u58er-65">org.vcs.bazaar.eclipse.ui/icons/bzr_logo_trans.png
+		</file>
+		<file fid="managed.png-20070822045808-m0i79j8w4d148doo-5">org.vcs.bazaar.eclipse.ui/images/managed.png
+		</file>
+		<file fid="modified.png-20070822045808-m0i79j8w4d148doo-6">org.vcs.bazaar.eclipse.ui/images/modified.png
+		</file>
+	</removed>
+	<added>
+		<file fid="updateinfodialog.jav-20080908183041-uga3815dga2x9epo-1">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/dialogs/UpdateInfoDialog.java
+		</file>
+	</added>
+	<modified>
+		<file fid="classpath-20070314121258-jk6m96n2yi0u58er-27">org.vcs.bazaar.eclipse.ui/.classpath
+		</file>
+		<file fid="manifest.mf-20070314121258-jk6m96n2yi0u58er-59">org.vcs.bazaar.eclipse.ui/META-INF/MANIFEST.MF
+		</file>
+		<file fid="eclipsebazaarui.java-20070317004021-uttcmgfwd1uz90qs-5">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/EclipseBazaarUI.java
+		</file>
+		<file fid="pullaction.java-20070701074801-at3nvdr2ssmq08x0-2">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/actions/PullAction.java
+		</file>
+		<file fid="pushaction.java-20070710042818-puxcd37as8fq1sph-1">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/actions/PushAction.java
+		</file>
+		<file fid="resolveaction.java-20080821024905-78pdd0m14lbpb4nj-1">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/actions/ResolveAction.java
+		</file>
+		<file fid="refreshexecutionlist-20080719202352-olt2ed1i3b4pfntu-3">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/team/RefreshExecutionListener.java
+		</file>
+		<file fid="uitexts.properties-20070319191258-j4xmg20c8oh2evxw-8">
+			org.vcs.bazaar.eclipse.ui/src/org/vcs/bazaar/eclipse/ui/uitexts.properties
+		</file>
+	</modified>
+	<unknown>
+		<file>org.vcs.bazaar.eclipse.ui/icons/annotate.gif
+		</file>
+		<file>org.vcs.bazaar.eclipse.ui/icons/branches.gif
+		</file>
+		<file>org.vcs.bazaar.eclipse.ui/icons/checkin_action.gif
+		</file>
+		<file>org.vcs.bazaar.eclipse.ui/icons/checkout_action.gif
+		</file>
+		<file>org.vcs.bazaar.eclipse.ui/icons/history.gif
+		</file>
+	</unknown>
+	<pending_merges>
+		<log>
+			<revisionid>guillo.gonzo@gmail.com-20080710023631-k60gbraf2pfcxuez</revisionid>
+			<committer>Guillermo Gonzalez</committer>
+			<timestamp>2008-09-01 18:17:10</timestamp>
+			<message>* merge with my dev branch</message>
+		</log>
+		<log>
+			<revisionid>guillo.gonzo@gmail.com-20080709192216-qe8n0myfa9qngoe8</revisionid>
+			<committer>Guillermo Gonzalez</committer>
+			<timestamp>2008-08-24 16:22:16</timestamp>
+			<message>* merge with my dev branch</message>
+		</log>
+	</pending_merges>
+</status>

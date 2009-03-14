@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Bazaar Suite">
+  <test name="Bazaar Tests">
+    <classes>
+      <class name="jetbrains.buildServer.buildTriggers.vcs.bzr.LogCommandTest"/>
+      <class name="jetbrains.buildServer.buildTriggers.vcs.bzr.StatusCommandTest"/>
+      <class name="jetbrains.buildServer.buildTriggers.vcs.bzr.BazaarVcsSupportTest"/>
+    </classes>
+  </test>
+</suite>

@@ -1,0 +1,123 @@
+<project name="bzr4intellij" basedir="." default="build">
+
+    <dirname property="bzr4intellij.dir" file="${ant.file.bzr4intellij}"/>
+
+    <import file="${bzr4intellij.dir}/../build-shared.xml"/>
+
+    <target name="bzr4intellij.jar" depends="bzr4j.jar">
+
+        <fail>ERROR:
+            
+The idea.sdk.dir property must point to an IntelliJ IDEA installation.
+Try the ant "help" target for more information.
+            <condition>
+                <not>
+                    <available file="${idea.sdk.dir}/lib/idea.jar"/>
+                </not>
+            </condition>
+        </fail>
+
+        <mkdir dir="${build.dir}/production/intellij"/>
+
+        <xjavac destdir="${build.dir}/production/intellij">
+            <src path="${bzr4intellij.dir}/src/main"/>
+            <classpath>
+                <fileset dir="${idea.sdk.dir}">
+                    <include name="lib/**/*.jar"/>
+                </fileset>
+                <pathelement location="${build.dir}/bzr4j.jar"/>
+            </classpath>
+        </xjavac>
+
+        <copy todir="${build.dir}/production/intellij" preservelastmodified="true">
+            <fileset dir="${bzr4intellij.dir}/src/main">
+                <exclude name="**/*.java"/>
+                <exclude name="META-INF/**"/>
+            </fileset>
+        </copy>
+
+        <loadresource property="README.content">
+            <file file="${bzr4j.dir}/doc/README"/>
+        </loadresource>
+        
+        <copy todir="${build.dir}/production/intellij" preservelastmodified="true">
+            <fileset dir="${bzr4intellij.dir}/src/main">
+                <include name="META-INF/**"/>
+            </fileset>
+            <filterset>
+                <filter token="BZR4INTELLIJ_VERSION" value="${bzr4j.version}"/>
+                <filter token="BZR4INTELLIJ_CHANGENOTES" value="${README.content}"/>
+            </filterset>
+        </copy>
+
+        <jar destfile="${build.dir}/bzr4intellij.jar" update="false">
+            <zipfileset dir="${build.dir}/production/intellij">
+            </zipfileset>
+            <zipgroupfileset dir="${build.dir}">
+                <include name="bzr4j.jar"/>
+            </zipgroupfileset>
+            <manifest>
+                <attribute name="Implementation-Version" value="${bzr4j.version}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="build" depends="clean,bzr4intellij.jar"/>
+
+    <target name="install" depends="build">
+
+        <fail>ERROR:
+
+The idea.plugins.dir property is pointing to a non-existent location: "${idea.plugins.dir}".
+Try the ant "help" target for more information.
+            <condition>
+                <not>
+                    <available type="dir" file="${idea.plugins.dir}"/>
+                </not>
+            </condition>
+        </fail>
+
+        <copy todir="${idea.plugins.dir}" overwrite="true"
+              verbose="true" preservelastmodified="true"
+              file="${build.dir}/bzr4intellij.jar"/>
+
+    </target>
+
+    <target name="uninstall" depends="build">
+
+        <delete quiet="true" includeemptydirs="true">
+            <fileset dir="${idea.plugins.dir}">
+                <include name="bzr4intellij.jar"/>
+                <include name="bzr4intellij/**"/>
+            </fileset>
+        </delete>
+
+    </target>
+
+    <target name="release-init" depends="init">
+        <fail unless="env.BZR4J_JDK_HOME">ERROR:
+
+Publishing requires you to build with a 1.6 JDK, but point the BZR4J_JDK_HOME
+environment variable to the location of a 1.5 JDK, so that we can generate
+bytecode that'll work for platforms like Mac OS X where the availability of
+the 1.6 platform is still fairly limited.
+        </fail>
+    </target>
+
+    <target name="release" depends="release-init,distclean,zipsource,build">
+
+<!--
+        <copy todir="${publish.dir}" overwrite="true"
+              verbose="true" preservelastmodified="true"
+              file="${build.dir}/bzr4intellij.jar"/>
+
+        <mkdir dir="${publish.dir}/archive"/>
+
+        <copy tofile="${publish.dir}/archive/bzr4intellij-${bzr4j.version}.jar"
+              overwrite="true" verbose="true" preservelastmodified="true"
+              file="${build.dir}/bzr4intellij.jar"/>
+-->
+
+    </target>
+
+</project>

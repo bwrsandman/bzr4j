@@ -1,0 +1,5 @@
+*.iws
+./build
+./lib/tmp
+./teamcity/lib/tmp
+./user.properties

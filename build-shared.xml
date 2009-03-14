@@ -1,0 +1,198 @@
+<project name="bzr4j" basedir=".">
+
+    <defaultexcludes add="**/vssver2.scc/**"/>
+    <defaultexcludes add="**/.sbas/**"/>
+    <defaultexcludes add="**/.IJI.*/**"/>
+    <defaultexcludes add="**/.pyc/**"/>
+    <defaultexcludes add="**/.pyo/**"/>
+    <defaultexcludes add="**/*.pyc/**"/>
+    <defaultexcludes add="**/*.pyo/**"/>
+    <defaultexcludes add="**/.git/**"/>
+    <defaultexcludes add="**/.bzr/**"/>
+
+    <dirname property="bzr4j.dir" file="${ant.file.bzr4j}"/>
+
+    <property file="${bzr4j.dir}/user.properties"/>
+    <property file="${bzr4j.dir}/build.properties"/>
+
+    <property name="build.dir" location="${bzr4j.dir}/build"/>
+
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+        <include name="**/?*.jsp"/>
+        <include name="**/?*.tag"/>
+    </patternset>
+
+    <property environment="env."/>
+
+    <condition property="publish.dir"
+               value="\\bfda.qa.tripwire.com\devtools\misc\bazaar"
+               else="/mnt/devtools/misc/bazaar"
+            >
+        <os family="windows"/>
+    </condition>
+
+    <target name="init-normal-compile" unless="env.BZR4J_JDK_HOME">
+
+        <presetdef name="xjavac">
+           <javac includeantruntime="false"
+                  debug="true"
+                  target="1.5"
+                  source="1.5"
+                  memorymaximumsize="128m"
+                  fork="true"
+                  >
+           </javac>
+        </presetdef>
+
+    </target>
+
+    <target name="init-special-compile" if="env.BZR4J_JDK_HOME" depends="init-normal-compile">
+
+        <presetdef name="xjavac">
+           <javac includeantruntime="false"
+                  debug="true"
+                  target="1.5"
+                  source="1.5"
+                  memorymaximumsize="128m"
+                  fork="true"
+                  >
+               <bootclasspath>
+                   <fileset dir="${env.BZR4J_JDK_HOME}/jre">
+                       <include name="**/*.jar"/>
+                       <exclude name="lib/ext/**"/>
+                   </fileset>
+               </bootclasspath>
+               <extdirs>
+                   <pathelement path="${env.BZR4J_JDK_HOME}/jre/lib/ext"/>
+               </extdirs>
+           </javac>
+        </presetdef>
+
+    </target>
+
+    <target name="init" depends="init-special-compile">
+
+        <exec executable="bzr"
+              outputproperty="bzr.revno.stdout"
+              errorproperty="bzr.revno.stderr"
+              failonerror="true"
+              >
+          <arg value="revno"/>
+          <arg value="--no-aliases"/>
+        </exec>
+        <property name="bzr.revno.stderr" value=""/> <!-- prevent intellij highlighting errors -->
+        <fail message="bzr revno had a non-empty stderr">
+            <condition>
+                <not>
+                    <equals arg1="${bzr.revno.stderr}" arg2=""/>
+                </not>
+            </condition>
+        </fail>
+
+        <property name="bzr4j.version" value="${bzr4j.version.prefix}.${bzr.revno.stdout}"/>
+    </target>
+
+    <target name="bzr4j.jar" depends="init">
+
+        <mkdir dir="${build.dir}/production/bzr4j"/>
+
+        <xjavac destdir="${build.dir}/production/bzr4j">
+            <src path="${bzr4j.dir}/src/main"/>
+            <classpath>
+                <fileset dir="${bzr4j.dir}/lib">
+                    <include name="kxml2*.jar"/>
+                </fileset>
+            </classpath>
+        </xjavac>
+
+        <copy todir="${build.dir}/production/bzr4j" overwrite="true">
+            <fileset dir="${bzr4j.dir}/src/main">
+                <exclude name="**/*.java"/>
+                <exclude name="**/*.properties"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${build.dir}/production/bzr4j" overwrite="true">
+            <fileset dir="${bzr4j.dir}/src/main">
+                <include name="**/*.properties"/>
+            </fileset>
+            <filterset>
+                <filter token="BZR4INTELLIJ_VERSION" value="${bzr4j.version}"/>
+            </filterset>
+        </copy>
+
+        <jar destfile="${build.dir}/bzr4j.jar" update="false">
+            <zipfileset dir="${build.dir}/production/bzr4j">
+            </zipfileset>
+            <zipgroupfileset dir="${bzr4j.dir}/lib">
+                <include name="kxml2*.jar"/>
+            </zipgroupfileset>
+            <manifest>
+                <attribute name="Implementation-Version" value="${bzr4j.version}"/>
+            </manifest>
+        </jar>
+
+    </target>
+
+    <macrodef name="m-fixeolsforpath">
+        <attribute name="dir"/>
+        <sequential>
+            <fixcrlf srcdir="@{dir}" eol="unix" fixlast="true">
+                <include name="**/*.java"/>
+                <include name="**/*.properties"/>
+                <include name="**/*.xml"/>
+                <exclude name="build/**"/>
+                <exclude name="lib/**"/>
+            </fixcrlf>
+        </sequential>
+    </macrodef>
+
+    <target name="fixeol">
+        <m-fixeolsforpath dir="${bzr4j.dir}"/>
+        <m-fixeolsforpath dir="${bzr4j.dir}/intellij"/>
+        <m-fixeolsforpath dir="${bzr4j.dir}/teamcity"/>
+        <fixcrlf srcdir="${bzr4j.dir}" eol="unix" fixlast="true">
+            <include name="LICENSE"/>
+            <include name="NOTICE"/>
+            <include name="README.txt"/>
+        </fixcrlf>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}" quiet="true"/>
+    </target>
+
+    <target name="distclean" depends="clean">
+        <delete dir="${bzr4j.dir}/lib/tmp" quiet="true"/>
+        <delete dir="${bzr4j.dir}/teamcity/lib/tmp" quiet="true"/>
+    </target>
+
+    <target name="prepci" depends="distclean,fixeol"/>
+
+    <target name="zipsource" depends="init,clean">
+        <mkdir dir="${bzr4j.dir}/build"/>
+        <zip destfile="${bzr4j.dir}/build/bzr4j-src-${bzr4j.version}.zip" update="false">
+            <zipfileset dir="${bzr4j.dir}">
+                <exclude name="build/**"/>
+                <exclude name="lib/tmp/**"/>
+                <exclude name="teamcity/lib/**"/>
+                <exclude name="user.properties"/>
+                <exclude name="*.iws"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <target name="props">
+        <echoproperties/>
+    </target>
+
+</project>

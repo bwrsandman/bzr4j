@@ -1,0 +1,76 @@
+<project name="bzr4jmeta" basedir="." default="help">
+
+    <dirname property="bzr4jmeta.dir" file="${ant.file.bzr4jmeta}"/>
+
+    <import file="${bzr4jmeta.dir}/build-shared.xml"/>
+
+    <target name="help" description="Displays the BUILDING file.">
+        <loadresource property="BUILDING.content">
+            <file file="doc/BUILDING"/>
+        </loadresource>
+        <echo message="${BUILDING.content}"/>
+    </target>
+
+    <target name="build" description="Builds the Bazaar VCS plugin for IntelliJ">
+        <ant dir="intellij" inheritall="false" target="build"/>
+    </target>
+
+    <target name="install" description="Builds and installs the Bazaar VCS plugin for IntelliJ">
+        <ant dir="intellij" inheritall="false" target="install"/>
+    </target>
+
+    <target name="release">
+        <ant dir="intellij" inheritall="false" target="release"/>
+    </target>
+
+    <target name="tc-build" description="Builds the Bazaar VCS plugin for TeamCity">
+        <ant dir="teamcity" inheritall="false" target="build"/>
+    </target>
+
+    <target name="tc-install" description="Builds and installs the Bazaar VCS plugin for TeamCity">
+        <ant dir="teamcity" inheritall="false" target="install"/>
+    </target>
+
+    <target name="tc-release">
+        <ant dir="teamcity" inheritall="false" target="release"/>
+    </target>
+
+    <target name="tc-runtests">
+        <ant dir="teamcity" inheritall="false" target="runtests"/>
+    </target>
+
+    <target name="prepipr-init">
+        <condition property="prepipr.teamcity.enabled" value="true">
+            <available type="dir" file="${teamcity.webapp.dir}/WEB-INF/lib"/>
+        </condition>
+    </target>
+
+    <target name="prepipr-teamcitylibs" depends="prepipr-init" if="prepipr.teamcity.enabled">
+        <copy todir="${bzr4j.dir}/teamcity/lib/tmp"
+              overwrite="true" preservelastmodified="true">
+            <fileset dir="${teamcity.webapp.dir}/WEB-INF/lib">
+                <include name="annotations.jar"/>
+                <include name="common-api.jar"/>
+                <include name="jmock-SNAPSHOT.jar"/>
+                <include name="junit-3.8.1.jar"/>
+                <include name="openapi.jar"/>
+                <include name="patches-impl.jar"/>
+                <include name="resources_en.jar"/>
+                <include name="runtime-util.jar"/>
+                <include name="server-api.jar"/>
+                <include name="util.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="prepipr" depends="prepipr-teamcitylibs"
+            description="Preps the workspace for opening the IDE project.">
+        <copy todir="${bzr4j.dir}/lib/tmp"
+              overwrite="true" preservelastmodified="true">
+            <fileset dir="${idea.sdk.dir}/lib">
+                <include name="junit-4.5.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+</project>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<annotation workingtree-root="/home/guillo/Unison-root/sandbox/bazaar/bzrplugins/bzr-xmloutput/" file="annotatexml.py">
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">#!/usr/bin/env python</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"># -*- encoding: utf-8 -*-</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"># @author Guillermo Gonzalez</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"># This code is a modified copy from bzrlib.annotate (see there for copyrights and licensing)</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"># @version 0.1</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">import sys</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">from bzrlib.annotate import _annotate_file</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">from xml.sax import saxutils</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">def annotate_file_xml(branch, rev_id, file_id, to_file=None, </entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">            show_ids=False, wt_root_path=None):</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    if to_file is None:</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">        to_file = sys.stdout</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    prevanno=''</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    last_rev_id = None</entry>
+<entry revno="8" author="guillo.gonzo@gmail.com" date="20070407">    print &gt;&gt;to_file, '&lt;?xml version="1.0"?&gt;'</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">    print &gt;&gt;to_file, '&lt;annotation workingtree-root="%s"&gt;' % wt_root_path</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    if show_ids:</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">        w = branch.repository.weave_store.get_weave(file_id,</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">            branch.repository.get_transaction())</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">        annotations = list(w.annotate_iter(rev_id))</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">        for origin, text in annotations:</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">            if last_rev_id != origin:</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">                this = origin</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">            else:</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">                this = ''</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">            to_file.write('&lt;entry fid="%s"&gt;%s&lt;/entry&gt;' % (this, text))</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">            last_rev_id = origin</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">        print &gt;&gt;to_file, '&lt;/annotation&gt;'</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">        return</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    annotation = list(_annotate_file(branch, rev_id, file_id))</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    for (revno_str, author, date_str, line_rev_id, text) in annotation:</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">        anno = 'revno="%s" author="%s" date="%s"' % \</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">                    (saxutils.escape(revno_str), author, date_str)</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">        if anno.lstrip() == 'revno="" author="" date=""': </entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">            anno = prevanno</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">        print &gt;&gt;to_file, '&lt;entry %s&gt;%s&lt;/entry&gt;' % (anno, saxutils.escape(text))</entry>
+<entry revno="7" author="guillo.gonzo@gmail.com" date="20070407">        prevanno = anno</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407">    print &gt;&gt;to_file, '&lt;/annotation&gt;'</entry>
+<entry revno="6" author="guillo.gonzo@gmail.com" date="20070407"></entry>
+</annotation>

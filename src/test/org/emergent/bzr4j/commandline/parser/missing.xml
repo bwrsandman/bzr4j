@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<missing>
+	<last_location>
+		/Users/guillermo/Projects/BazaarEclipse/bzr-eclipse/trunk/
+	</last_location>
+	<extra_revisions size="1">
+		<logs>
+			<log>
+				<revno>116</revno>
+				<committer>
+					Guillermo Gonzalez &lt;antiSpam@mail.com&gt;
+				</committer>
+				<branch-nick>quickdiff-integration</branch-nick>
+				<timestamp>Fri 2007-12-21 19:34:45 -0300</timestamp>
+				<message>* merge with quickdiff branch</message>
+			</log>
+		</logs>
+	</extra_revisions>
+	<missing_revisions size="1">
+		<logs>
+			<log>
+				<revno>116</revno>
+				<committer>
+					Guillermo Gonzalez &lt;antiSpam@mail.com&gt;
+				</committer>
+				<branch-nick>quickdiff-integration</branch-nick>
+				<timestamp>Fri 2007-12-21 19:34:45 -0300</timestamp>
+				<message>* merge with quickdiff branch</message>
+			</log>
+		</logs>
+	</missing_revisions>
+</missing>

@@ -1,0 +1,42 @@
+<info>
+	<layout>Repository tree</layout>
+	<formats>
+		<format>dirstate</format>
+	</formats>
+	<location>
+		<shared_repository>/home/guillo/bazaar/bzr</shared_repository>
+		<repository_branch>.</repository_branch>
+	</location>
+	<related_branches>
+		<parent_branch>
+			http://bazaar.launchpad.net/~bzr/bzr/trunk/
+		</parent_branch>
+	</related_branches>
+	<format>
+		<control>Meta directory format 1</control>
+		<working_tree>Working tree format 4</working_tree>
+		<branch>Branch format 5</branch>
+		<repository>Knit repository format 1</repository>
+	</format>
+	<working_tree_stats>
+		<unchanged>735</unchanged>
+		<modified>0</modified>
+		<added>0</added>
+		<removed>0</removed>
+		<renamed>0</renamed>
+		<unknown>3</unknown>
+		<ignored>73</ignored>
+		<versioned_subdirectories>58</versioned_subdirectories>
+	</working_tree_stats>
+	<branch_history>
+		<revisions>2866</revisions>
+		<committers>108</committers>
+		<days_old>824</days_old>
+		<first_revision>Sun 2005-06-26 16:55:27 -0500</first_revision>
+		<latest_revision>Tue 2007-09-25 22:28:01 +0100</latest_revision>
+	</branch_history>
+	<repository_stats>
+		<revisions>13764</revisions>
+		<size unit="KiB">63614</size>
+	</repository_stats>
+</info>

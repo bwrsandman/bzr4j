@@ -1,0 +1,209 @@
+<project name="bzr4teamcity" basedir="." default="build">
+
+    <dirname property="bzr4teamcity.dir" file="${ant.file.bzr4teamcity}"/>
+
+    <import file="${bzr4teamcity.dir}/../build-shared.xml"/>
+
+    <!-- IMPORTANT: The value of this property must match the value of Constants.VCS_NAME -->
+    <property name="bzr4teamcity.vcs.name" value="bzr"/>
+    
+    <target  name="bzr4teamcity-init">
+
+        <fail>ERROR:
+            
+The teamcity.webapp.dir property must point to the TeamCity webapp folder.
+Try the ant "help" target for more information.
+            <condition>
+                <not>
+                    <available file="${teamcity.webapp.dir}/WEB-INF/lib/server-api.jar"/>
+                </not>
+            </condition>
+        </fail>
+
+        <path id="library.teamcityapi-server.classpath">
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/server-api.jar"/>
+        </path>
+
+        <path id="library.idea-openapi.classpath">
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/util.jar"/>
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/openapi.jar"/>
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/resources_en.jar"/>
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/annotations.jar"/>
+        </path>
+
+        <path id="library.teamcity-testssupport.classpath">
+            <pathelement location="${bzr4teamcity.dir}/lib/patches-tests.jar"/>
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/jmock-SNAPSHOT.jar"/>
+            <!--<pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/xmlrpc-2.0.1.jar"/>-->
+        </path>
+
+        <path id="library.testng.classpath">
+            <pathelement location="${bzr4teamcity.dir}/lib/testng-5.7-jdk15.jar"/>
+        </path>
+
+        <path id="library.junit.classpath">
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/junit-3.8.1.jar"/>
+        </path>
+
+        <path id="library.teamcity-impl.classpath">
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/patches-impl.jar"/>
+        </path>
+
+        <path id="library.teamcityapi-common.classpath">
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/common-api.jar"/>
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/runtime-util.jar"/>
+        </path>
+
+        <path id="library.teamcityapi-agent.classpath">
+            <pathelement location="${teamcity.webapp.dir}/WEB-INF/lib/agent-api.jar"/>
+        </path>
+
+    </target>
+
+    <target name="bzr4teamcity-server.jar" depends="bzr4teamcity-init,bzr4j.jar"
+            description="Compile module bazaar-server; production classes">
+
+        <mkdir dir="${build.dir}/production/teamcity"/>
+
+        <xjavac destdir="${build.dir}/production/teamcity">
+            <src>
+                <dirset dir="${bzr4teamcity.dir}/src">
+                    <include name="main"/>
+                </dirset>
+            </src>
+            <classpath id="bzr4teamcity.module.classpath">
+                <path refid="library.idea-openapi.classpath"/>
+                <!--<path refid="library.log4j.classpath"/>-->
+                <path refid="library.teamcityapi-common.classpath"/>
+                <pathelement location="${build.dir}/bzr4j.jar"/>
+                <path refid="library.teamcityapi-server.classpath"/>
+                <path refid="library.teamcity-impl.classpath"/>
+                <!--<path refid="library.gnu_trove.classpath"/>-->
+            </classpath>
+        </xjavac>
+
+        <copy todir="${build.dir}/production/teamcity">
+            <fileset dir="${bzr4teamcity.dir}/src/main">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+
+        <jar destfile="${build.dir}/bzr4teamcity-server.jar"
+             basedir="${build.dir}/production/teamcity"
+             update="false">
+            <manifest>
+                <attribute name="Implementation-Version" value="${bzr4j.version}"/>
+            </manifest>
+        </jar>
+
+    </target>
+
+    <target name="bzr4teamcity-test.jar" depends="bzr4teamcity-server.jar"
+            description="Compile module bazaar-tests; production classes">
+
+        <mkdir dir="${build.dir}/test/teamcity"/>
+
+        <xjavac destdir="${build.dir}/test/teamcity">
+            <src>
+                <dirset dir="${bzr4teamcity.dir}/src">
+                    <include name="test"/>
+                </dirset>
+            </src>
+            <classpath id="bzr4teamcity-test.module.classpath">
+                <path refid="library.teamcity-testssupport.classpath"/>
+                <path refid="library.junit.classpath"/>
+                <path refid="library.testng.classpath"/>
+                <path refid="bzr4teamcity.module.classpath"/>
+                <pathelement location="${build.dir}/bzr4teamcity-server.jar"/>
+            </classpath>
+        </xjavac>
+
+        <copy todir="${build.dir}/test/teamcity">
+            <fileset dir="${bzr4teamcity.dir}/src/test">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+
+        <jar destfile="${build.dir}/bzr4teamcity-test.jar"
+             basedir="${build.dir}/test/teamcity"
+             update="false"/>
+
+    </target>
+
+    <target name="build" depends="init,clean,bzr4teamcity-server.jar">
+        <zip destfile="${build.dir}/${bzr4teamcity.vcs.name}.zip" update="false">
+            <zipfileset prefix="server" dir="${build.dir}">
+                <include name="bzr4teamcity-server.jar"/>
+                <include name="bzr4j.jar"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <target name="install" depends="build">
+        <fail>ERROR:
+
+The teamcity.plugins.dir property is pointing to a non-existent location: "${teamcity.plugins.dir}"
+Try the ant "help" target for more information.
+            <condition>
+                <not>
+                    <available type="dir" file="${teamcity.plugins.dir}"/>
+                </not>
+            </condition>
+        </fail>
+        <copy todir="${teamcity.plugins.dir}" file="${build.dir}/${bzr4teamcity.vcs.name}.zip"/>
+    </target>
+
+    <target name="release-init" depends="init">
+        <fail unless="env.BZR4J_JDK_HOME">ERROR:
+
+Publishing requires you to build with a 1.6 JDK, but point the BZR4J_JDK_HOME
+environment variable to the location of a 1.5 JDK, so that we can generate
+bytecode that'll work for platforms like Mac OS X where the availability of
+the 1.6 platform is still fairly limited.
+        </fail>
+    </target>
+
+    <target name="release" depends="release-init,distclean,zipsource,build">
+
+        <copy todir="${publish.dir}" overwrite="true"
+              verbose="true" preservelastmodified="true"
+              file="${build.dir}/${bzr4teamcity.vcs.name}.zip"/>
+
+        <mkdir dir="${publish.dir}/archive"/>
+
+        <copy tofile="${publish.dir}/archive/${bzr4teamcity.vcs.name}-${bzr4j.version}.jar"
+              overwrite="true" verbose="true" preservelastmodified="true"
+              file="${build.dir}/${bzr4teamcity.vcs.name}.zip"/>
+
+    </target>
+
+    <taskdef name="testng" classname="org.testng.TestNGAntTask"
+             classpath="${bzr4teamcity.dir}/lib/testng-5.7-jdk15.jar"/>
+
+    <target name="runtests" depends="init,clean,bzr4teamcity-test.jar">
+        <property name="suspend" value="n"/>
+
+        <path id="tests_classpath">
+            <path refid="bzr4teamcity-test.module.classpath"/>
+            <pathelement location="${build.dir}/bzr4teamcity-test.jar"/>
+        </path>
+
+        <testng haltonfailure="no" failureProperty="failure_found"
+                listener="org.testng.reporters.TestHTMLReporter"
+                outputdir="${build.dir}/bzr4teamcity-test-output" classpathref="tests_classpath"
+                dumpcommand="true">
+
+            <jvmarg value="-ea"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=${suspend},address=5555"/>
+
+            <sysproperty key="java.awt.headless" value="true"/>
+
+            <xmlfileset dir="${bzr4teamcity.dir}/src/test">
+                <include name="testng.xml"/>
+            </xmlfileset>
+        </testng>
+    </target>
+
+</project>
