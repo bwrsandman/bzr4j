@@ -230,6 +230,8 @@ public class BzrChangeProvider implements ChangeProvider
 
     private void processUnversioned( RootContext rootCtx, VirtualFile virtualFile )
     {
+        if (virtualFile == null)
+            return;
         rootCtx.builder.processUnversionedFile( virtualFile );
         if (virtualFile.isDirectory())
         {
