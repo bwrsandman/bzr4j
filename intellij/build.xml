@@ -94,7 +94,7 @@ Try the ant "help" target for more information.
 
     </target>
 
-    <target name="release-init" depends="init">
+    <target name="release-init" depends="init,distclean">
         <fail unless="env.BZR4J_JDK_HOME">ERROR:
 
 Publishing requires you to build with a 1.6 JDK, but point the BZR4J_JDK_HOME
@@ -102,9 +102,10 @@ environment variable to the location of a 1.5 JDK, so that we can generate
 bytecode that'll work for platforms like Mac OS X where the availability of
 the 1.6 platform is still fairly limited.
         </fail>
+        <m-zipsource zipnamebase="bzr4intellij"/>
     </target>
 
-    <target name="release" depends="release-init,distclean,zipsource,build">
+    <target name="release" depends="release-init,build">
 
 <!--
         <copy todir="${publish.dir}" overwrite="true"

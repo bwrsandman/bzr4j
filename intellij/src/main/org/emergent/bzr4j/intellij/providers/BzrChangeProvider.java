@@ -81,9 +81,8 @@ public class BzrChangeProvider implements ChangeProvider
                     continue;
 
                 String statusTarget = ".";
-                if (!IJConstants.DISABLE_STATUS_TARGET_OPTIMIZATION )
+                if (IJConstants.ENABLE_STATUS_TARGET_OPTIMIZATION)
                 {
-//                    Log.info( "Optimizing statusTarget!" );
                     String commonPrefix = IJUtil.getCommonParent( paths );
                     if (commonPrefix != null)
                     {
