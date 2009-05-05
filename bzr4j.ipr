@@ -531,6 +531,9 @@
     <option name="projectName" value="bzr4j" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="C:\working\bzr\bzr4j\trunk" />
+  </component>
   <component name="ProjectLibrariesConfigurable.UI">
     <option name="proportions">
       <SplitterProportionsDataImpl />
@@ -743,6 +746,9 @@
   <component name="testng.defaultConfiguration">
     <outputDirectory />
     <properties />
+  </component>
+  <component name="uidesigner-configuration">
+    <option name="INSTRUMENT_CLASSES" value="false" />
   </component>
 </project>
 
