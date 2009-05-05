@@ -25,16 +25,6 @@ public abstract class BazaarClient implements IBazaarClient
         m_workDir = workDir;
     }
 
-    /**
-     * Get the preferences shared by all clients
-     *
-     * @return BazaarClientPreferences
-     */
-    public static BazaarClientPreferences getPreferences()
-    {
-        return BazaarClientPreferences.getInstance();
-    }
-
     public InputStream cat( File file, IBazaarRevisionSpec revision, Option... options )
             throws BazaarException
     {

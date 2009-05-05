@@ -17,7 +17,9 @@ import org.emergent.bzr4j.intellij.BzrContentRevision;
 import org.emergent.bzr4j.intellij.BzrFileRevision;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
 import org.emergent.bzr4j.intellij.BzrVcs;
+import org.emergent.bzr4j.intellij.BzrVcsSettings;
 import org.emergent.bzr4j.intellij.utils.IJUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,11 +27,11 @@ import java.util.List;
 
 public class BzrAnnotationProvider implements AnnotationProvider
 {
-    private BzrVcs m_vcs;
+    private final BzrVcs m_vcs;
 
     public BzrAnnotationProvider( BzrVcs vcs )
     {
-        this.m_vcs = vcs;
+        m_vcs = vcs;
     }
 
     public FileAnnotation annotate( VirtualFile file ) throws VcsException
@@ -41,26 +43,16 @@ public class BzrAnnotationProvider implements AnnotationProvider
     {
         try
         {
-            BzrRevisionNumber revno = null;
-            if ( revision != null )
-            {
-                revno = (BzrRevisionNumber)revision.getRevisionNumber();
-            }
-            else
-            {
-                revno = (BzrRevisionNumber)m_vcs.getDiffProvider().getCurrentRevision( file );
-            }
-            IBazaarAnnotation annotation = m_vcs.getBzrClient().annotate(
-                    IJUtil.toFile( file ),
-                    IAnnotateOptions.REVISION.setArgument( revno.asString() ) );
+            BzrRevisionNumber revno = revision != null
+                    ? (BzrRevisionNumber)revision.getRevisionNumber()
+                    : (BzrRevisionNumber)m_vcs.getDiffProvider().getCurrentRevision( file );
 
-            BzrContentRevision thing =
-                    new BzrContentRevision( m_vcs, IJUtil.toFilePath( file ), revno );
+            IBazaarAnnotation annotation = m_vcs.getBzrClient().annotate( IJUtil.toFile( file ),
+                    IAnnotateOptions.REVISION.setArgument( String.valueOf( revno ) ) );
 
-            BzrFileAnnotation retval =
-                    new BzrFileAnnotation( annotation, m_vcs, file, thing.getContent() );
-            return retval;
+            BzrContentRevision thing = new BzrContentRevision( m_vcs, IJUtil.toFilePath( file ), revno );
 
+            return new BzrFileAnnotation( annotation, m_vcs, file, thing.getContent() );
         }
         catch ( BazaarException e )
         {
@@ -108,6 +100,11 @@ public class BzrAnnotationProvider implements AnnotationProvider
                 if ( annotation.getNumberOfLines() > lineNumber && lineNumber >= 0 )
                 {
                     retval = annotation.getAuthor( lineNumber );
+                    int atIdx = retval.indexOf( '@' );
+                    if (atIdx > 0 && BzrVcsSettings.getInstance().isTrimAnnotations())
+                    {
+                        retval = retval.substring( 0, atIdx );
+                    }
                 }
                 return retval;
             }

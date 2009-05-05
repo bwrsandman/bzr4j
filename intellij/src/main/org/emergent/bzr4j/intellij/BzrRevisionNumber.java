@@ -27,4 +27,10 @@ public final class BzrRevisionNumber implements VcsRevisionNumber
     {
         return NaturalOrderComparator.compareObjects( asString(), o.asString() );
     }
+
+    @Override
+    public String toString()
+    {
+        return asString();
+    }
 }

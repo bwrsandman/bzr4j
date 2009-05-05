@@ -35,6 +35,7 @@ import org.emergent.bzr4j.utils.BzrUtil;
 import org.emergent.bzr4j.utils.LogUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Collections;
@@ -101,11 +102,9 @@ public class BzrVcs extends AbstractVcs implements Disposable
 
         this.project = project;
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance( project );
-        addConfirmation = vcsManager
-                .getStandardConfirmation( VcsConfiguration.StandardConfirmation.ADD, this );
+        addConfirmation = vcsManager.getStandardConfirmation( VcsConfiguration.StandardConfirmation.ADD, this );
 
-        myDeleteConfirmation = vcsManager
-                .getStandardConfirmation( VcsConfiguration.StandardConfirmation.REMOVE, this );
+        myDeleteConfirmation = vcsManager.getStandardConfirmation( VcsConfiguration.StandardConfirmation.REMOVE, this );
 
         sm_instances.put( project, this );
     }
@@ -154,12 +153,6 @@ public class BzrVcs extends AbstractVcs implements Disposable
                 {
                 }
         };
-
-        BzrVcsSettings settings = BzrVcsSettings.getInstance();
-
-        BazaarClientPreferences.getInstance().set(
-                BazaarPreference.EXECUTABLE,
-                settings.getBzrExecutable() );
 
         bzrclient = new CommandLineClient();
     }
@@ -218,7 +211,7 @@ public class BzrVcs extends AbstractVcs implements Disposable
         return retval;
     }
 
-    public static Commander getCommander( final File workDir )
+    public Commander getCommander( final File workDir )
     {
         Commander retval = new Commander()
         {
@@ -230,7 +223,7 @@ public class BzrVcs extends AbstractVcs implements Disposable
             @Override
             public String getBzrExePath()
             {
-                return BazaarClientPreferences.getExecutablePath();
+                return BzrVcsSettings.getInstance().getExecutablePath();
             }
         };
         return retval;

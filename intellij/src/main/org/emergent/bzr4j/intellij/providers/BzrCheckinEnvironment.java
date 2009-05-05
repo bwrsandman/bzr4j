@@ -117,7 +117,9 @@ public class BzrCheckinEnvironment implements CheckinEnvironment
     @Nullable
     public List<VcsException> scheduleMissingFileForDeletion( List<FilePath> files )
     {
-        throw new UnsupportedOperationException( "scheduleMissingFileForDeletion: " + files );
+//        throw new UnsupportedOperationException( "scheduleMissingFileForDeletion: " + files );
+        // should be automatic with bzr4j
+        return null;
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -138,7 +140,7 @@ public class BzrCheckinEnvironment implements CheckinEnvironment
         {
             exceptions.add( new VcsException( e.getMessage(), e ) );
         }
-        /* @todo trigger an update of the Unversioned folder. */
+        // @todo trigger an update of the Unversioned folder. 
         return exceptions;
     }
 

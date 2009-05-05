@@ -22,9 +22,14 @@ import java.util.logging.Logger;
  */
 public final class BazaarClientPreferences
 {
-    private static final Logger logger = Logger.getLogger( BazaarClientPreferences.class.getName() );
-
     private static final BazaarClientPreferences instance = new BazaarClientPreferences();
+
+    private static final Properties sm_defaults = new Properties();
+
+    static
+    {
+        sm_defaults.setProperty( BazaarPreference.EXECUTABLE.toString(), "bzr" );
+    }
 
     private final HashMap<BazaarPreference, String> preferenceMap =
             new HashMap<BazaarPreference, String>();
@@ -36,7 +41,7 @@ public final class BazaarClientPreferences
      */
     private BazaarClientPreferences()
     {
-        preferenceMap.put( BazaarPreference.EXECUTABLE, "bzr" );
+        fillFrom( sm_defaults );
         for ( BazaarPreference pref : BazaarPreference.values() )
         {
             if ( getSystemEnv( pref ) != null )
@@ -52,7 +57,7 @@ public final class BazaarClientPreferences
      *
      * Any value in the properties that is already setted is ignored.
      *
-     * @param properties
+     * @param properties Properties to fill from
      */
     public void fillFrom( Properties properties )
     {
@@ -73,27 +78,24 @@ public final class BazaarClientPreferences
         }
     }
 
-    /**
-     * @return
-     */
-    public final static BazaarClientPreferences getInstance()
+    public static BazaarClientPreferences getInstance()
     {
         return instance;
     }
 
     /**
-     * @param value
-     * @return
+     * @param key The preference key.
+     * @return The value of the preference
      */
-    public String getString( BazaarPreference value )
+    public String getString( BazaarPreference key )
     {
-        return (String)preferenceMap.get( value );
+        return (String)preferenceMap.get( key );
     }
 
     /**
      *
-     * @param key
-     * @param value
+     * @param key The preference key.
+     * @param value The new value for the preference.
      */
     public final void set( BazaarPreference key, String value )
     {

@@ -21,6 +21,7 @@ Integration of <a href="http://bazaar-vcs.org/">Bazaar VCS</a> for IntelliJ IDEA
 
     <extensions xmlns="com.intellij" defaultExtensionNs="com.intellij">
         <vcs name="Bazaar" vcsClass="org.emergent.bzr4j.intellij.BzrVcs"/>
+        <!--<errorHandler implementation="org.emergent.bzr4j.intellij.utils.BzrErrorReportSubmitter"/>-->
     </extensions>
 
     <actions>

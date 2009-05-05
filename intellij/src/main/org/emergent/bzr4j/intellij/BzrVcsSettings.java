@@ -23,6 +23,8 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.emergent.bzr4j.core.BazaarClientPreferences;
+import org.emergent.bzr4j.core.BazaarPreference;
 
 /**
  * @author Patrick Woodworth
@@ -33,6 +35,8 @@ public class BzrVcsSettings
         implements PersistentStateComponent<BzrVcsSettings>, ApplicationComponent
 {
     private String m_executable = "bzr";
+
+    private boolean m_trimAnnotations = false;
 
     public static BzrVcsSettings getInstance()
     {
@@ -64,6 +68,11 @@ public class BzrVcsSettings
     {
     }
 
+    public String getExecutablePath()
+    {
+        return BazaarClientPreferences.getExecutablePath();
+    }
+
     public String getBzrExecutable()
     {
         return m_executable;
@@ -72,5 +81,17 @@ public class BzrVcsSettings
     public void setBzrExecutable( String bzrexe )
     {
         m_executable = bzrexe;
+        BazaarClientPreferences.getInstance().set( BazaarPreference.EXECUTABLE, bzrexe );
+//       ServiceManager.getService( BzrVcsSettings.class ).getBzrExecutable()
+    }
+
+    public boolean isTrimAnnotations()
+    {
+        return m_trimAnnotations;
+    }
+
+    public void setTrimAnnotations( boolean trimAnnotations )
+    {
+        m_trimAnnotations = trimAnnotations;
     }
 }
