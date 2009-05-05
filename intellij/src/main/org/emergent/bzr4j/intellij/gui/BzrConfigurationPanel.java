@@ -33,6 +33,8 @@ public class BzrConfigurationPanel
 
     private JCheckBox m_trimAnnotationCheckbox;
 
+    private JCheckBox m_statusCheckTargetOptimization;
+
     public BzrConfigurationPanel( Project project )
     {
         m_project = project;
@@ -61,13 +63,14 @@ public class BzrConfigurationPanel
     {
         m_exePathField.setText( settings.getBzrExecutable() );
         m_trimAnnotationCheckbox.setSelected( settings.isTrimAnnotations() );
+        m_statusCheckTargetOptimization.setSelected( settings.isOptimizeStatusTargets() );
     }
 
     public boolean isModified( BzrVcsSettings settings )
     {
-        return !(
-                settings.getBzrExecutable().equals( m_exePathField.getText() )
-                        && settings.isTrimAnnotations() == m_trimAnnotationCheckbox.isSelected()
+        return !(settings.getBzrExecutable().equals( m_exePathField.getText() )
+                && settings.isTrimAnnotations() == m_trimAnnotationCheckbox.isSelected()
+                && settings.isOptimizeStatusTargets() == m_statusCheckTargetOptimization.isSelected()
         );
     }
 
@@ -75,6 +78,7 @@ public class BzrConfigurationPanel
     {
         settings.setBzrExecutable( m_exePathField.getText() );
         settings.setTrimAnnotations( m_trimAnnotationCheckbox.isSelected() );
+        settings.setOptimizeStatusTargets( m_statusCheckTargetOptimization.isSelected() );
     }
 
     private void testConnection()
@@ -136,7 +140,7 @@ public class BzrConfigurationPanel
     private void $$$setupUI$$$()
     {
         m_panel = new JPanel();
-        m_panel.setLayout( new GridLayoutManager( 3, 1, new Insets( 0, 0, 0, 0 ), -1, -1 ) );
+        m_panel.setLayout( new GridLayoutManager( 5, 1, new Insets( 0, 0, 0, 0 ), -1, -1 ) );
         final Spacer spacer1 = new Spacer();
         m_panel.add( spacer1,
                 new GridConstraints( 2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
@@ -160,6 +164,16 @@ public class BzrConfigurationPanel
         m_trimAnnotationCheckbox.setText( "Trim annotation email address display" );
         m_panel.add( m_trimAnnotationCheckbox,
                 new GridConstraints( 1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
+        final JLabel label2 = new JLabel();
+        label2.setText( "Experimental Settings:" );
+        m_panel.add( label2, new GridConstraints( 3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
+        m_statusCheckTargetOptimization = new JCheckBox();
+        m_statusCheckTargetOptimization.setText( "Optimize status check targets" );
+        m_panel.add( m_statusCheckTargetOptimization,
+                new GridConstraints( 4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
     }

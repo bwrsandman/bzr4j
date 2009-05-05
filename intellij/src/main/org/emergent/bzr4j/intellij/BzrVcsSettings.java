@@ -38,6 +38,8 @@ public class BzrVcsSettings
 
     private boolean m_trimAnnotations = false;
 
+    private boolean m_optimizeStatusTargets = false;
+
     public static BzrVcsSettings getInstance()
     {
         return ServiceManager.getService( BzrVcsSettings.class );
@@ -82,7 +84,6 @@ public class BzrVcsSettings
     {
         m_executable = bzrexe;
         BazaarClientPreferences.getInstance().set( BazaarPreference.EXECUTABLE, bzrexe );
-//       ServiceManager.getService( BzrVcsSettings.class ).getBzrExecutable()
     }
 
     public boolean isTrimAnnotations()
@@ -93,5 +94,15 @@ public class BzrVcsSettings
     public void setTrimAnnotations( boolean trimAnnotations )
     {
         m_trimAnnotations = trimAnnotations;
+    }
+
+    public boolean isOptimizeStatusTargets()
+    {
+        return m_optimizeStatusTargets;
+    }
+
+    public void setOptimizeStatusTargets( boolean value )
+    {
+        m_optimizeStatusTargets = value;
     }
 }

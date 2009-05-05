@@ -13,6 +13,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.CurrentContentRevision;
 import com.intellij.openapi.vcs.changes.VcsDirtyScope;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.StatusBar;
 import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarRevision;
@@ -22,6 +23,7 @@ import org.emergent.bzr4j.core.IBazaarClient;
 import org.emergent.bzr4j.core.IBazaarStatus;
 import org.emergent.bzr4j.intellij.BzrContentRevision;
 import org.emergent.bzr4j.intellij.BzrVcs;
+import org.emergent.bzr4j.intellij.BzrVcsSettings;
 import org.emergent.bzr4j.intellij.utils.IJConstants;
 import org.emergent.bzr4j.intellij.utils.IJUtil;
 
@@ -81,7 +83,7 @@ public class BzrChangeProvider implements ChangeProvider
                     continue;
 
                 String statusTarget = ".";
-                if (IJConstants.ENABLE_STATUS_TARGET_OPTIMIZATION)
+                if (BzrVcsSettings.getInstance().isOptimizeStatusTargets())
                 {
                     String commonPrefix = IJUtil.getCommonParent( paths );
                     if (commonPrefix != null)
