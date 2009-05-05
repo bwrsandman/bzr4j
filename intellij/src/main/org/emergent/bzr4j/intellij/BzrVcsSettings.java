@@ -23,6 +23,8 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.emergent.bzr4j.core.BazaarClientPreferences;
+import org.emergent.bzr4j.core.BazaarPreference;
 
 /**
  * @author Patrick Woodworth
@@ -33,6 +35,12 @@ public class BzrVcsSettings
         implements PersistentStateComponent<BzrVcsSettings>, ApplicationComponent
 {
     private String m_executable = "bzr";
+
+    private boolean m_annotationTrimmingEnabled = false;
+
+    private boolean m_scanTargetOptimizationEnabled = false;
+
+    private boolean m_extraLoggingEnabled = false;
 
     public static BzrVcsSettings getInstance()
     {
@@ -64,6 +72,11 @@ public class BzrVcsSettings
     {
     }
 
+    public String getExecutablePath()
+    {
+        return BazaarClientPreferences.getExecutablePath();
+    }
+
     public String getBzrExecutable()
     {
         return m_executable;
@@ -72,5 +85,36 @@ public class BzrVcsSettings
     public void setBzrExecutable( String bzrexe )
     {
         m_executable = bzrexe;
+        BazaarClientPreferences.getInstance().set( BazaarPreference.EXECUTABLE, bzrexe );
+    }
+
+    public boolean isAnnotationTrimmingEnabled()
+    {
+        return m_annotationTrimmingEnabled;
+    }
+
+    public void setAnnotationTrimmingEnabled( boolean value )
+    {
+        m_annotationTrimmingEnabled = value;
+    }
+
+    public boolean isScanTargetOptimizationEnabled()
+    {
+        return m_scanTargetOptimizationEnabled;
+    }
+
+    public void setScanTargetOptimizationEnabled( boolean value )
+    {
+        m_scanTargetOptimizationEnabled = value;
+    }
+
+    public boolean isExtraLoggingEnabled()
+    {
+        return m_extraLoggingEnabled;
+    }
+
+    public void setExtraLoggingEnabled( boolean value )
+    {
+        m_extraLoggingEnabled = value;
     }
 }

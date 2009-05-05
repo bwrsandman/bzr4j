@@ -35,17 +35,6 @@
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
-        <option name="OTHER_INDENT_OPTIONS">
-          <value>
-            <option name="INDENT_SIZE" value="4" />
-            <option name="CONTINUATION_INDENT_SIZE" value="8" />
-            <option name="TAB_SIZE" value="8" />
-            <option name="USE_TAB_CHARACTER" value="false" />
-            <option name="SMART_TABS" value="false" />
-            <option name="LABEL_INDENT_SIZE" value="0" />
-            <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-          </value>
-        </option>
         <option name="LINE_SEPARATOR" value="&#10;" />
         <option name="BRACE_STYLE" value="2" />
         <option name="CLASS_BRACE_STYLE" value="2" />
@@ -60,18 +49,13 @@
         <option name="BLANK_LINES_AROUND_FIELD" value="1" />
         <option name="SPACE_WITHIN_METHOD_CALL_PARENTHESES" value="true" />
         <option name="SPACE_WITHIN_METHOD_PARENTHESES" value="true" />
-        <option name="SPACE_WITHIN_IF_PARENTHESES" value="true" />
-        <option name="SPACE_WITHIN_WHILE_PARENTHESES" value="true" />
-        <option name="SPACE_WITHIN_FOR_PARENTHESES" value="true" />
-        <option name="SPACE_WITHIN_CATCH_PARENTHESES" value="true" />
-        <option name="SPACE_WITHIN_SWITCH_PARENTHESES" value="true" />
-        <option name="SPACE_WITHIN_SYNCHRONIZED_PARENTHESES" value="true" />
+        <option name="SPACE_WITHIN_ARRAY_INITIALIZER_BRACES" value="true" />
         <option name="SPACE_AFTER_TYPE_CAST" value="false" />
+        <option name="SPACE_BEFORE_ARRAY_INITIALIZER_LBRACE" value="true" />
         <option name="FIELD_NAME_PREFIX" value="m_" />
         <option name="STATIC_FIELD_NAME_PREFIX" value="sm_" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
-        <option name="RIGHT_MARGIN" value="100" />
         <option name="CALL_PARAMETERS_WRAP" value="1" />
         <option name="METHOD_PARAMETERS_WRAP" value="1" />
         <option name="EXTENDS_LIST_WRAP" value="1" />
@@ -94,7 +78,7 @@
         <ADDITIONAL_INDENT_OPTIONS fileType="groovy">
           <option name="INDENT_SIZE" value="2" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
           <option name="USE_TAB_CHARACTER" value="false" />
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
@@ -103,7 +87,7 @@
         <ADDITIONAL_INDENT_OPTIONS fileType="gsp">
           <option name="INDENT_SIZE" value="2" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
           <option name="USE_TAB_CHARACTER" value="false" />
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
@@ -121,7 +105,7 @@
         <ADDITIONAL_INDENT_OPTIONS fileType="js">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
           <option name="USE_TAB_CHARACTER" value="false" />
           <option name="SMART_TABS" value="false" />
           <option name="LABEL_INDENT_SIZE" value="0" />
@@ -343,16 +327,25 @@
   </component>
   <component name="IdProvider" IDEtalkID="317BB29ECB7DA19EFFA340ECF52563C6" />
   <component name="InspectionProjectProfileManager">
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_LEVEL_SETTINGS" value="false" />
+    <option name="PROJECT_PROFILE" value="Bzr4J" />
+    <option name="USE_PROJECT_LEVEL_SETTINGS" value="true" />
     <scopes />
     <profiles>
+      <profile version="1.0" is_locked="false">
+        <option name="myName" value="Bzr4J" />
+        <option name="myLocal" value="false" />
+      </profile>
       <profile version="1.0" is_locked="false">
         <option name="myName" value="Project Default" />
         <option name="myLocal" value="false" />
       </profile>
     </profiles>
-    <list size="0" />
+    <list size="4">
+      <item index="0" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+      <item index="1" class="java.lang.String" itemvalue="INFO" />
+      <item index="2" class="java.lang.String" itemvalue="WARNING" />
+      <item index="3" class="java.lang.String" itemvalue="ERROR" />
+    </list>
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -522,6 +515,11 @@
         <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
       </item>
     </group>
+    <group name="Other">
+      <item class="com.intellij.openapi.ui.TextFieldWithBrowseButton" icon="/com/intellij/uiDesigner/icons/panel.png" removable="true" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+    </group>
   </component>
   <component name="PerforceChangeBrowserSettings">
     <option name="USE_CLIENT_FILTER" value="true" />
@@ -531,6 +529,9 @@
     <option name="projectName" value="bzr4j" />
   </component>
   <component name="ProjectFileVersion" converted="true" />
+  <component name="ProjectKey">
+    <option name="state" value="C:\working\bzr\bzr4j\trunk" />
+  </component>
   <component name="ProjectLibrariesConfigurable.UI">
     <option name="proportions">
       <SplitterProportionsDataImpl />
@@ -743,6 +744,9 @@
   <component name="testng.defaultConfiguration">
     <outputDirectory />
     <properties />
+  </component>
+  <component name="uidesigner-configuration">
+    <option name="INSTRUMENT_CLASSES" value="false" />
   </component>
 </project>
 

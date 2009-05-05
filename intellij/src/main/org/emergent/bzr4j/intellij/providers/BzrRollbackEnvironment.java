@@ -78,6 +78,7 @@ public class BzrRollbackEnvironment extends DefaultRollbackEnvironment
     public void rollbackMissingFileDeletion( List<FilePath> files, List<VcsException> exceptions,
             RollbackProgressListener listener )
     {
-        throw new UnsupportedOperationException( "rollbackMissingFileDeletion: " + files );
+//        throw new UnsupportedOperationException( "rollbackMissingFileDeletion: " + files );
+        // should be automatic with bzr4j
     }
 }

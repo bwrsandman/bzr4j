@@ -4,6 +4,7 @@
 package org.emergent.bzr4j.core;
 
 import org.emergent.bzr4j.utils.BzrConstants;
+import org.emergent.bzr4j.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +23,14 @@ import java.util.logging.Logger;
  */
 public final class BazaarClientPreferences
 {
-    private static final Logger logger = Logger.getLogger( BazaarClientPreferences.class.getName() );
+    private static final Properties sm_defaults = new Properties();
 
-    private static final BazaarClientPreferences instance = new BazaarClientPreferences();
+    private static BazaarClientPreferences sm_instance;
+
+    static
+    {
+        sm_defaults.setProperty( BazaarPreference.EXECUTABLE.toString(), "bzr" );
+    }
 
     private final HashMap<BazaarPreference, String> preferenceMap =
             new HashMap<BazaarPreference, String>();
@@ -36,7 +42,7 @@ public final class BazaarClientPreferences
      */
     private BazaarClientPreferences()
     {
-        preferenceMap.put( BazaarPreference.EXECUTABLE, "bzr" );
+        fillFrom( sm_defaults );
         for ( BazaarPreference pref : BazaarPreference.values() )
         {
             if ( getSystemEnv( pref ) != null )
@@ -52,7 +58,7 @@ public final class BazaarClientPreferences
      *
      * Any value in the properties that is already setted is ignored.
      *
-     * @param properties
+     * @param properties Properties to fill from
      */
     public void fillFrom( Properties properties )
     {
@@ -60,7 +66,8 @@ public final class BazaarClientPreferences
         {
             if ( preferenceMap.get( pref ) == null )
             {
-                preferenceMap.put( pref, getValue( properties, pref ) );
+                String value = getValue( properties, pref );
+                preferenceMap.put( pref, value );
             }
         }
     }
@@ -69,31 +76,33 @@ public final class BazaarClientPreferences
     {
         for ( BazaarPreference pref : BazaarPreference.values() )
         {
-            preferenceMap.put( pref, getValue( properties, pref ) );
+            String value = getValue( properties, pref );
+            preferenceMap.put( pref, value );
         }
     }
 
-    /**
-     * @return
-     */
-    public final static BazaarClientPreferences getInstance()
+    public static synchronized BazaarClientPreferences getInstance()
     {
-        return instance;
+        if (sm_instance == null)
+        {
+            sm_instance = new BazaarClientPreferences();
+        }
+        return sm_instance;
     }
 
     /**
-     * @param value
-     * @return
+     * @param key The preference key.
+     * @return The value of the preference
      */
-    public String getString( BazaarPreference value )
+    public String getString( BazaarPreference key )
     {
-        return (String)preferenceMap.get( value );
+        return (String)preferenceMap.get( key );
     }
 
     /**
      *
-     * @param key
-     * @param value
+     * @param key The preference key.
+     * @param value The new value for the preference.
      */
     public final void set( BazaarPreference key, String value )
     {

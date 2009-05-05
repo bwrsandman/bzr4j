@@ -1,6 +1,5 @@
 package org.emergent.bzr4j.intellij.gui;
 
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -9,9 +8,9 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import org.emergent.bzr4j.commandline.internal.Commander;
-import org.emergent.bzr4j.core.BazaarClientPreferences;
-import org.emergent.bzr4j.core.BazaarPreference;
 import org.emergent.bzr4j.intellij.BzrVcsSettings;
+import org.emergent.bzr4j.intellij.BzrBundle;
+import org.emergent.bzr4j.utils.LogUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,22 +20,33 @@ import java.io.File;
 
 /**
  * @author Patrik Beno
+ * @author Patrick Woodworth
  */
 public class BzrConfigurationPanel
 {
+    private Project m_project;
 
-    private Project project;
+    private JPanel m_panel;
 
-    private JPanel panel;
+    private TextFieldWithBrowseButton m_exePathField;
 
-    private TextFieldWithBrowseButton pathField;
+    private JButton m_testExeButton;
 
-    private JButton testButton;
+    private JCheckBox m_trimAnnotationCheckbox;
+
+    private JCheckBox m_statusCheckTargetOptimization;
+
+    private JPanel m_loggingPanel;
+
+    private JCheckBox m_extraLoggingCheckbox;
+
+    private JTextField m_loggingFilePath;
 
     public BzrConfigurationPanel( Project project )
     {
-        this.project = project;
-        testButton.addActionListener( new ActionListener()
+        m_project = project;
+
+        m_testExeButton.addActionListener( new ActionListener()
         {
             public void actionPerformed( ActionEvent e )
             {
@@ -44,11 +54,45 @@ public class BzrConfigurationPanel
             }
         } );
 
-        pathField.addBrowseFolderListener(
-                "Bazaar Configuration",
-                "Select path to bzr executable",
-                project,
+        m_exePathField.addBrowseFolderListener(
+                BzrBundle.message( "configpanel.exechooser.title" ),
+                BzrBundle.message( "configpanel.exechooser.description" ),
+                m_project,
                 new FileChooserDescriptor( true, false, false, false, false, false ) );
+    }
+
+    public JComponent getPanel()
+    {
+        return m_panel;
+    }
+
+    public void load( BzrVcsSettings settings )
+    {
+        m_exePathField.setText( settings.getBzrExecutable() );
+        m_trimAnnotationCheckbox.setSelected( settings.isAnnotationTrimmingEnabled() );
+        m_statusCheckTargetOptimization.setSelected( settings.isScanTargetOptimizationEnabled() );
+        m_extraLoggingCheckbox.setSelected( settings.isExtraLoggingEnabled() );
+
+        String logFilePath = String.valueOf( LogUtil.getFileHandlePattern() ).replace( '/', File.separatorChar );
+        logFilePath = logFilePath.replaceAll( "%g", "0" );
+        m_loggingFilePath.setText( logFilePath );
+    }
+
+    public boolean isModified( BzrVcsSettings settings )
+    {
+        return !(settings.getBzrExecutable().equals( m_exePathField.getText() )
+                && settings.isAnnotationTrimmingEnabled() == m_trimAnnotationCheckbox.isSelected()
+                && settings.isScanTargetOptimizationEnabled() == m_statusCheckTargetOptimization.isSelected()
+                && settings.isExtraLoggingEnabled() == m_extraLoggingCheckbox.isSelected()
+        );
+    }
+
+    public void save( BzrVcsSettings settings )
+    {
+        settings.setBzrExecutable( m_exePathField.getText() );
+        settings.setAnnotationTrimmingEnabled( m_trimAnnotationCheckbox.isSelected() );
+        settings.setScanTargetOptimizationEnabled( m_statusCheckTargetOptimization.isSelected() );
+        settings.setExtraLoggingEnabled( m_extraLoggingCheckbox.isSelected() );
     }
 
     private void testConnection()
@@ -62,7 +106,7 @@ public class BzrConfigurationPanel
 
             public String getBzrExePath()
             {
-                return pathField.getText();
+                return m_exePathField.getText();
             }
         };
 
@@ -72,7 +116,9 @@ public class BzrConfigurationPanel
         }
         catch (Exception ignored)
         {
-            Messages.showErrorDialog( project, "Failed to invoke bzr!", "Bzr Test Result" );
+            Messages.showErrorDialog( m_project,
+                    BzrBundle.message( "error.bzrexec.failed.invoke" ),
+                    BzrBundle.message( "error.bzrtest.errordialog.title" ) );
             return;
         }
 
@@ -80,36 +126,17 @@ public class BzrConfigurationPanel
         {
             commander.rawCmd( "xmlplugins" ).exec( true );
         }
-        catch (Exception ignored) 
+        catch (Exception ignored)
         {
-            Messages.showErrorDialog( project, "You seem to be missing the xmloutput plugin for bzr!", "Bzr Test Result" );
+            Messages.showErrorDialog( m_project,
+                    BzrBundle.message( "error.xmloutput.notinstalled" ),
+                    BzrBundle.message( "error.bzrtest.errordialog.title" ) );
             return;
         }
 
-        Messages.showInfoMessage( project, "Test Passed!", "Bzr Test Result" );
-    }
-
-    public JComponent getPanel()
-    {
-        return panel;
-    }
-
-    public void load( BzrVcsSettings settings )
-    {
-        pathField.setText( settings.getBzrExecutable() );
-    }
-
-    public boolean isModified( BzrVcsSettings settings )
-    {
-        return !settings.getBzrExecutable().equals( pathField.getText() );
-    }
-
-    public void save( BzrVcsSettings settings )
-    {
-        settings.setBzrExecutable( pathField.getText() );
-        BazaarClientPreferences.getInstance().set(
-                BazaarPreference.EXECUTABLE,
-                ServiceManager.getService( BzrVcsSettings.class ).getBzrExecutable() );
+        Messages.showInfoMessage( m_project,
+                BzrBundle.message( "configdialog.exetest.success" ),
+                BzrBundle.message( "error.bzrtest.errordialog.title" ) );
     }
 
     {
@@ -119,53 +146,67 @@ public class BzrConfigurationPanel
         $$$setupUI$$$();
     }
 
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
-     * call it in your code!
-     *
+    /** Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
      * @noinspection ALL
      */
     private void $$$setupUI$$$()
     {
-        panel = new JPanel();
-        panel.setLayout( new GridLayoutManager( 3, 3, new Insets( 0, 0, 0, 0 ), -1, -1 ) );
-        final JLabel label1 = new JLabel();
-        label1.setText( "Path to Bazaar executable: " );
-        panel.add( label1, new GridConstraints( 0, 0, 1, 1, GridConstraints.ANCHOR_WEST,
-                GridConstraints.FILL_NONE,
-                GridConstraints.SIZEPOLICY_FIXED,
-                GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0,
-                false ) );
-        pathField = new TextFieldWithBrowseButton();
-        panel.add( pathField, new GridConstraints( 0, 1, 1, 2, GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                null, null, null, 0, false ) );
-        testButton = new JButton();
-        testButton.setText( "Test" );
-        panel.add( testButton, new GridConstraints( 1, 2, 1, 1, GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                GridConstraints.SIZEPOLICY_FIXED, null, null, null,
-                0, false ) );
+        m_panel = new JPanel();
+        m_panel.setLayout( new GridLayoutManager( 6, 1, new Insets( 0, 0, 0, 0 ), -1, -1 ) );
         final Spacer spacer1 = new Spacer();
-        panel.add( spacer1, new GridConstraints( 2, 2, 1, 1, GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_VERTICAL, 1,
-                GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null,
-                0, false ) );
-        final Spacer spacer2 = new Spacer();
-        panel.add( spacer2, new GridConstraints( 1, 1, 1, 1, GridConstraints.ANCHOR_CENTER,
-                GridConstraints.FILL_HORIZONTAL,
-                GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null,
-                null, 0, false ) );
+        m_panel.add( spacer1,
+                new GridConstraints( 2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false ) );
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout( new BorderLayout( 0, 0 ) );
+        m_panel.add( panel1,
+                new GridConstraints( 0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null,
+                        0, false ) );
+        m_exePathField = new TextFieldWithBrowseButton();
+        panel1.add( m_exePathField, BorderLayout.CENTER );
+        final JLabel label1 = new JLabel();
+        label1.setText( "Bzr executable path" );
+        panel1.add( label1, BorderLayout.WEST );
+        m_testExeButton = new JButton();
+        m_testExeButton.setText( "Test" );
+        panel1.add( m_testExeButton, BorderLayout.EAST );
+        m_trimAnnotationCheckbox = new JCheckBox();
+        m_trimAnnotationCheckbox.setText( "Trim annotation email address display" );
+        m_panel.add( m_trimAnnotationCheckbox,
+                new GridConstraints( 1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
+        final JLabel label2 = new JLabel();
+        label2.setText( "Experimental Settings:" );
+        m_panel.add( label2, new GridConstraints( 3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
+        m_statusCheckTargetOptimization = new JCheckBox();
+        m_statusCheckTargetOptimization.setText( "Optimize status check scan targets" );
+        m_panel.add( m_statusCheckTargetOptimization,
+                new GridConstraints( 5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
+        m_loggingPanel = new JPanel();
+        m_loggingPanel.setLayout( new BorderLayout( 0, 0 ) );
+        m_panel.add( m_loggingPanel,
+                new GridConstraints( 4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null,
+                        0, false ) );
+        m_extraLoggingCheckbox = new JCheckBox();
+        m_extraLoggingCheckbox.setText( "Enable extra logging (restart required) in:" );
+        m_loggingPanel.add( m_extraLoggingCheckbox, BorderLayout.WEST );
+        m_loggingFilePath = new JTextField();
+        m_loggingFilePath.setEditable( false );
+        m_loggingFilePath.setEnabled( true );
+        m_loggingPanel.add( m_loggingFilePath, BorderLayout.CENTER );
     }
 
-    /**
-     * @noinspection ALL
-     */
+    /** @noinspection ALL */
     public JComponent $$$getRootComponent$$$()
-    {
-        return panel;
-    }
+    { return m_panel; }
 }

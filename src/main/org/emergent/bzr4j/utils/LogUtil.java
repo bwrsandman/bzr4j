@@ -16,29 +16,36 @@ public class LogUtil
 
     private static LogUtil sm_instance = new LogUtil();
 
+    public static String getFileHandlePattern()
+    {
+        String fhpattern = System.getProperty( "teamcity_logs" );
+        if (fhpattern == null)
+        {
+            fhpattern = System.getProperty( "idea.system.path" );
+            if (fhpattern != null)
+            {
+                if (!fhpattern.endsWith( "/" ))
+                    fhpattern += "/";
+                fhpattern += "log/bzr4j.%g.log";
+            }
+        }
+        else
+        {
+            if (!fhpattern.endsWith( "/" ))
+                fhpattern += "/";
+            fhpattern += "bzr4j.%g.log";
+        }
+
+        return fhpattern;
+    }
+
     public static void dumpImportantData( Properties ijprops )
     {
         if (!Boolean.getBoolean( "bzr4j.logging.disable_autoconf" ))
         {
             try
             {
-                String fhpattern = System.getProperty( "teamcity_logs" );
-                if (fhpattern == null)
-                {
-                    fhpattern = System.getProperty( "idea.system.path" );
-                    if (fhpattern != null)
-                    {
-                        if (!fhpattern.endsWith( "/" ))
-                            fhpattern += "/";
-                        fhpattern += "log/bzr4j.%g.log";
-                    }
-                }
-                else
-                {
-                    if (!fhpattern.endsWith( "/" ))
-                        fhpattern += "/";
-                    fhpattern += "bzr4j.%g.log";
-                }
+                String fhpattern = getFileHandlePattern();
 
                 if (fhpattern != null)
                 {

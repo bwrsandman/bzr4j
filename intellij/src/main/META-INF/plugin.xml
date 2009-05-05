@@ -21,6 +21,7 @@ Integration of <a href="http://bazaar-vcs.org/">Bazaar VCS</a> for IntelliJ IDEA
 
     <extensions xmlns="com.intellij" defaultExtensionNs="com.intellij">
         <vcs name="Bazaar" vcsClass="org.emergent.bzr4j.intellij.BzrVcs"/>
+        <!--<errorHandler implementation="org.emergent.bzr4j.intellij.utils.BzrErrorReportSubmitter"/>-->
     </extensions>
 
     <actions>
@@ -52,6 +53,8 @@ Integration of <a href="http://bazaar-vcs.org/">Bazaar VCS</a> for IntelliJ IDEA
             <add-to-group group-id="VcsGroup" anchor="last"/>
             <add-to-group group-id="VcsGroups" anchor="last"/>
         </group>
+        <action id="Bazaar.ScanToggle" class="org.emergent.bzr4j.intellij.action.ToggleScanningAction"
+                text="Toggle Change Scanning"/>
     </actions>
 
 </idea-plugin>
