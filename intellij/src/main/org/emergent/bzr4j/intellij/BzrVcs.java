@@ -20,8 +20,6 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.emergent.bzr4j.commandline.CommandLineClient;
 import org.emergent.bzr4j.commandline.internal.Commander;
-import org.emergent.bzr4j.core.BazaarClientPreferences;
-import org.emergent.bzr4j.core.BazaarPreference;
 import org.emergent.bzr4j.core.IBazaarClient;
 import org.emergent.bzr4j.intellij.gui.BzrVcsConfigurable;
 import org.emergent.bzr4j.intellij.providers.BzrAnnotationProvider;
@@ -34,8 +32,8 @@ import org.emergent.bzr4j.intellij.providers.BzrRollbackEnvironment;
 import org.emergent.bzr4j.utils.BzrUtil;
 import org.emergent.bzr4j.utils.LogUtil;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -98,7 +96,8 @@ public class BzrVcs extends AbstractVcs implements Disposable
         ijprops.setProperty( "intellij.version.major", appInfo.getMajorVersion() );
         ijprops.setProperty( "intellij.version.minor", appInfo.getMinorVersion() );
         ijprops.setProperty( "intellij.version.name", appInfo.getVersionName() );
-        LogUtil.dumpImportantData( ijprops );
+        if (BzrVcsSettings.getInstance().isExtraLoggingEnabled())
+            LogUtil.dumpImportantData( ijprops );
 
         this.project = project;
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance( project );
@@ -267,7 +266,7 @@ public class BzrVcs extends AbstractVcs implements Disposable
         return getVcsHistoryProvider();
     }
 
-    @Nullable
+    @NotNull
     public BzrChangeProvider getChangeProvider()
     {
         if ( changeProvider == null )

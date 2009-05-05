@@ -4,6 +4,7 @@
 package org.emergent.bzr4j.core;
 
 import org.emergent.bzr4j.utils.BzrConstants;
+import org.emergent.bzr4j.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +23,9 @@ import java.util.logging.Logger;
  */
 public final class BazaarClientPreferences
 {
-    private static final BazaarClientPreferences instance = new BazaarClientPreferences();
-
     private static final Properties sm_defaults = new Properties();
+
+    private static BazaarClientPreferences sm_instance;
 
     static
     {
@@ -65,7 +66,8 @@ public final class BazaarClientPreferences
         {
             if ( preferenceMap.get( pref ) == null )
             {
-                preferenceMap.put( pref, getValue( properties, pref ) );
+                String value = getValue( properties, pref );
+                preferenceMap.put( pref, value );
             }
         }
     }
@@ -74,13 +76,18 @@ public final class BazaarClientPreferences
     {
         for ( BazaarPreference pref : BazaarPreference.values() )
         {
-            preferenceMap.put( pref, getValue( properties, pref ) );
+            String value = getValue( properties, pref );
+            preferenceMap.put( pref, value );
         }
     }
 
-    public static BazaarClientPreferences getInstance()
+    public static synchronized BazaarClientPreferences getInstance()
     {
-        return instance;
+        if (sm_instance == null)
+        {
+            sm_instance = new BazaarClientPreferences();
+        }
+        return sm_instance;
     }
 
     /**

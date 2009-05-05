@@ -10,6 +10,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import org.emergent.bzr4j.commandline.internal.Commander;
 import org.emergent.bzr4j.intellij.BzrVcsSettings;
 import org.emergent.bzr4j.intellij.BzrBundle;
+import org.emergent.bzr4j.utils.LogUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +35,12 @@ public class BzrConfigurationPanel
     private JCheckBox m_trimAnnotationCheckbox;
 
     private JCheckBox m_statusCheckTargetOptimization;
+
+    private JPanel m_loggingPanel;
+
+    private JCheckBox m_extraLoggingCheckbox;
+
+    private JTextField m_loggingFilePath;
 
     public BzrConfigurationPanel( Project project )
     {
@@ -62,23 +69,30 @@ public class BzrConfigurationPanel
     public void load( BzrVcsSettings settings )
     {
         m_exePathField.setText( settings.getBzrExecutable() );
-        m_trimAnnotationCheckbox.setSelected( settings.isTrimAnnotations() );
-        m_statusCheckTargetOptimization.setSelected( settings.isOptimizeStatusTargets() );
+        m_trimAnnotationCheckbox.setSelected( settings.isAnnotationTrimmingEnabled() );
+        m_statusCheckTargetOptimization.setSelected( settings.isScanTargetOptimizationEnabled() );
+        m_extraLoggingCheckbox.setSelected( settings.isExtraLoggingEnabled() );
+
+        String logFilePath = String.valueOf( LogUtil.getFileHandlePattern() ).replace( '/', File.separatorChar );
+        logFilePath = logFilePath.replaceAll( "%g", "0" );
+        m_loggingFilePath.setText( logFilePath );
     }
 
     public boolean isModified( BzrVcsSettings settings )
     {
         return !(settings.getBzrExecutable().equals( m_exePathField.getText() )
-                && settings.isTrimAnnotations() == m_trimAnnotationCheckbox.isSelected()
-                && settings.isOptimizeStatusTargets() == m_statusCheckTargetOptimization.isSelected()
+                && settings.isAnnotationTrimmingEnabled() == m_trimAnnotationCheckbox.isSelected()
+                && settings.isScanTargetOptimizationEnabled() == m_statusCheckTargetOptimization.isSelected()
+                && settings.isExtraLoggingEnabled() == m_extraLoggingCheckbox.isSelected()
         );
     }
 
     public void save( BzrVcsSettings settings )
     {
         settings.setBzrExecutable( m_exePathField.getText() );
-        settings.setTrimAnnotations( m_trimAnnotationCheckbox.isSelected() );
-        settings.setOptimizeStatusTargets( m_statusCheckTargetOptimization.isSelected() );
+        settings.setAnnotationTrimmingEnabled( m_trimAnnotationCheckbox.isSelected() );
+        settings.setScanTargetOptimizationEnabled( m_statusCheckTargetOptimization.isSelected() );
+        settings.setExtraLoggingEnabled( m_extraLoggingCheckbox.isSelected() );
     }
 
     private void testConnection()
@@ -140,7 +154,7 @@ public class BzrConfigurationPanel
     private void $$$setupUI$$$()
     {
         m_panel = new JPanel();
-        m_panel.setLayout( new GridLayoutManager( 5, 1, new Insets( 0, 0, 0, 0 ), -1, -1 ) );
+        m_panel.setLayout( new GridLayoutManager( 6, 1, new Insets( 0, 0, 0, 0 ), -1, -1 ) );
         final Spacer spacer1 = new Spacer();
         m_panel.add( spacer1,
                 new GridConstraints( 2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
@@ -171,11 +185,25 @@ public class BzrConfigurationPanel
         m_panel.add( label2, new GridConstraints( 3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                 GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
         m_statusCheckTargetOptimization = new JCheckBox();
-        m_statusCheckTargetOptimization.setText( "Optimize status check targets" );
+        m_statusCheckTargetOptimization.setText( "Optimize status check scan targets" );
         m_panel.add( m_statusCheckTargetOptimization,
-                new GridConstraints( 4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                new GridConstraints( 5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false ) );
+        m_loggingPanel = new JPanel();
+        m_loggingPanel.setLayout( new BorderLayout( 0, 0 ) );
+        m_panel.add( m_loggingPanel,
+                new GridConstraints( 4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null,
+                        0, false ) );
+        m_extraLoggingCheckbox = new JCheckBox();
+        m_extraLoggingCheckbox.setText( "Enable extra logging (restart required) in:" );
+        m_loggingPanel.add( m_extraLoggingCheckbox, BorderLayout.WEST );
+        m_loggingFilePath = new JTextField();
+        m_loggingFilePath.setEditable( false );
+        m_loggingFilePath.setEnabled( true );
+        m_loggingPanel.add( m_loggingFilePath, BorderLayout.CENTER );
     }
 
     /** @noinspection ALL */

@@ -36,9 +36,11 @@ public class BzrVcsSettings
 {
     private String m_executable = "bzr";
 
-    private boolean m_trimAnnotations = false;
+    private boolean m_annotationTrimmingEnabled = false;
 
-    private boolean m_optimizeStatusTargets = false;
+    private boolean m_scanTargetOptimizationEnabled = false;
+
+    private boolean m_extraLoggingEnabled = false;
 
     public static BzrVcsSettings getInstance()
     {
@@ -86,23 +88,33 @@ public class BzrVcsSettings
         BazaarClientPreferences.getInstance().set( BazaarPreference.EXECUTABLE, bzrexe );
     }
 
-    public boolean isTrimAnnotations()
+    public boolean isAnnotationTrimmingEnabled()
     {
-        return m_trimAnnotations;
+        return m_annotationTrimmingEnabled;
     }
 
-    public void setTrimAnnotations( boolean trimAnnotations )
+    public void setAnnotationTrimmingEnabled( boolean value )
     {
-        m_trimAnnotations = trimAnnotations;
+        m_annotationTrimmingEnabled = value;
     }
 
-    public boolean isOptimizeStatusTargets()
+    public boolean isScanTargetOptimizationEnabled()
     {
-        return m_optimizeStatusTargets;
+        return m_scanTargetOptimizationEnabled;
     }
 
-    public void setOptimizeStatusTargets( boolean value )
+    public void setScanTargetOptimizationEnabled( boolean value )
     {
-        m_optimizeStatusTargets = value;
+        m_scanTargetOptimizationEnabled = value;
+    }
+
+    public boolean isExtraLoggingEnabled()
+    {
+        return m_extraLoggingEnabled;
+    }
+
+    public void setExtraLoggingEnabled( boolean value )
+    {
+        m_extraLoggingEnabled = value;
     }
 }

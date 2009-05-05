@@ -2,6 +2,8 @@
 package org.emergent.bzr4j.utils;
 
 import java.io.File;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -165,5 +167,16 @@ public class StringUtil
             buf.append(String.valueOf(a[i]));
         }
         return buf.toString();
+    }
+
+    public static String throwableStackToString( Throwable e )
+    {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace( pw );
+        pw.flush();
+        pw.close();
+        String retval = sw.getBuffer().toString();
+        return retval;
     }
 }

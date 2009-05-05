@@ -13,7 +13,6 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.CurrentContentRevision;
 import com.intellij.openapi.vcs.changes.VcsDirtyScope;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.StatusBar;
 import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarRevision;
@@ -24,7 +23,6 @@ import org.emergent.bzr4j.core.IBazaarStatus;
 import org.emergent.bzr4j.intellij.BzrContentRevision;
 import org.emergent.bzr4j.intellij.BzrVcs;
 import org.emergent.bzr4j.intellij.BzrVcsSettings;
-import org.emergent.bzr4j.intellij.utils.IJConstants;
 import org.emergent.bzr4j.intellij.utils.IJUtil;
 
 import java.io.File;
@@ -43,6 +41,10 @@ public class BzrChangeProvider implements ChangeProvider
 
     private BzrVcs m_bzr;
 
+    private boolean m_scanningEnabled = true;
+    
+    private boolean m_scanToggleDirty = false;
+
     public BzrChangeProvider( BzrVcs bzr )
     {
         m_bzr = bzr;
@@ -55,6 +57,9 @@ public class BzrChangeProvider implements ChangeProvider
     public void getChanges( VcsDirtyScope scope, ChangelistBuilder builder,
             ProgressIndicator indicator, ChangeListManagerGate gate ) throws VcsException
     {
+        if (!m_scanningEnabled)
+            return;
+
         Set<FilePath> files = getAllFilesInDirtyScope( scope );
         Map<FilePath, Set<FilePath>> roots = sortByRoots( files );
 
@@ -83,7 +88,7 @@ public class BzrChangeProvider implements ChangeProvider
                     continue;
 
                 String statusTarget = ".";
-                if (BzrVcsSettings.getInstance().isOptimizeStatusTargets())
+                if (!m_scanToggleDirty && BzrVcsSettings.getInstance().isScanTargetOptimizationEnabled())
                 {
                     String commonPrefix = IJUtil.getCommonParent( paths );
                     if (commonPrefix != null)
@@ -113,6 +118,9 @@ public class BzrChangeProvider implements ChangeProvider
                 {
                     processStatus( rootCtx, status );
                 }
+
+                // make sure we've done it at least once from the root since it changed.
+                m_scanToggleDirty = false;
             }
             catch ( BazaarException e )
             {
@@ -258,6 +266,17 @@ public class BzrChangeProvider implements ChangeProvider
             Change change = new Change( null, cRev, FileStatus.IGNORED );
             processChange( rootCtx, change, fpath );
         }
+    }
+
+    public boolean isScanningEnabled()
+    {
+        return m_scanningEnabled;
+    }
+
+    public void setScanningEnabled( boolean value )
+    {
+        m_scanningEnabled = value;
+        m_scanToggleDirty = true;
     }
 
     private class RootContext

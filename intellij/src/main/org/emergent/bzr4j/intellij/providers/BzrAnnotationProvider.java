@@ -19,7 +19,6 @@ import org.emergent.bzr4j.intellij.BzrRevisionNumber;
 import org.emergent.bzr4j.intellij.BzrVcs;
 import org.emergent.bzr4j.intellij.BzrVcsSettings;
 import org.emergent.bzr4j.intellij.utils.IJUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -101,7 +100,7 @@ public class BzrAnnotationProvider implements AnnotationProvider
                 {
                     retval = annotation.getAuthor( lineNumber );
                     int atIdx = retval.indexOf( '@' );
-                    if (atIdx > 0 && BzrVcsSettings.getInstance().isTrimAnnotations())
+                    if (atIdx > 0 && BzrVcsSettings.getInstance().isAnnotationTrimmingEnabled())
                     {
                         retval = retval.substring( 0, atIdx );
                     }
