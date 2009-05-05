@@ -18,7 +18,7 @@ public class BzrVcsConfigurable implements Configurable
 {
     private final BzrVcsSettings settings;
 
-    private BazaarConfigPanel panel;
+    private BzrConfigurationPanel panel;
 
     private Project project;
 
@@ -49,7 +49,7 @@ public class BzrVcsConfigurable implements Configurable
 
     public JComponent createComponent()
     {
-        panel = new BazaarConfigPanel( project );
+        panel = new BzrConfigurationPanel( project );
         panel.load( settings );
         return panel.getPanel();
     }
