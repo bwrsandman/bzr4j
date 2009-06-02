@@ -24,6 +24,7 @@ import java.util.List;
  * Set&lt;IBazaarLogMessage&gt;
  *
  * @author Guillermo Gonzalez
+ * @author Phan Minh Thang
  */
 public class XMLLogParser extends XMLParser
 {
@@ -96,10 +97,14 @@ public class XMLLogParser extends XMLParser
             {
                 if ( eventType == XmlPullParser.START_TAG && LOG.equals( parser.getName() ) )
                 {
-                    IBazaarLogMessage log = parseLog();
+                    CommandLineLogMessage log = parseLog();
                     if ( log != null )
                     {
                         logs.add( log );
+                        if (log.getMerged().size() > 0)
+                        {
+                            logs.addAll( log.getMerged() );
+                        }
                     }
                 }
                 eventType = parser.next();

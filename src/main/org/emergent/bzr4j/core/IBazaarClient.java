@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * @author Guillermo Gonzalez
- *
+ * @author Phan Minh Thang
  */
 public interface IBazaarClient
 {
@@ -51,6 +51,15 @@ public interface IBazaarClient
      */
     public void branch( BranchLocation fromLocation, File toLocation, IBazaarRevisionSpec revision,
             Option... options ) throws BazaarException;
+
+    /**
+     * Execute the bugs command.
+     * @param location The location of the branch.
+     * @param options Command options.
+     * @return The command output.
+     * @throws BazaarException If a problem occurs.
+     */
+    public List<String> bugs( BranchLocation location, Option... options ) throws BazaarException;
 
     /**
      * Convert the current branch into a checkout of the supplied {@link BranchLocation}.

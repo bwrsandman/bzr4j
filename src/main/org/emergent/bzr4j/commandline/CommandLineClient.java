@@ -37,6 +37,7 @@ import org.emergent.bzr4j.commandline.commands.UnCommit;
 import org.emergent.bzr4j.commandline.commands.Unknowns;
 import org.emergent.bzr4j.commandline.commands.Update;
 import org.emergent.bzr4j.commandline.commands.VersionInfo;
+import org.emergent.bzr4j.commandline.commands.Bugs;
 import org.emergent.bzr4j.commandline.commands.options.KeywordOption;
 import org.emergent.bzr4j.commandline.commands.options.Option;
 import org.emergent.bzr4j.commandline.internal.Command;
@@ -86,6 +87,7 @@ import java.util.concurrent.Future;
  * </p>
  *
  * @author Guillermo Gonzalez
+ * @author Phan Minh Thang
  *
  */
 public class CommandLineClient extends BazaarClient
@@ -131,6 +133,24 @@ public class CommandLineClient extends BazaarClient
             cmd.setOption( option );
         }
         run( cmd );
+    }
+
+    /** {@inheritDoc} */
+    public List<String> bugs( BranchLocation location, final Option... options ) throws BazaarException
+    {
+        final Bugs cmd = new Bugs( m_workDir, location );
+        for ( Option option : options )
+        {
+            cmd.setOption( option );
+        }
+        run( cmd );
+
+        if( !"".equals(cmd.getStandardOutput().trim() ) )
+        {
+            return Arrays.asList( cmd.getStandardOutput().split( "\r\n" ) );
+        }
+
+        return new ArrayList<String>();
     }
 
     public InputStream cat( final File file, final IBazaarRevisionSpec revision,
