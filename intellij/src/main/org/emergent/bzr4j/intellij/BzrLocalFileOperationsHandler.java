@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.LocalFileOperationsHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
+import com.intellij.util.ThrowableConsumer;
 import org.emergent.bzr4j.commandline.commands.options.Option;
 import org.emergent.bzr4j.commandline.syntax.IAddOptions;
 import org.emergent.bzr4j.commandline.syntax.IMoveOptions;
@@ -374,6 +375,11 @@ public class BzrLocalFileOperationsHandler implements LocalFileOperationsHandler
     }
 
     public void undoTransparentActionFinished()
+    {
+    }
+
+    @Override
+    public void afterDone( ThrowableConsumer<LocalFileOperationsHandler, IOException> invoker )
     {
     }
 

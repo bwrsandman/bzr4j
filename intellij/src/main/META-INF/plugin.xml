@@ -10,8 +10,10 @@
 Integration of <a href="http://bazaar-vcs.org/">Bazaar VCS</a> for IntelliJ IDEA.
 	]]></description>
     <change-notes><![CDATA[
-@BZR4INTELLIJ_CHANGENOTES@
-	]]></change-notes>
+            <ul>
+            <li>Updated for IDEA 9.0M1</li>
+            </ul>
+    ]]></change-notes>
 
     <application-components>
         <component>

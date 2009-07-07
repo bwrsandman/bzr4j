@@ -9,6 +9,7 @@ import com.intellij.openapi.vcs.history.VcsFileRevision;
 import com.intellij.openapi.vcs.history.VcsHistoryProvider;
 import com.intellij.openapi.vcs.history.VcsHistorySession;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import com.intellij.openapi.vcs.history.VcsDependentHistoryComponents;
 import com.intellij.util.ui.ColumnInfo;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarRevision;
@@ -20,6 +21,7 @@ import org.emergent.bzr4j.intellij.utils.IJUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,5 +113,12 @@ public class BzrHistoryProvider implements VcsHistoryProvider
     public boolean supportsHistoryForDirectories()
     {
         return false;
+    }
+
+    @Override
+    public VcsDependentHistoryComponents getUICustomization( VcsHistorySession session,
+            JComponent forShortcutRegistration )
+    {
+        return null;
     }
 }
