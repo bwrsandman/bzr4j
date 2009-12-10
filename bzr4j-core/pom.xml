@@ -1,0 +1,140 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.emergent.bzr4j</groupId>
+  <artifactId>bzr4j-core</artifactId>
+  <version>2.0.0</version>
+  <packaging>jar</packaging>
+  <name>Bzr4J Library</name>
+  <url>http://code.google.com/p/bzr4j/</url>
+
+  <properties>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>internal-releases</id>
+      <name>Internal Releases</name>
+      <url>${internal.release.repo.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>internal-snapshots</id>
+      <name>Internal Snapshots</name>
+      <url>${internal.snapshot.repo.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+  
+  <dependencies>
+
+    <dependency>
+      <groupId>net.sf.kxml</groupId>
+      <artifactId>kxml2</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
+<!--
+    <dependency>
+      <groupId>org.codehaus.woodstox</groupId>
+      <artifactId>woodstox-core-asl</artifactId>
+      <version>4.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+-->
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <classifier>jdk15</classifier>
+      <version>5.8</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-idea-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <jdkLevel>1.5</jdkLevel>
+          <jdkName>1.5</jdkName>
+          <exclude>target</exclude>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+    </plugins>
+    <finalName>${project.artifactId}</finalName>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <breakiterator>true</breakiterator>
+          <maxmemory>512m</maxmemory>
+          <source>1.5</source>
+          <use>true</use>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Emergent.org</name>
+    <url>http://www.emergent.org/</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>plw</id>
+      <name>Patrick Woodworth</name>
+      <email>patrick@woodworth.org</email>
+      <timezone>-8</timezone>
+    </developer>
+  </developers>
+
+</project>

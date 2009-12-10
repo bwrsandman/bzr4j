@@ -1,0 +1,20 @@
+
+
+//////////////////// Other Useful Stuff //////////////////////
+
+mvn help:active-profiles
+mvn idea:idea -Denablemod.crypto-misc=true
+
+
+mvn deploy:deploy-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk14 -Dversion=143 -Dpackaging=jar -Dfile=E:\working\1.5\buildsys\trunk\ivyrepos\binpkgs\bouncycastle\bcprov\v1.43\bcprov-jdk14.jar -Durl=file:///E:/working/1.5/buildsys/trunk/mvnrepos/binpkgs -DrepositoryId=binpkgs
+
+mvn deploy:deploy-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk14 -Dversion=143 -Dpackaging=jar -Dfile=/home/plw/ws/buildsys/ivyrepos/binpkgs/bouncycastle/bcprov/v1.43/bcprov-jdk14.jar -Durl=file:///home/plw/ws/buildsys/mvnrepos/binpkgs -DrepositoryId=binpkgs
+
+
+/////////////////// DONT USE THESE (they'll do commits to the bzr repo behind your back without confirming!) ////////
+
+rem mvn --batch-mode -DreleaseVersion=1.0 -DdevelopmentVersion=1.1 release:clean release:prepare -DdryRun=true
+rem mvn --batch-mode -DreleaseVersion=1.0 -DdevelopmentVersion=1.1 release:perform
+rem bzr revert && bzr clean-tree --force && bzr tag --delete cypher-1.0
+
+rem mvn --batch-mode release:clean release:prepare -DdryRun=true

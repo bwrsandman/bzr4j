@@ -1,0 +1,39 @@
+
+To build:
+
+  mvn clean install
+
+To generate intellij project files:
+
+  mvn idea:idea
+
+To stage the site:
+
+  mvn site:stage -DstagingDirectory=C:\mvnsite
+
+To auto install generated plugins you can create a ~/.m2/settings.xml with the following contents
+
+    <settings
+      xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          http://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <profiles>
+        <profile>
+          <id>bzr4jprops</id>
+          <activation>
+            <activeByDefault>true</activeByDefault>
+          </activation>
+          <properties>
+            <idea.plugins.dir>${user.home}/.IntelliJIdea90/config/plugins</idea.plugins.dir>
+            <teamcity.plugins.dir>${user.home}/.BuildServer/plugins</teamcity.plugins.dir>
+          </properties>
+        </profile>
+      </profiles>
+    </settings>
+
+Also note the intellij project expects you to have defined within your IntelliJ
+installation a special kind of JDK named "IDEA_SDK".  You can create this
+special JDK by going to the same location where you would define your other
+locally installed JDKs but then select the "IntelliJ IDEA SDK" option instead
+of the standard "JSDK" when given the choice.

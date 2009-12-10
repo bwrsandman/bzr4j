@@ -1,0 +1,144 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.emergent.bzr4j</groupId>
+  <artifactId>bzr4j</artifactId>
+  <version>2.0.0</version>
+  <packaging>pom</packaging>
+  <name>Bzr4J Aggregator Project</name>
+  <url>http://code.google.com/p/bzr4j/</url>
+
+  <modules>
+    <module>bzr4j-core</module>
+    <module>bzr4intellij</module>
+    <module>bzr4teamcity</module>
+  </modules>
+
+  <scm>
+    <connection>scm:bazaar:bzr://bzr4j.bzr.sourceforge.net/bzrroot/bzr4j/trunk</connection>
+    <developerConnection>scm:bazaar:bzr+ssh://bzr4j.bzr.sourceforge.net/bzrroot/bzr4j/trunk</developerConnection>
+  </scm>
+
+<!--
+  <repositories>
+    <repository>
+      <id>local-release-repo</id>
+      <name>Local Release Repo</name>
+      <url>file://${user.home}/.m2/distrepos/releases</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>local-release-pluginrepo</id>
+      <name>Local Plugin Releases Repo</name>
+      <url>file://${user.home}/.m2/distrepos/plugin-releases</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+-->
+
+  <distributionManagement>
+    <repository>
+      <id>internal-releases</id>
+      <name>Internal Releases</name>
+      <url>${internal.release.repo.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>internal-snapshots</id>
+      <name>Internal Snapshots</name>
+      <url>${internal.snapshot.repo.url}</url>
+    </snapshotRepository>
+<!--
+    <repository>
+      <id>local-release-repo</id>
+      <name>Local Release Repo</name>
+      <url>file://${user.home}/.m2/distrepos/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>local-snapshot-repo</id>
+      <name>Local Snapshot Repo</name>
+      <url>file://${user.home}/.m2/distrepos/snapshots</url>
+    </snapshotRepository>
+    <site>
+      <id>bzr4j.website</id>
+      <name>Bzr4J Website</name>
+      <url>scp://foo.emergent.org/home/projects/bzr4j/public_html/</url>
+    </site>
+-->
+  </distributionManagement>
+
+  <build>
+    <plugins>
+<!--
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-9</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-bazaar</artifactId>
+            <version>1.2-em1</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <skipAssembly>true</skipAssembly>
+        </configuration>
+      </plugin>
+-->
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+       </configuration>
+     </plugin>
+      <plugin>
+        <artifactId>maven-idea-plugin</artifactId>
+        <configuration>
+          <jdkLevel>1.5</jdkLevel>
+          <jdkName>1.5</jdkName>
+          <exclude>target</exclude>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

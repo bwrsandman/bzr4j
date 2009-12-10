@@ -1,0 +1,122 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin url="http://code.google.com/p/bzr4j/">
+  <name>Bzr4IntelliJ</name>
+  <id>bzr4intellij</id>
+  <description>Provides integration with Bazaar version control system</description>
+  <version>${project.version}</version>
+  <category>VCS Integration</category>
+  <vendor url="http://emergent.org/" logo="/images/bzr.png" email="bzr4j@emergent.org">Emergent.org</vendor>
+  <idea-version since-build="91.13"/>
+
+  <depends>com.intellij.modules.vcs</depends>
+
+  <actions>
+    <group id="BzrGroup" text="_Bazaar" popup="true" icon="/images/bzr.png" class="org.emergent.bzr4j.intellij.action.BzrGroup">
+
+      <reference id="CheckinFiles"/>
+      <!-- <reference id="CheckinProject"/> -->
+      <!--<reference id="UpdateFiles"/>-->
+      <reference id="IntegrateFiles"/>
+      <reference id="Annotate"/>
+      <reference id="Compare.SameVersion"/>
+      <!--  text="Compare with BASE revision" -->
+      <!--<reference id="Compare.LastVersion" text="Compare with revision at HEAD"/>-->
+      <reference id="Compare.Selected"/>
+      <reference id="Vcs.ShowTabbedFileHistory"/>
+      <reference id="Vcs.ShowHistoryForBlock"/>
+      <reference id="CheckStatusForFiles"/>
+      <reference id="ChangesView.Rollback"/>
+
+      <separator/>
+
+      <action id="Bazaar.Add" class="org.emergent.bzr4j.intellij.action.AddAction" text="Add"/>
+      <action id="Bazaar.Update" class="org.emergent.bzr4j.intellij.action.UpdateAction" text="Update"/>
+      <action id="Bazaar.Resolve" class="org.emergent.bzr4j.intellij.action.ResolveAction" text="Resolve Conflict"/>
+      <!--<action id="Bazaar.MarkResolved" class="org.jetbrains.idea.svn.actions.MarkResolvedAction"/>-->
+
+      <action id="Bazaar.Foo" class="org.emergent.bzr4j.intellij.action.FooAction" text="Foo"/>
+
+      <separator/>
+
+      <add-to-group group-id="VcsGroup" anchor="last"/>
+      <add-to-group group-id="VcsGlobalGroup" anchor="last"/>
+
+    </group>
+    <action id="Bazaar.ScanToggle" class="org.emergent.bzr4j.intellij.action.ToggleScanningAction"
+            text="Toggle Change Scanning"/>
+  </actions>
+
+  <application-components>
+    <component>
+      <implementation-class>org.emergent.bzr4j.intellij.HgGlobalSettings</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.emergent.bzr4j.intellij.HgIdeConfigurable</implementation-class>
+    </component>
+  </application-components>
+  <resource-bundle>org.emergent.bzr4j.intellij.HgVcsMessages</resource-bundle>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!--
+        <errorHandler implementation="org.emergent.bzr4j.intellij.utils.BzrErrorReportSubmitter"/>
+        <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+    -->
+
+    <vcs name="Bazaar" vcsClass="org.emergent.bzr4j.intellij.BzrVcs"/>
+
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrAnnotationProvider"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrAnnotationProvider"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrDiffProvider"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrDiffProvider"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrCheckinEnvironment"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrCheckinEnvironment"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrChangeProvider"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrChangeProvider"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrHistoryProvider"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrHistoryProvider"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrRollbackEnvironment"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrRollbackEnvironment"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.providers.BzrCommittedChangesProvider"
+        serviceImplementation="org.emergent.bzr4j.intellij.providers.BzrCommittedChangesProvider"/>
+    <projectService
+        serviceInterface="org.emergent.bzr4j.intellij.config.BzrVcsSettings"
+        serviceImplementation="org.emergent.bzr4j.intellij.config.BzrVcsSettings"/>
+
+    <ComponentRoamingType component="BzrVcsApplicationSettings" type="DISABLED"/>
+
+
+    <!--
+        <checkoutProvider implementation="git4idea.checkout.GitCheckoutProvider"/>
+
+        <projectService
+            serviceInterface="git4idea.config.GitVcsSettings"
+            serviceImplementation="git4idea.config.GitVcsSettings"/>
+        <applicationService
+            serviceInterface="org.jetbrains.git4idea.ssh.GitSSHService"
+            serviceImplementation="org.jetbrains.git4idea.ssh.GitSSHService"/>
+        <applicationService
+            serviceInterface="git4idea.rebase.GitRebaseEditorService"
+            serviceImplementation="git4idea.rebase.GitRebaseEditorService"/>
+        <ComponentRoamingType component="Git.Settings" type="DISABLED"/>
+        <fileTypeFactory implementation="git4idea.vfs.GitFileTypeFactory"/>
+    -->
+
+  </extensions>
+
+  <change-notes>
+  <![CDATA[
+  <h3>Changes since 1.1.9</h3>
+  <ul>
+    <li>[feature] Supports IntelliJ IDEA 9.0
+  </ul>
+  ]]>
+  </change-notes>
+
+</idea-plugin>

@@ -1,0 +1,84 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin>
+  <id>hg4idea</id>
+  <name>hg4idea</name>
+  <description>
+  <![CDATA[
+  IntelliJ IDEA plugin for Mercurial integration.
+  <p>
+  Mercurial is a fast, lightweight Source Control Management system designed for efficient handling of very large distributed projects.
+  ]]>
+  </description>
+  <category>VCS Integration</category>
+  <version>0.6.12-9EAP</version>
+  <vendor email="victor.iacoban@gmail.com" logo="/images/bzr.png" url="http://www.bitbucket.org/viacoban/hg4idea">Victor Iacoban</vendor>
+  <idea-version since-build="92.105"/>
+  <extensions defaultExtensionNs="com.intellij">
+    <vcs name="hg4idea" vcsClass="org.emergent.bzr4j.intellij.HgVcs"/>
+  </extensions>
+  <actions>
+    <group id="hg4idea.file.menu" popup="true" icon="/images/bzr.png" class="org.emergent.bzr4j.intellij.action.HgMercurialMenu">
+      <action id="hg4idea.resolve.mark" class="org.emergent.bzr4j.intellij.action.HgMarkResolved"/>
+      <separator/>
+      <reference id="Annotate"/>
+      <reference id="Vcs.ShowTabbedFileHistory"/>
+      <reference id="Vcs.ShowHistoryForBlock"/>
+      <add-to-group group-id="VcsGroup" anchor="last"/>
+    </group>
+    <group id="hg4idea.global.submenu" popup="true" icon="/images/bzr.png" class="org.emergent.bzr4j.intellij.action.HgMercurialMenu">
+      <action id="hg4idea.run.conflict.resolver" class="org.emergent.bzr4j.intellij.action.HgRunConflictResolverAction"/>
+      <action id="hg4idea.mq.rebase" class="org.emergent.bzr4j.intellij.action.HgMqRebaseAction"/>
+      <separator/>
+      <action id="hg4idea.tag" class="org.emergent.bzr4j.intellij.action.HgCreateTagAction"/>
+      <action id="hg4idea.switch" class="org.emergent.bzr4j.intellij.action.HgSwitchWorkingDirectoryAction"/>
+      <add-to-group group-id="VcsGlobalGroup" anchor="last"/>
+    </group>
+    <group id="hg4idea.global.menu" popup="false">
+      <action id="hg4idea.pull" class="org.emergent.bzr4j.intellij.action.HgPullAction"/>
+      <action id="hg4idea.push" class="org.emergent.bzr4j.intellij.action.HgPushAction"/>
+      <add-to-group group-id="VcsGlobalGroup" relative-to-action="Vcs.IntegrateProject" anchor="after"/>
+    </group>
+  </actions>
+  <application-components>
+    <component>
+      <implementation-class>org.emergent.bzr4j.intellij.HgGlobalSettings</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.emergent.bzr4j.intellij.HgIdeConfigurable</implementation-class>
+    </component>
+  </application-components>
+  <project-components>
+    <component>
+      <implementation-class>org.emergent.bzr4j.intellij.command.HgCommandService</implementation-class>
+    </component>
+    <component>
+      <implementation-class>org.emergent.bzr4j.intellij.HgProjectSettings</implementation-class>
+    </component>
+  </project-components>
+  <resource-bundle>org.emergent.bzr4j.intellij.HgVcsMessages</resource-bundle>
+  <change-notes>
+  <![CDATA[
+  <h3>Changes since 0.6.0</h3>
+  <ul>
+    <li>[feature] Folders under mercurial control are auto-detected on project creation
+    <li>[feature] New status notifications for incoming and outgoing changesets
+    <li>[enhancement] User was required to enter the hg executable path for every project
+    <li>[enhancement] Added support for multi-line commit messages
+  </ul>
+  <h3>Changes since 0.5</h3>
+  <ul>
+    <li>[feature] Unresolved files show in red
+    <li>[feature] Added new action to resolve all conflicts, will open the merge dialog
+    <li>[feature] Added mercurial context action to mark a file as resolved
+    <li>[feature] New Mercurial menu action to rebase MQ patches
+    <li>[enhancement] When file is moved/renamed, it has a status of modified
+    <li>[enhancement] Added tooltip to mercurial status component
+    <li>[bugfix] exception clicking annotate in history view
+    <li>[bugfix] NPE on project integration
+    <li>Re-organized mercurial menu
+    <li>Performance improvements
+  </ul>
+  For full changelog visit <a href="http://bitbucket.org/viacoban/hg4idea/wiki/Changelog">wiki changelog page</a>.
+  ]]>
+  </change-notes>
+</idea-plugin>
