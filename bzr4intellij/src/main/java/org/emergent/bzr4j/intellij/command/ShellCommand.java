@@ -24,10 +24,16 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class ShellCommand {
 
   private static final Logger LOG = Logger.getInstance(ShellCommand.class.getName());
+
+  private static final ConcurrentMap<String, Lock> sm_workDirLocks = new ConcurrentHashMap<String, Lock>();
 
   private static final int BUFFER_SIZE = 1024;
 
@@ -55,25 +61,26 @@ public final class ShellCommand {
     StringWriter err = new StringWriter();
     ShellCommandResult result = new ShellCommandResult(out, err);
     Process process = null;
+    String lockDir = "."; // todo this should be the bzr root, (not the cwd represented by dir)
+    lockWorkDir(lockDir);
     try {
       ProcessBuilder processBuilder = new ProcessBuilder(commandLine);
       if (dir != null) {
         processBuilder = processBuilder.directory(dir);
       }
       process = processBuilder.start();
-      Thread outReaderThread = startReader(
-          new InputStreamReader(process.getInputStream(), m_charset), out
-      );
-      Thread errReaderThread = startReader(
-          new InputStreamReader(process.getErrorStream()), err
-      );
+      Thread outReaderThread = startReader(new InputStreamReader(process.getInputStream(), m_charset), out);
+      Thread errReaderThread = startReader(new InputStreamReader(process.getErrorStream()), err);
+      IOUtils.closeQuietly(process.getOutputStream());
       int exitValue = process.waitFor();
       result.setExitValue(exitValue);
       outReaderThread.join();
       errReaderThread.join();
-      if ((isExitValueValidationEnabled() && exitValue != 0) || (isStderrValidationEnabled() && !result.isStdErrEmpty())) {
-        throw new ShellCommandException(BzrVcsMessages.message("bzr4intellij.exec.validation.error",
-            exitValue, result.getRawStdErr(), StringUtil.toString(commandLine,"\n","",""), dir));
+      if ((isExitValueValidationEnabled() && exitValue != 0)
+          || (isStderrValidationEnabled() && !result.isStdErrEmpty())) {
+        throw new ShellCommandException(
+            BzrVcsMessages.message("bzr4intellij.exec.validation.error",
+                exitValue, result.getRawStdErr(), StringUtil.toString(commandLine,"\n","",""), dir));
       }
       return result;
     } catch (IOException e) {
@@ -86,6 +93,7 @@ public final class ShellCommand {
           process.destroy();
         } catch (Exception ignored) {
         }
+      unlockWorkDir(lockDir);
     }
   }
 
@@ -132,5 +140,28 @@ public final class ShellCommand {
 
   public void setExitValueValidationEnabled(boolean exitValueValidationEnabled) {
     m_exitValueValidationEnabled = exitValueValidationEnabled;
+  }
+
+  protected final void lockWorkDir(String path) {
+//    LOG.debug(String.format("Locking   \"%s\"", path));
+    getWorkDirLock(path).lock();
+  }
+
+  protected final void unlockWorkDir(String path) {
+//    LOG.debug(String.format("Unlocking \"%s\"", path));
+    getWorkDirLock(path).unlock();
+  }
+
+  private static Lock getWorkDirLock(String path) {
+//    String path = workDir != null ? workDir.getAbsolutePath() : ".";
+    Lock lock = sm_workDirLocks.get(path);
+    if (lock == null) {
+      lock = new ReentrantLock();
+      Lock curLock = sm_workDirLocks.putIfAbsent(path, lock);
+      if (curLock != null) {
+        lock = curLock;
+      }
+    }
+    return lock;
   }
 }
