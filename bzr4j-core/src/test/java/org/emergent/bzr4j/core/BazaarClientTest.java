@@ -6,25 +6,14 @@ package org.emergent.bzr4j.core;
 import org.emergent.bzr4j.commandline.CommandLineClient;
 import org.emergent.bzr4j.commandline.syntax.IInfoOptions;
 import org.emergent.bzr4j.commandline.syntax.ILogOptions;
-import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BranchLocation;
-import org.emergent.bzr4j.core.BazaarRevision;
-import org.emergent.bzr4j.core.BazaarStatusKind;
-import org.emergent.bzr4j.core.IBazaarAnnotation;
-import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.IBazaarInfo;
-import org.emergent.bzr4j.core.BazaarTreeStatus;
-import org.emergent.bzr4j.core.BazaarVersionInfo;
-import org.emergent.bzr4j.core.IBazaarItemInfo;
-import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.testUtils.BazaarTest;
 import org.emergent.bzr4j.testUtils.Environment;
 import org.emergent.bzr4j.testUtils.ExpectedWorkingTree;
 import org.emergent.bzr4j.testUtils.FileUtils;
 import static org.emergent.bzr4j.testUtils.FileUtils.addContentToFile;
 import static org.emergent.bzr4j.testUtils.FileUtils.assertWTEqual;
-import org.emergent.bzr4j.utils.BzrUtil;
-import static org.emergent.bzr4j.utils.BzrUtil.unixFilePath;
+import org.emergent.bzr4j.utils.BzrCoreUtil;
+import static org.emergent.bzr4j.utils.BzrCoreUtil.unixFilePath;
 import org.emergent.bzr4j.utils.StringUtil;
 import org.testng.annotations.Test;
 
@@ -716,7 +705,7 @@ public class BazaarClientTest extends BazaarTest
         ExpectedWorkingTree tree = testEnv.getExpectedWorkingTree();
         for ( IBazaarItemInfo item : items )
         {
-            File file = BzrUtil.getRelativeTo( wtPath, new File( item.getPath() ) );
+            File file = BzrCoreUtil.getRelativeTo( wtPath, new File( item.getPath() ) );
             String path = unixFilePath( file );
             org.testng.Assert.assertNotNull( tree.getItem( path ), path );
             org.testng.Assert.assertFalse( "".equals( tree.getItem( path ).getPath().trim() ) );

@@ -8,7 +8,7 @@ import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.debug.LogUtil;
 import org.emergent.bzr4j.utils.StringUtil;
 import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParser;
@@ -64,7 +64,7 @@ public class XMLStatusParser extends XMLParser
 
     private final static String NEWKIND = "newkind";
 
-    private final static String OLDPATH = "newkind";
+    private final static String OLDPATH = "oldpath";
 
     private final static String FID = "fid";
 

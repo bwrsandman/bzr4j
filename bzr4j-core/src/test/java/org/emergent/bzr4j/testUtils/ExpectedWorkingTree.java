@@ -1,5 +1,10 @@
 package org.emergent.bzr4j.testUtils;
 
+import junit.framework.Assert;
+import org.emergent.bzr4j.core.BazaarRevision;
+import org.emergent.bzr4j.core.BazaarStatusKind;
+import org.emergent.bzr4j.core.IBazaarStatus;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,12 +14,6 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import junit.framework.Assert;
-
-import org.emergent.bzr4j.core.BazaarRevision;
-import org.emergent.bzr4j.core.BazaarStatusKind;
-import org.emergent.bzr4j.core.IBazaarStatus;
 
 /**
  * This class describe the expected state of the working copy

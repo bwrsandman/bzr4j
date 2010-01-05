@@ -16,7 +16,7 @@
 package org.emergent.bzr4j.core;
 
 import org.emergent.bzr4j.commandline.internal.ExecResult;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.debug.LogUtil;
 
 /**
  * @author Patrick Woodworth

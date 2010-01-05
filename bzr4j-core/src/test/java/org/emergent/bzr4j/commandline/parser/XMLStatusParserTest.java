@@ -3,16 +3,16 @@
  */
 package org.emergent.bzr4j.commandline.parser;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-
+import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.testUtils.ParserTest;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Guillermo Gonzalez

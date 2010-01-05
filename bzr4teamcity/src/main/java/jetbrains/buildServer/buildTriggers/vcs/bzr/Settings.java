@@ -15,128 +15,110 @@
  */
 package jetbrains.buildServer.buildTriggers.vcs.bzr;
 
-import org.emergent.bzr4j.utils.StringUtil;
-import org.emergent.bzr4j.utils.BzrUtil;
+import jetbrains.buildServer.util.Hash;
+import jetbrains.buildServer.vcs.VcsRoot;
 import org.emergent.bzr4j.utils.BzrConstants;
+import org.emergent.bzr4j.utils.BzrCoreUtil;
+import org.emergent.bzr4j.utils.StringUtil;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import jetbrains.buildServer.vcs.VcsRoot;
-import jetbrains.buildServer.util.Hash;
-
 /**
  * Represents Bazaar repository settings
  */
-public class Settings
-{
-    private static final String DEFAULT_BRANCH_NAME = "default";
+public class Settings {
 
-    private String myRepository;
+  private static final String DEFAULT_BRANCH_NAME = "default";
 
-    private String myBzrCommandPath;
+  private String myRepository;
 
-    private File myWorkingDir;
+  private String myBzrCommandPath;
 
-    private File myWorkFolderParentDir;
+  private File myWorkingDir;
 
-    private String myUsername;
+  private File myWorkFolderParentDir;
 
-    private String myPassword;
+  private String myUsername;
 
-    private String myBranchName;
+  private String myPassword;
 
-    public Settings( File workFolderParentDir, VcsRoot vcsRoot )
-    {
-        myWorkFolderParentDir = workFolderParentDir;
-        setRepository( vcsRoot.getProperty( TCConstants.REPOSITORY_PROP ) );
-        setBzrCommandPath( vcsRoot.getProperty( TCConstants.BZR_COMMAND_PATH_PROP ) );
-        setBranchName( vcsRoot.getProperty( TCConstants.BRANCH_NAME_PROP ) );
-        setUsername( vcsRoot.getProperty( TCConstants.USERNAME ) );
-        setPassword( vcsRoot.getProperty( TCConstants.PASSWORD ) );
-//        setRepository( vcsRoot.getProperty( Constants.REPOSITORY_PROP ) );
-//        setBzrCommandPath( vcsRoot.getProperty( Constants.BZR_COMMAND_PATH_PROP ) );
-//        myBranchName = vcsRoot.getProperty( Constants.BRANCH_NAME_PROP );
-//
-//        myUsername = vcsRoot.getProperty( Constants.USERNAME );
-//        myPassword = vcsRoot.getProperty( Constants.PASSWORD );
-    }
+  private String myBranchName;
 
+  public Settings(File workFolderParentDir, VcsRoot vcsRoot) {
+    myWorkFolderParentDir = workFolderParentDir;
+    setRepository(vcsRoot.getProperty(TCConstants.REPOSITORY_PROP));
+    setBzrCommandPath(vcsRoot.getProperty(TCConstants.BZR_COMMAND_PATH_PROP));
+    setBranchName(vcsRoot.getProperty(TCConstants.BRANCH_NAME_PROP));
+    setUsername(vcsRoot.getProperty(TCConstants.USERNAME));
+    setPassword(vcsRoot.getProperty(TCConstants.PASSWORD));
+  }
 
-    public void setBranchName( String branchName )
-    {
-        myBranchName = branchName;
-    }
+  public void setBranchName(String branchName) {
+    myBranchName = branchName;
+  }
 
-    public void setUsername( String username )
-    {
-        myUsername = username;
-    }
+  public void setUsername(String username) {
+    myUsername = username;
+  }
 
-    public void setPassword( String password )
-    {
-        myPassword = password;
-    }
+  public void setPassword(String password) {
+    myPassword = password;
+  }
 
-    public void setRepository( final String repository )
-    {
-        myRepository = repository;
-    }
+  public void setRepository(final String repository) {
+    myRepository = repository;
+  }
 
-    /**
-     * Returns repository path
-     * @return repository path
-     */
-    public String getRepository()
-    {
-        return myRepository;
-    }
+  /**
+   * Returns repository path
+   * @return repository path
+   */
+  public String getRepository() {
+    return myRepository;
+  }
 
-    /**
-     * Returns name of the branch to use (returns 'default' if no branch specified)
-     * @return see above
-     */
-    public String getBranchName()
-    {
-        return StringUtil.isEmpty( myBranchName ) ? DEFAULT_BRANCH_NAME : myBranchName;
-    }
+  /**
+   * Returns name of the branch to use (returns 'default' if no branch specified)
+   * @return see above
+   */
+  public String getBranchName() {
+    return StringUtil.isEmpty(myBranchName) ? DEFAULT_BRANCH_NAME : myBranchName;
+  }
 
-    /**
-     * Returns true if current branch is default branch
-     * @return see above
-     */
-    public boolean isDefaultBranch()
-    {
-        return getBranchName().equals( DEFAULT_BRANCH_NAME );
-    }
+  /**
+   * Returns true if current branch is default branch
+   * @return see above
+   */
+  public boolean isDefaultBranch() {
+    return getBranchName().equals(DEFAULT_BRANCH_NAME);
+  }
 
-    /**
-     * Returns path to bzr command
-     * @return path to bzr command
-     */
-    public String getBzrCommandPath()
-    {
-        if ( BzrConstants.EXE_PATH != null)
-            return BzrConstants.EXE_PATH;
-        return myBzrCommandPath;
-    }
+  /**
+   * Returns path to bzr command
+   * @return path to bzr command
+   */
+  public String getBzrCommandPath() {
+    if (BzrConstants.EXE_PATH != null)
+      return BzrConstants.EXE_PATH;
+    return myBzrCommandPath;
+  }
 
-    private final static Set<String> AUTH_PROTOS = new HashSet<String>();
+  private final static Set<String> AUTH_PROTOS = new HashSet<String>();
 
-    static
-    {
-        AUTH_PROTOS.add( "http://" );
-        AUTH_PROTOS.add( "https://" );
-        AUTH_PROTOS.add( "ssh://" );
-    }
+  static {
+    AUTH_PROTOS.add("http://");
+    AUTH_PROTOS.add("https://");
+    AUTH_PROTOS.add("ssh://");
+  }
 
-    /**
-     * Returns URL to use for push command
-     * @return URL to use for push command
-     */
-    public String getPushUrl()
-    {
+  /**
+   * Returns URL to use for push command
+   * @return URL to use for push command
+   */
+  public String getPushUrl() {
+/*
         String cre = "";
         if ( !StringUtil.isEmpty( myUsername ) )
         {
@@ -155,61 +137,54 @@ public class Settings
                 return proto + cre + myRepository.substring( proto.length() );
             }
         }
+*/
 
-        return myRepository;
+    return myRepository;
+  }
+
+  public void setBzrCommandPath(final String bzrCommandPath) {
+    myBzrCommandPath = bzrCommandPath;
+  }
+
+  public void setWorkingDir(final File workingDir) {
+    myWorkingDir = BzrCoreUtil.getCanonicalFile(workingDir);
+  }
+
+  /**
+   * Returns directory where repository is supposed to be cloned, i.e. working directory of cloned repository
+   * @return repository working directory
+   */
+  public File getLocalRepositoryDir() {
+    if (myWorkingDir != null) {
+      return myWorkingDir;
     }
 
-    public void setBzrCommandPath( final String bzrCommandPath )
-    {
-        myBzrCommandPath = bzrCommandPath;
+    return getDefaultWorkDir(myWorkFolderParentDir, myRepository);
+  }
+
+  /**
+   * Returns true if current working directory contains copy of repository (contains .bzr directory)
+   * @return see above
+   */
+  public boolean hasCopyOfRepository() {
+    // need better way to check that repository copy is ok
+    return getLocalRepositoryDir().isDirectory() && new File(getLocalRepositoryDir(), ".bzr")
+        .isDirectory();
+  }
+
+  public static String DEFAULT_WORK_DIR_PREFIX = "bzr_";
+
+  private static File getDefaultWorkDir(File workFolderParentDir, String repPath) {
+    String workingDirname =
+        DEFAULT_WORK_DIR_PREFIX + String.valueOf(Hash.calc(normalize(repPath)));
+    return BzrCoreUtil.getCanonicalFile(new File(workFolderParentDir, workingDirname));
+  }
+
+  private static String normalize(final String path) {
+    String normalized = BzrCoreUtil.normalizeSeparator(path);
+    if (path.endsWith("/")) {
+      return normalized.substring(0, normalized.length() - 1);
     }
-
-    public void setWorkingDir( final File workingDir )
-    {
-        myWorkingDir = BzrUtil.getCanonicalFile( workingDir );
-    }
-
-    /**
-     * Returns directory where repository is supposed to be cloned, i.e. working directory of cloned repository
-     * @return repository working directory
-     */
-    public File getLocalRepositoryDir()
-    {
-        if ( myWorkingDir != null )
-        {
-            return myWorkingDir;
-        }
-
-        return getDefaultWorkDir( myWorkFolderParentDir, myRepository );
-    }
-
-    /**
-     * Returns true if current working directory contains copy of repository (contains .bzr directory)
-     * @return see above
-     */
-    public boolean hasCopyOfRepository()
-    {
-        // need better way to check that repository copy is ok
-        return getLocalRepositoryDir().isDirectory() && new File( getLocalRepositoryDir(), ".bzr" )
-                .isDirectory();
-    }
-
-    public static String DEFAULT_WORK_DIR_PREFIX = "bzr_";
-
-    private static File getDefaultWorkDir( File workFolderParentDir, String repPath )
-    {
-        String workingDirname =
-                DEFAULT_WORK_DIR_PREFIX + String.valueOf( Hash.calc( normalize( repPath ) ) );
-        return BzrUtil.getCanonicalFile( new File( workFolderParentDir, workingDirname ) );
-    }
-
-    private static String normalize( final String path )
-    {
-        String normalized = BzrUtil.normalizeSeparator( path );
-        if ( path.endsWith( "/" ) )
-        {
-            return normalized.substring( 0, normalized.length() - 1 );
-        }
-        return normalized;
-    }
+    return normalized;
+  }
 }

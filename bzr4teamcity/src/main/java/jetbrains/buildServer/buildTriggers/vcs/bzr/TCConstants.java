@@ -20,17 +20,17 @@ import jetbrains.buildServer.vcs.VcsRoot;
 /**
  * @author Patrick Woodworth
  */
-public class TCConstants
-{
-    public static final String VCS_NAME = "bzr";
+public class TCConstants {
 
-    public static final String REPOSITORY_PROP = "repositoryPath";
+  public static final String VCS_NAME = "bzr";
 
-    public static final String BRANCH_NAME_PROP = "branchName";
+  public static final String REPOSITORY_PROP = "repositoryPath";
 
-    public static final String BZR_COMMAND_PATH_PROP = "bzrCommandPath";
+  public static final String BRANCH_NAME_PROP = "branchName";
 
-    public static final String USERNAME = "username";
+  public static final String BZR_COMMAND_PATH_PROP = "bzrCommandPath";
 
-    public static final String PASSWORD = VcsRoot.SECURE_PROPERTY_PREFIX + "password";
+  public static final String USERNAME = "username";
+
+  public static final String PASSWORD = VcsRoot.SECURE_PROPERTY_PREFIX + "password";
 }

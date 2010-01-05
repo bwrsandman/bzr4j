@@ -2,12 +2,15 @@
 package org.emergent.bzr4j.utils;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -179,4 +182,24 @@ public class StringUtil
         String retval = sw.getBuffer().toString();
         return retval;
     }
+
+  public static <E> String toString(Collection<E> col) {
+    return toString(col, ", ", "[", "]");
+  }
+
+  public static <E> String toString(Collection<E> col, String sep, String prefix, String suffix) {
+    Iterator<E> i = col.iterator();
+    if (!i.hasNext())
+      return prefix + suffix;
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(prefix);
+    for (; ;) {
+      E e = i.next();
+      sb.append(e == col ? "(this Collection)" : e);
+      if (!i.hasNext())
+        return sb.append(suffix).toString();
+      sb.append(sep);
+    }
+  }
 }

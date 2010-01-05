@@ -6,7 +6,7 @@ package org.emergent.bzr4j.commandline;
 import org.emergent.bzr4j.core.BazaarStatus;
 import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import static org.emergent.bzr4j.utils.BzrUtil.unixFilePath;
+import static org.emergent.bzr4j.utils.BzrCoreUtil.unixFilePath;
 
 import java.io.File;
 

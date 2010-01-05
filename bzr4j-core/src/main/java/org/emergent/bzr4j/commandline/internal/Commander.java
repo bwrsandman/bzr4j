@@ -68,6 +68,12 @@ public abstract class Commander
         return retval.addOpts( m_stdArgs );
     }
 
+    public Cmd push()
+    {
+        Cmd retval = new Cmd( getDefaultWorkDir(), getBzrExePath(), "push" );
+        return retval.addOpts( m_stdArgs );
+    }
+
     public Cmd tag()
     {
         Cmd retval = new Cmd( getDefaultWorkDir(), getBzrExePath(), "tag" );

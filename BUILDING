@@ -32,7 +32,7 @@ To auto install generated plugins you can create a ~/.m2/settings.xml with the f
       </profiles>
     </settings>
 
-Also note the intellij project expects you to have defined within your IntelliJ
+Also note (conflicting change) the intellij project expects you to have defined within your IntelliJ
 installation a special kind of JDK named "IDEA_SDK".  You can create this
 special JDK by going to the same location where you would define your other
 locally installed JDKs but then select the "IntelliJ IDEA SDK" option instead

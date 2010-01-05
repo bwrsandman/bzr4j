@@ -3,9 +3,9 @@
  */
 package org.emergent.bzr4j.testUtils;
 
-import java.io.File;
-
 import org.emergent.bzr4j.core.IBazaarClient;
+
+import java.io.File;
 
 /**
  * @author Guillermo Gonzalez

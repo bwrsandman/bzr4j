@@ -3,13 +3,13 @@
  */
 package org.emergent.bzr4j.testUtils;
 
-import java.io.IOException;
-
-import org.emergent.bzr4j.core.IBazaarClient;
 import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IBazaarClient;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+
+import java.io.IOException;
 
 /**
  * @author Guillermo Gonzalez

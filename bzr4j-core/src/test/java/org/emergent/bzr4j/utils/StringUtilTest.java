@@ -3,11 +3,11 @@
  */
 package org.emergent.bzr4j.utils;
 
-import java.io.File;
-import java.net.URI;
-
 import org.emergent.bzr4j.core.BranchLocation;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.net.URI;
 
 /**
  * @author Guillermo Gonzalez <guillo.gonzo AT gmail DOT com>

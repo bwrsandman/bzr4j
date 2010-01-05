@@ -18,56 +18,51 @@ package jetbrains.buildServer.buildTriggers.vcs.bzr;
 /**
  * Represents repository modified file
  */
-public class ModifiedFile
-{
-    /**
-     * Type of modification
-     */
-    public static enum Status
-    {
-        ADDED( "added" ),
-        MODIFIED( "modified" ),
-        REMOVED( "removed" ),
-        UNKNOWN( "unknown" );
+public class ModifiedFile {
 
-        private String myName;
+  /**
+   * Type of modification
+   */
+  public static enum Status {
 
-        Status( final String name )
-        {
-            myName = name;
-        }
+    ADDED("added"),
+    MODIFIED("modified"),
+    REMOVED("removed"),
+    UNKNOWN("unknown");
 
-        public String getName()
-        {
-            return myName;
-        }
+    private String myName;
+
+    Status(final String name) {
+      myName = name;
     }
 
-    private Status myStatus;
-
-    private String myPath;
-
-    public ModifiedFile( final Status status, final String path )
-    {
-        myStatus = status;
-        myPath = path;
+    public String getName() {
+      return myName;
     }
+  }
 
-    /**
-     * Returns type of modification
-     * @return type of modification
-     */
-    public Status getStatus()
-    {
-        return myStatus;
-    }
+  private Status myStatus;
 
-    /**
-     * Returns file path
-     * @return file path
-     */
-    public String getPath()
-    {
-        return myPath;
-    }
+  private String myPath;
+
+  public ModifiedFile(final Status status, final String path) {
+    myStatus = status;
+    myPath = path;
+  }
+
+  /**
+   * Returns type of modification
+   * @return type of modification
+   */
+  public Status getStatus() {
+    return myStatus;
+  }
+
+  /**
+   * Returns file path
+   * @return file path
+   */
+  public String getPath() {
+    return myPath;
+  }
 }

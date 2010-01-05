@@ -1,249 +1,352 @@
+/*
+ * Copyright (c) 2010 Emergent.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package org.emergent.bzr4j.intellij;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
+import com.intellij.openapi.fileEditor.FileEditorManagerListener;
+import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vcs.AbstractVcs;
-import com.intellij.openapi.vcs.CommittedChangesProvider;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import com.intellij.openapi.vcs.VcsConfiguration;
-import com.intellij.openapi.vcs.VcsShowConfirmationOption;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
+import com.intellij.openapi.vcs.changes.ChangeListManager;
+import com.intellij.openapi.vcs.changes.ChangeProvider;
 import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
 import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.history.VcsHistoryProvider;
 import com.intellij.openapi.vcs.merge.MergeProvider;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
+import com.intellij.openapi.vcs.update.UpdateEnvironment;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.emergent.bzr4j.intellij.config.BzrVcsSettings;
-import org.emergent.bzr4j.intellij.gui.BzrVcsConfigurable;
-import org.emergent.bzr4j.intellij.providers.BzrAnnotationProvider;
-import org.emergent.bzr4j.intellij.providers.BzrChangeProvider;
-import org.emergent.bzr4j.intellij.providers.BzrCheckinEnvironment;
-import org.emergent.bzr4j.intellij.providers.BzrCommittedChangesProvider;
-import org.emergent.bzr4j.intellij.providers.BzrDiffProvider;
-import org.emergent.bzr4j.intellij.providers.BzrHistoryProvider;
-import org.emergent.bzr4j.intellij.providers.BzrMergeProvider;
-import org.emergent.bzr4j.intellij.providers.BzrRollbackEnvironment;
-import org.emergent.bzr4j.utils.BzrUtil;
-import org.emergent.bzr4j.utils.LogUtil;
+import com.intellij.openapi.vfs.VirtualFileListener;
+import com.intellij.openapi.wm.StatusBar;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.util.messages.Topic;
+import org.emergent.bzr4j.intellij.provider.BzrChangeProvider;
+import org.emergent.bzr4j.intellij.provider.BzrDiffProvider;
+import org.emergent.bzr4j.intellij.provider.BzrHistoryProvider;
+import org.emergent.bzr4j.intellij.provider.BzrRollbackEnvironment;
+import org.emergent.bzr4j.intellij.provider.annotate.BzrAnnotationProvider;
+import org.emergent.bzr4j.intellij.provider.commit.BzrCheckinEnvironment;
+import org.emergent.bzr4j.intellij.provider.commit.BzrCommitExecutor;
+import org.emergent.bzr4j.intellij.provider.update.BzrIntegrateEnvironment;
+import org.emergent.bzr4j.intellij.provider.update.BzrUpdateEnvironment;
+import org.emergent.bzr4j.intellij.ui.BzrChangesetStatus;
+import org.emergent.bzr4j.intellij.ui.BzrCurrentBranchStatus;
+import org.emergent.bzr4j.utils.BzrCoreUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Properties;
+import javax.swing.*;
+import java.util.concurrent.ScheduledFuture;
 
 /**
- * @author Patrik Beno
+ * @author Patrick Woodworth
  */
-public class BzrVcs extends AbstractVcs implements Disposable
-{
-    private static final LogUtil LOG = LogUtil.getLogger( BzrVcs.class );
+public class BzrVcs extends AbstractVcs implements Disposable {
 
-    public static final String VCS_NAME = "Bazaar";
+  static final Logger LOG = Logger.getInstance(BzrVcs.class.getName());
 
-    private BzrLocalFileOperationsHandler m_vfsHandler;
+  public static final String VCS_NAME = "Bazaar";
 
-    private final BzrAnnotationProvider m_annotationProvider;
+  public static final Topic<BzrUpdater> BRANCH_TOPIC = new Topic<BzrUpdater>("bzr4intellij.branch", BzrUpdater.class);
+  public static final Topic<BzrUpdater> INCOMING_TOPIC =
+      new Topic<BzrUpdater>("bzr4intellij.incoming", BzrUpdater.class);
+  public static final Topic<BzrUpdater> OUTGOING_TOPIC =
+      new Topic<BzrUpdater>("bzr4intellij.outgoing", BzrUpdater.class);
 
-    private final BzrDiffProvider m_diffProvider;
+  public static final Icon BAZAAR_ICON = IconLoader.getIcon("/images/bzr.png");
+  public static final Icon INCOMING_ICON = IconLoader.getIcon("/actions/moveDown.png");
+  public static final Icon OUTGOING_ICON = IconLoader.getIcon("/actions/moveUp.png");
 
-    private final BzrCheckinEnvironment m_checkinEnvironment;
+  private final AnnotationProvider m_annotationProvider;
 
-    private final BzrChangeProvider m_changeProvider;
+  private final DiffProvider m_diffProvider;
 
-    private final BzrHistoryProvider m_vcsHistoryProvider;
+  private final CheckinEnvironment m_checkinEnvironment;
 
-    private final BzrRollbackEnvironment m_rollbackEnvironment;
+  private final ChangeProvider m_changeProvider;
 
-    private final BzrCommittedChangesProvider m_committedChangesProvider;
+  private final VcsHistoryProvider m_vcsHistoryProvider;
 
-    private final BzrVcsSettings m_settings;
+  private final RollbackEnvironment m_rollbackEnvironment;
 
-    private final BzrVcsConfigurable m_configurable;
+  private final MergeProvider m_mergeProvider;
 
-    private final BzrMergeProvider m_mergeProvider;
+  private final UpdateEnvironment updateEnvironment;
+  private final BzrIntegrateEnvironment integrateEnvironment;
 
-    private VcsShowConfirmationOption m_addConfirmation;
+  private final BzrProjectConfigurable m_configurable;
 
-    private VcsShowConfirmationOption m_deleteConfirmation;
+  private Disposable m_activationDisposable;
 
-    private Disposable m_activationDisposable;
+  private VirtualFileListener virtualFileListener;
 
-    public static BzrVcs getInstance( @NotNull Project project )
-    {
-        return (BzrVcs)ProjectLevelVcsManager.getInstance( project ).findVcsByName( VCS_NAME );
+  private final BzrCommitExecutor commitExecutor;
+  private final BzrCurrentBranchStatus hgCurrentBranchStatus = new BzrCurrentBranchStatus();
+  private final BzrChangesetStatus incomingChangesStatus = new BzrChangesetStatus(BzrVcs.INCOMING_ICON);
+  private final BzrChangesetStatus outgoingChangesStatus = new BzrChangesetStatus(BzrVcs.OUTGOING_ICON);
+  private MessageBusConnection messageBusConnection;
+  private ScheduledFuture<?> changesUpdaterScheduledFuture;
+
+  private boolean started;
+
+  public static BzrVcs getInstance(@NotNull Project project) {
+    return (BzrVcs)ProjectLevelVcsManager.getInstance(project).findVcsByName(VCS_NAME);
+  }
+
+  public BzrVcs(@NotNull final Project project) {
+    super(project, VCS_NAME);
+
+    BzrProjectSettings projectSettings = BzrProjectSettings.getInstance(project);
+    m_configurable = new BzrProjectConfigurable(projectSettings);
+    m_changeProvider = new BzrChangeProvider(project, getKeyInstanceMethod());
+    virtualFileListener = new BzrVirtualFileListener(project, this);
+    m_rollbackEnvironment = new BzrRollbackEnvironment(project);
+    m_diffProvider = new BzrDiffProvider(project);
+    m_vcsHistoryProvider = new BzrHistoryProvider(project);
+    m_checkinEnvironment = new BzrCheckinEnvironment(project);
+    m_annotationProvider = new BzrAnnotationProvider(project);
+    commitExecutor = new BzrCommitExecutor(project);
+
+    m_mergeProvider = null;
+    updateEnvironment = new BzrUpdateEnvironment(project);
+    integrateEnvironment = BzrDebug.EXPERIMENTAL_ENABLED ? new BzrIntegrateEnvironment(project) : null;
+
+//        LogUtil.dumpImportantData(new Properties());
+  }
+
+  @NonNls
+  public String getDisplayName() {
+    return m_configurable.getDisplayName();
+  }
+
+  public void dispose() {
+  }
+
+  public Configurable getConfigurable() {
+    return m_configurable;
+  }
+
+  @Nullable
+  public BzrRevisionNumber parseRevisionNumber(String revisionNumberString) {
+    BzrRevisionNumber retval = null;
+    try {
+      retval = BzrRevisionNumber.createBzrRevisionNumber(BzrCoreUtil.parseRevisionNumber(revisionNumberString));
+      return retval;
+    }
+    finally {
+      LOG.debug("parseRevisionNumber: " + String.valueOf(retval));
+    }
+  }
+
+  public DiffProvider getDiffProvider() {
+    if (!started) {
+      return null;
+    }
+    return m_diffProvider;
+  }
+
+  public AnnotationProvider getAnnotationProvider() {
+    if (!started) {
+      return null;
+    }
+    return m_annotationProvider;
+  }
+
+  public VcsHistoryProvider getVcsHistoryProvider() {
+    if (!started) {
+      return null;
+    }
+    return m_vcsHistoryProvider;
+  }
+
+  public VcsHistoryProvider getVcsBlockHistoryProvider() {
+    if (!started) {
+      return null;
+    }
+    return getVcsHistoryProvider();
+  }
+
+  public ChangeProvider getChangeProvider() {
+    if (!started) {
+      return null;
+    }
+    return m_changeProvider;
+  }
+
+  public MergeProvider getMergeProvider() {
+    if (!started) {
+      return null;
+    }
+    return m_mergeProvider;
+  }
+
+  public RollbackEnvironment getRollbackEnvironment() {
+    if (!started) {
+      return null;
+    }
+    return m_rollbackEnvironment;
+  }
+
+  public CheckinEnvironment getCheckinEnvironment() {
+    if (!started) {
+      return null;
+    }
+    return m_checkinEnvironment;
+  }
+
+  @Override
+  public UpdateEnvironment getUpdateEnvironment() {
+    if (!started) {
+      return null;
     }
 
-    public BzrVcs(
-            @NotNull final Project project,
-            @NotNull final BzrAnnotationProvider bzrAnnotationProvider,
-            @NotNull final BzrDiffProvider bzrDiffProvider,
-            @NotNull final BzrCheckinEnvironment checkinEnvironment,
-            @NotNull final BzrChangeProvider changeProvider,
-            @NotNull final BzrHistoryProvider vcsHistoryProvider,
-            @NotNull final BzrRollbackEnvironment rollbackEnvironment,
-            @NotNull final BzrCommittedChangesProvider committedChangesProvider,
-            @NotNull final BzrVcsSettings bzrSettings
-    )
-    {
-        super( project, VCS_NAME );
-        m_annotationProvider = bzrAnnotationProvider;
-        m_diffProvider = bzrDiffProvider;
-        m_checkinEnvironment = checkinEnvironment;
-        m_changeProvider = changeProvider;
-        m_vcsHistoryProvider = vcsHistoryProvider;
-        m_rollbackEnvironment = rollbackEnvironment;
-        m_committedChangesProvider = committedChangesProvider;
-        m_settings = bzrSettings;
+    return updateEnvironment;
+  }
 
-//        myRevSelector = new GitRevisionSelector();
-        m_configurable = new BzrVcsConfigurable(/* mySettings, */ myProject );
-//        myUpdateEnvironment = new GitUpdateEnvironment(myProject, this, mySettings);
-        m_mergeProvider = new BzrMergeProvider( myProject );
-//        myCommittedChangeListProvider = new GitCommittedChangeListProvider(myProject);
-//        myOutgoingChangesProvider = new GitOutgoingChangesProvider(myProject);
-//        myTreeDiffProvider = new GitTreeDiffProvider(myProject);
-
-        ApplicationInfo appInfo = ApplicationInfo.getInstance();
-        Properties ijprops = new Properties();
-        ijprops.setProperty( "intellij.version.build", "" + appInfo.getBuild().getBuildNumber() );
-        ijprops.setProperty( "intellij.version.major", appInfo.getMajorVersion() );
-        ijprops.setProperty( "intellij.version.minor", appInfo.getMinorVersion() );
-        ijprops.setProperty( "intellij.version.name", appInfo.getVersionName() );
-        if (m_settings.isExtraLoggingEnabled())
-            LogUtil.dumpImportantData( ijprops );
-
-        ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance( project );
-        m_addConfirmation = vcsManager.getStandardConfirmation( VcsConfiguration.StandardConfirmation.ADD, this );
-
-        m_deleteConfirmation = vcsManager.getStandardConfirmation( VcsConfiguration.StandardConfirmation.REMOVE, this );
+  @Override
+  public UpdateEnvironment getIntegrateEnvironment() {
+    if (!started) {
+      return null;
     }
 
-    @NonNls
-    public String getDisplayName()
-    {
-        return getName();
+    return integrateEnvironment;
+  }
+
+  @Override
+  public RootsConvertor getCustomConvertor() {
+    return BzrRootConverter.INSTANCE;
+  }
+
+  @Override
+  public boolean isVersionedDirectory(VirtualFile dir) {
+    return dir.isDirectory() && BzrUtil.bzrRootOrNull(dir) != null;
+  }
+
+  public boolean isStarted() {
+    return started;
+  }
+
+  @Override
+  protected void start() throws VcsException {
+    BzrExecutableValidator validator = new BzrExecutableValidator(myProject);
+    started = validator.check(BzrGlobalSettings.getInstance());
+  }
+
+  @Override
+  protected void shutdown() throws VcsException {
+    started = false;
+  }
+
+  public void activate() {
+    if (!started) {
+      return;
     }
 
-    public void dispose()
-    {
+    LocalFileSystem.getInstance().addVirtualFileListener(virtualFileListener);
+
+    BzrGlobalSettings globalSettings = BzrGlobalSettings.getInstance();
+    BzrProjectSettings projectSettings = BzrProjectSettings.getInstance(myProject);
+
+    ChangeListManager.getInstance(myProject).registerCommitExecutor(commitExecutor);
+
+    StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
+    if (statusBar != null) {
+      statusBar.addCustomIndicationComponent(hgCurrentBranchStatus);
+      statusBar.addCustomIndicationComponent(incomingChangesStatus);
+      statusBar.addCustomIndicationComponent(outgoingChangesStatus);
     }
 
-    public BzrVcsConfigurable getConfigurable()
-    {
-        return m_configurable;
+    final BzrIncomingStatusUpdater incomingUpdater =
+        new BzrIncomingStatusUpdater(incomingChangesStatus, projectSettings);
+
+    final BzrOutgoingStatusUpdater outgoingUpdater =
+        new BzrOutgoingStatusUpdater(outgoingChangesStatus, projectSettings);
+
+//        changesUpdaterScheduledFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(
+//                new Runnable() {
+//                    public void run() {
+//                        incomingUpdater.update(myProject);
+//                        outgoingUpdater.update(myProject);
+//                    }
+//                }, 0, globalSettings.getIncomingCheckIntervalSeconds(), TimeUnit.SECONDS);
+
+    MessageBus messageBus = myProject.getMessageBus();
+    messageBusConnection = messageBus.connect();
+
+    messageBusConnection.subscribe(BzrVcs.INCOMING_TOPIC, incomingUpdater);
+    messageBusConnection.subscribe(BzrVcs.OUTGOING_TOPIC, outgoingUpdater);
+
+    messageBusConnection.subscribe(
+        BzrVcs.BRANCH_TOPIC, new BzrCurrentBranchStatusUpdater(hgCurrentBranchStatus)
+    );
+
+    messageBusConnection.subscribe(
+        FileEditorManagerListener.FILE_EDITOR_MANAGER,
+        new FileEditorManagerAdapter() {
+          @Override
+          public void selectionChanged(FileEditorManagerEvent event) {
+            Project project = event.getManager().getProject();
+            project.getMessageBus()
+                .asyncPublisher(BzrVcs.BRANCH_TOPIC)
+                .update(project);
+          }
+        }
+    );
+
+    m_activationDisposable = new Disposable() {
+      public void dispose() {
+      }
+    };
+  }
+
+  public void deactivate() {
+    if (!started) {
+      return;
     }
 
-    public void activate()
-    {
-        super.activate();
-        m_vfsHandler = new BzrLocalFileOperationsHandler( this );
-        LocalFileSystem.getInstance().registerAuxiliaryFileOperationsHandler( m_vfsHandler );
-        CommandProcessor.getInstance().addCommandListener( m_vfsHandler );
+    LocalFileSystem.getInstance().removeVirtualFileListener(virtualFileListener);
 
-        m_activationDisposable = new Disposable()
-        {
-            public void dispose()
-            {
-            }
-        };
+    StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
+    if (messageBusConnection != null) {
+      messageBusConnection.disconnect();
+    }
+    if (changesUpdaterScheduledFuture != null) {
+      changesUpdaterScheduledFuture.cancel(true);
+    }
+    if (statusBar != null) {
+      statusBar.removeCustomIndicationComponent(incomingChangesStatus);
+      statusBar.removeCustomIndicationComponent(outgoingChangesStatus);
+      statusBar.removeCustomIndicationComponent(hgCurrentBranchStatus);
     }
 
-    public void deactivate()
-    {
-        LOG.info( "BzrVcs.deactivate()" );
-        LocalFileSystem.getInstance().unregisterAuxiliaryFileOperationsHandler( m_vfsHandler );
-        CommandProcessor.getInstance().removeCommandListener( m_vfsHandler );
-        assert m_activationDisposable != null;
-        Disposer.dispose( m_activationDisposable );
-        m_activationDisposable = null;
-        super.deactivate();
-    }
-
-    @Nullable
-    public BzrRevisionNumber parseRevisionNumber( String revisionNumberString )
-    {
-        return new BzrRevisionNumber( BzrUtil.parseRevisionNumber( revisionNumberString ) );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isVersionedDirectory(VirtualFile dir) {
-      return dir.isDirectory() && BzrIdeaUtil.bzrRootOrNull(dir) != null;
-    }
-
-
-    public VcsShowConfirmationOption getAddConfirmation()
-    {
-        return m_addConfirmation;
-    }
-
-    public VcsShowConfirmationOption getDeleteConfirmation()
-    {
-        return m_deleteConfirmation;
-    }
-
-    @NotNull
-    public DiffProvider getDiffProvider()
-    {
-        return m_diffProvider;
-    }
-
-    @NotNull
-    public AnnotationProvider getAnnotationProvider()
-    {
-        return m_annotationProvider;
-    }
-
-    @NotNull
-    public VcsHistoryProvider getVcsHistoryProvider()
-    {
-        return m_vcsHistoryProvider;
-    }
-
-    @NotNull
-    public VcsHistoryProvider getVcsBlockHistoryProvider()
-    {
-        return getVcsHistoryProvider();
-    }
-
-    @NotNull
-    public BzrChangeProvider getChangeProvider()
-    {
-        return m_changeProvider;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    @Override
-    public MergeProvider getMergeProvider()
-    {
-        return m_mergeProvider;
-    }
-
-    @NotNull
-    public RollbackEnvironment getRollbackEnvironment()
-    {
-        return m_rollbackEnvironment;
-    }
-
-    @NotNull
-    public CheckinEnvironment getCheckinEnvironment()
-    {
-        return m_checkinEnvironment;
-    }
-
-    @NotNull
-    public CommittedChangesProvider getCommittedChangesProvider()
-    {
-        return m_committedChangesProvider;
-    }
+    assert m_activationDisposable != null;
+    Disposer.dispose(m_activationDisposable);
+    m_activationDisposable = null;
+  }
 }

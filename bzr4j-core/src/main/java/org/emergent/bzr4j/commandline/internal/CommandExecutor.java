@@ -1,9 +1,10 @@
 package org.emergent.bzr4j.commandline.internal;
 
 import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.debug.DebugLogRecord;
+import org.emergent.bzr4j.debug.LogUtil;
 import org.emergent.bzr4j.utils.BzrConstants;
-import org.emergent.bzr4j.utils.BzrUtil;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.utils.BzrCoreUtil;
 import org.emergent.bzr4j.utils.StreamRelay;
 import org.emergent.bzr4j.utils.StringUtil;
 
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 public final class CommandExecutor
 {
@@ -38,7 +38,7 @@ public final class CommandExecutor
         quoteArgs( pb.command(), true );
         String concated = StringUtil.concat( pb.command().toArray(), " " );
         String[] newCmdArray = null;
-        if ( BzrUtil.isWindows() )
+        if ( BzrCoreUtil.isWindows() )
         {
             newCmdArray = new String[] { "cmd.exe", "/s", "/c", "\"" + concated + "\"" };
         }
@@ -112,7 +112,7 @@ public final class CommandExecutor
 
     private static void logArguments( final long execid, final ProcessBuilder pb )
     {
-        LogUtil.LOG.log( new LogRecord( Level.FINE, null ) {
+        LogUtil.LOG.log( new DebugLogRecord( Level.FINE, null ) {
 
             @Override
             public String getLoggerName()
@@ -151,7 +151,7 @@ public final class CommandExecutor
 
     private static void logFinished( final long execid, final long duration, final boolean success )
     {
-        LogUtil.LOG.log( new LogRecord( Level.FINER, null ) {
+        LogUtil.LOG.log( new DebugLogRecord( Level.FINER, null ) {
 
             @Override
             public String getLoggerName()

@@ -3,11 +3,11 @@
  */
 package org.emergent.bzr4j.utils;
 
-import java.io.File;
-
 import org.emergent.bzr4j.testUtils.BazaarTest;
 import org.emergent.bzr4j.testUtils.Environment;
 import org.testng.annotations.Test;
+
+import java.io.File;
 
 /**
  * @author Guillermo Gonzalez <guillo.gonzo AT gmail DOT com>
@@ -25,7 +25,7 @@ public class BazaarUtilitiesTestWithBranch extends BazaarTest
 
         File newDir = new File( testEnv.getWorkingTreeLocation(), "new_Dir" );
         newDir.mkdirs();
-        org.testng.Assert.assertEquals( BzrUtil.getRootBranch( newDir ), testEnv.getWorkingTreeLocation() );
+        org.testng.Assert.assertEquals( BzrCoreUtil.getRootBranch( newDir ), testEnv.getWorkingTreeLocation() );
     }
 
     @Test
@@ -37,7 +37,7 @@ public class BazaarUtilitiesTestWithBranch extends BazaarTest
 
         File newDir = new File( testEnv.getWorkingTreeLocation(), "new_Dir" );
         newDir.mkdirs();
-        org.testng.Assert.assertTrue( BzrUtil.getRootBranch( newDir ).equals(
+        org.testng.Assert.assertTrue( BzrCoreUtil.getRootBranch( newDir ).equals(
                 testEnv.getWorkingTreeLocation() ) );
     }
 

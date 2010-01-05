@@ -15,6 +15,8 @@
  */
 package org.emergent.bzr4j.utils;
 
+import org.emergent.bzr4j.debug.LogUtil;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 

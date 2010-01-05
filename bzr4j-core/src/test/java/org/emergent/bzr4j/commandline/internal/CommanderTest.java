@@ -15,10 +15,10 @@
  */
 package org.emergent.bzr4j.commandline.internal;
 
+import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.emergent.bzr4j.testUtils.BazaarTest;
 import org.emergent.bzr4j.testUtils.Environment;
 import static org.emergent.bzr4j.testUtils.FileUtils.addContentToFile;
-import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.testng.annotations.Test;
 
 import java.io.File;

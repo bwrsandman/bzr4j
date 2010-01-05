@@ -4,7 +4,7 @@ import org.emergent.bzr4j.core.BazaarItemInfo;
 import org.emergent.bzr4j.core.BazaarItemKind;
 import org.emergent.bzr4j.core.BazaarStatusKind;
 import org.emergent.bzr4j.core.IBazaarItemInfo;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.debug.LogUtil;
 import org.kxml2.io.KXmlParser;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

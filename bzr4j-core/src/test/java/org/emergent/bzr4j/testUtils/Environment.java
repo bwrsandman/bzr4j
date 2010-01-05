@@ -3,11 +3,11 @@
  */
 package org.emergent.bzr4j.testUtils;
 
-import java.io.File;
-
 import org.emergent.bzr4j.core.BazaarTreeStatus;
 import org.emergent.bzr4j.core.BranchLocation;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.debug.LogUtil;
+
+import java.io.File;
 
 /**
  * @author Guillermo Gonzalez

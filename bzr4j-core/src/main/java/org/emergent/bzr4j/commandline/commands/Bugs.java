@@ -18,8 +18,8 @@ package org.emergent.bzr4j.commandline.commands;
 import org.emergent.bzr4j.commandline.syntax.IBugsOptions;
 import org.emergent.bzr4j.core.BranchLocation;
 
-import java.util.List;
 import java.io.File;
+import java.util.List;
 
 /**
  * Bugs command (get bzr bugs from metadata)

@@ -6,7 +6,7 @@
 
   <groupId>org.emergent.bzr4j</groupId>
   <artifactId>bzr4j-core</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Bzr4J Library</name>
   <url>http://code.google.com/p/bzr4j/</url>
@@ -56,6 +56,22 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <artifactId>maven-idea-plugin</artifactId>
@@ -64,8 +80,6 @@
           <jdkLevel>1.5</jdkLevel>
           <jdkName>1.5</jdkName>
           <exclude>target</exclude>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>true</downloadJavadocs>
         </configuration>
       </plugin>
       <plugin>

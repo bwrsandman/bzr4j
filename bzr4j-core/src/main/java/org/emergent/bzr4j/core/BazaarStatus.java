@@ -1,6 +1,6 @@
 package org.emergent.bzr4j.core;
 
-import static org.emergent.bzr4j.utils.BzrUtil.unixFilePath;
+import static org.emergent.bzr4j.utils.BzrCoreUtil.unixFilePath;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,92 +1,107 @@
 package org.emergent.bzr4j.intellij;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.ContentRevision;
-import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BazaarRevision;
-import org.emergent.bzr4j.intellij.utils.IJUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.vcsUtil.VcsUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.emergent.bzr4j.intellij.command.BzrCatCommand;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author Patrick Woodworth
  */
-public class BzrContentRevision implements ContentRevision
-{
-    private BzrVcs m_bzrvcs;
+public class BzrContentRevision implements ContentRevision {
 
-    private FilePath m_file;
+  private final Project project;
 
-    private BzrRevisionNumber m_revision;
+  private final BzrFile hgFile;
 
-    private String content;
+  private final BzrRevisionNumber revisionNumber;
 
-    public BzrContentRevision( Project project, FilePath file, BazaarRevision revision )
-    {
-        this( BzrVcs.getInstance( project ), file, new BzrRevisionNumber(  revision ) );
+  private FilePath filePath;
+  private String content;
+
+  public BzrContentRevision(Project project, FilePath file, BzrRevisionNumber revision) {
+    this.project = project;
+    VirtualFile vcsRoot = VcsUtil.getVcsRootFor(project, filePath);
+    assert vcsRoot != null;
+    hgFile = new BzrFile(vcsRoot, file);
+    revisionNumber = revision;
+  }
+
+  public BzrContentRevision(Project project, BzrFile file, @NotNull BzrRevisionNumber revision) {
+    this.project = project;
+    hgFile = file;
+    revisionNumber = revision;
+  }
+
+//    @Nullable
+//    public String getContent() throws VcsException {
+//        if (content != null) {
+//            return content;
+//        }
+//
+//        try {
+//            File ioFile = new File(m_file.getPath());
+//            IJUtil.createBzrClient().setWorkDir(IJUtil.root(ioFile));
+//            InputStream stream = IJUtil.createBzrClient().cat(ioFile, m_revision.getBazaarRevision());
+//            content = new String(FileUtil.adaptiveLoadBytes(stream));
+//            return content;
+//        }
+//        catch (BazaarException e) {
+//            throw IJUtil.notYetHandled(e);
+//        }
+//        catch (IOException e) {
+//            throw IJUtil.notYetHandled(e);
+//        }
+//
+//    }
+
+  public String getContent() throws VcsException {
+    if (StringUtils.isBlank(content)) {
+      content = new BzrCatCommand(project).execute(hgFile, revisionNumber, getFile().getCharset());
     }
+    return content;
+  }
 
-    public BzrContentRevision( Project project, FilePath file, BzrRevisionNumber revision )
-    {
-        this( BzrVcs.getInstance( project ), file, revision );
+  @NotNull
+  public FilePath getFile() {
+    if (filePath == null) {
+      filePath = hgFile.toFilePath();
     }
+    return filePath;
+  }
 
-    public BzrContentRevision( BzrVcs bzr, FilePath file, BazaarRevision revision )
-    {
-        this( bzr, file, new BzrRevisionNumber(  revision ) );
+  @NotNull
+  public BzrRevisionNumber getRevisionNumber() {
+    return revisionNumber;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder()
+        .append(hgFile)
+        .append(revisionNumber)
+        .toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == this) {
+      return true;
     }
-
-    public BzrContentRevision( BzrVcs bzr, FilePath file, BzrRevisionNumber revision )
-    {
-        m_bzrvcs = bzr;
-        m_file = file;
-        m_revision = revision;
+    if (!(object instanceof BzrContentRevision)) {
+      return false;
     }
-
-    @Nullable
-    public String getContent() throws VcsException
-    {
-        if ( content != null )
-        {
-            return content;
-        }
-
-        try
-        {
-            File ioFile = new File( m_file.getPath() );
-            IJUtil.createBzrClient().setWorkDir( IJUtil.root( ioFile ) );
-            InputStream stream = IJUtil.createBzrClient().cat( ioFile, m_revision.getBazaarRevision() );
-            content = new String( FileUtil.adaptiveLoadBytes( stream ) );
-            return content;
-        }
-        catch ( BazaarException e )
-        {
-            throw IJUtil.notYetHandled( e );
-        }
-        catch ( IOException e )
-        {
-            throw IJUtil.notYetHandled( e );
-        }
-
-    }
-
-    @NotNull
-    public FilePath getFile()
-    {
-        return m_file;
-    }
-
-    @NotNull
-    public VcsRevisionNumber getRevisionNumber()
-    {
-        return m_revision;
-    }
+    BzrContentRevision that = (BzrContentRevision)object;
+    return new EqualsBuilder()
+        .append(hgFile, that.hgFile)
+        .append(revisionNumber, that.revisionNumber)
+        .isEquals();
+  }
 }

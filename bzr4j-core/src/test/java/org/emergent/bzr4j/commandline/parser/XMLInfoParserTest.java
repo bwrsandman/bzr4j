@@ -3,12 +3,12 @@
  */
 package org.emergent.bzr4j.commandline.parser;
 
-import java.io.IOException;
-
-import org.emergent.bzr4j.core.IBazaarInfo;
 import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.IBazaarInfo;
 import org.emergent.bzr4j.testUtils.ParserTest;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 /**
  * @author Guillermo Gonzalez

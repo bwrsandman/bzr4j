@@ -4,7 +4,7 @@ import org.emergent.bzr4j.commandline.CommandLineClient;
 import org.emergent.bzr4j.core.BazaarClientPreferences;
 import org.emergent.bzr4j.core.BazaarPreference;
 import org.emergent.bzr4j.core.IBazaarClient;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.debug.LogUtil;
 
 import java.io.File;
 import java.io.InputStream;

@@ -19,7 +19,7 @@ import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarTreeStatus;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.utils.BzrUtil;
+import org.emergent.bzr4j.utils.BzrCoreUtil;
 import org.emergent.bzr4j.utils.IOUtil;
 
 import java.io.File;
@@ -85,6 +85,6 @@ public class ZStatusCmd extends Cmd
         {
             retval = m_pb.directory();
         }
-        return BzrUtil.getRootBranch( retval );
+        return BzrCoreUtil.getRootBranch( retval );
     }
 }

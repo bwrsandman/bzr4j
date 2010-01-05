@@ -33,174 +33,147 @@
 package org.emergent.bzr4j.intellij.action;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.FilePath;
+import com.intellij.openapi.vcs.FileStatus;
+import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
+import com.intellij.openapi.vcs.merge.MergeData;
+import com.intellij.openapi.vcs.merge.MergeProvider;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.Processor;
-import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BazaarStatusKind;
-import org.emergent.bzr4j.core.BazaarTreeStatus;
-import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.intellij.BzrBundle;
+import com.intellij.vcsUtil.VcsRunnable;
+import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.intellij.BzrVcs;
-import org.emergent.bzr4j.intellij.utils.IJUtil;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.intellij.BzrVcsMessages;
+import org.emergent.bzr4j.intellij.command.BzrResolveCommand;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResolveAction extends BasicAction
-{
-    private static final LogUtil LOG = LogUtil.getLogger( ResolveAction.class );
+public class ResolveAction extends BzrAbstractFilesAction {
 
-    protected String getActionName( AbstractVcs vcs )
-    {
-        return BzrBundle.message( "action.name.resolve.conflict" );
+  private static final Logger LOG = Logger.getInstance(ResolveAction.class.getName());
+
+  protected boolean isEnabled(Project project, BzrVcs vcs, VirtualFile file) {
+    if (file.isDirectory()) return true;
+    final FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
+    return fileStatus != null && FileStatus.MERGED_WITH_CONFLICTS.equals(fileStatus);
+  }
+
+  @Override
+  protected void batchPerform(final Project project, final BzrVcs activeVcs, final List<VirtualFile> files,
+      DataContext context) throws VcsException {
+    boolean hasDirs = false;
+    for (VirtualFile file : files) {
+      if (file.isDirectory()) {
+        hasDirs = true;
+      }
     }
-
-    protected boolean needsAllFiles()
-    {
-        return true;
-    }
-
-    protected boolean isEnabled( Project project, BzrVcs vcs, VirtualFile file )
-    {
-        if ( file.isDirectory() ) return true;
-        try
-        {
-            BazaarTreeStatus status = IJUtil.createBzrClient().status( new File[] { new File( file.getPath() ) } );
-            IBazaarStatus[] stat = status.getStatusAsArray();
-            if (stat != null && stat.length > 0)
-            {
-                return stat[0].contains( BazaarStatusKind.HAS_CONFLICTS );
-            }
-        }
-        catch ( BazaarException e )
-        {
-            LOG.error( "diffing", e );
-        }
-//    SVNStatus status;
-//    try {
-//      SvnVcs.SVNStatusHolder statusValue = vcs.getCachedStatus(file);
-//      if (statusValue != null) {
-//        status = statusValue.getStatus();
-//      } else {
-//        SVNStatusClient stClient = vcs.createStatusClient();
-//        status = stClient.doStatus(new File(file.getPath()), false);
-//      }
-//      if (status != null && status.getContentsStatus() == SVNStatusType.STATUS_CONFLICTED) {
-//        SVNInfo info;
-//        SvnVcs.SVNInfoHolder infoValue = vcs.getCachedInfo(file);
-//        if (infoValue != null) {
-//          info = infoValue.getInfo();
-//        } else {
-//          SVNWCClient wcClient = vcs.createWCClient();
-//          info = wcClient.doInfo(new File(file.getPath()), SVNRevision.WORKING);
-//          vcs.cacheInfo(file, info);
-//        }
-//        return info != null && info.getConflictNewFile() != null &&
-//               info.getConflictOldFile() != null &&
-//               info.getConflictWrkFile() != null;
-//      }
-//    }
-//    catch (SVNException e) {
-
-//    }
-        return false;
-    }
-
-    protected boolean needsFiles()
-    {
-        return true;
-    }
-
-    protected void perform( Project project, BzrVcs activeVcs, VirtualFile file, DataContext context )
-            throws VcsException
-    {
-        batchPerform( project, activeVcs, new VirtualFile[]{file}, context );
-    }
-
-    protected void batchPerform( final Project project, final BzrVcs activeVcs,
-            final VirtualFile[] files, DataContext context ) throws VcsException
-    {
-        boolean hasDirs = false;
-        for ( VirtualFile file : files )
-        {
-            if ( file.isDirectory() )
-            {
-                hasDirs = true;
-            }
-        }
-        final List<VirtualFile> fileList = new ArrayList<VirtualFile>();
-        if ( !hasDirs )
-        {
-            for ( VirtualFile file : files )
-            {
-                addIfWritable( file, project, fileList );
-            }
-        }
-        else
-        {
-            ProgressManager.getInstance().runProcessWithProgressSynchronously( new Runnable()
-            {
-                public void run()
-                {
-                    for ( VirtualFile file : files )
-                    {
-                        if ( file.isDirectory() )
-                        {
-                            ProjectLevelVcsManager.getInstance( project )
-                                    .iterateVcsRoot( file, new Processor<FilePath>()
-                                    {
-                                        public boolean process( final FilePath filePath )
-                                        {
-                                            ProgressManager.checkCanceled();
-                                            VirtualFile fileOrDir = filePath.getVirtualFile();
-                                            if ( fileOrDir != null && !fileOrDir.isDirectory()
-                                                    && isEnabled( project, activeVcs, fileOrDir )
-                                                    && !fileList.contains( fileOrDir ) )
-                                            {
-                                                addIfWritable( fileOrDir, project, fileList );
-                                            }
-                                            return true;
-                                        }
-                                    } );
-                        }
-                        else
-                        {
-                            if ( !fileList.contains( file ) )
-                            {
-                                fileList.add( file );
-                            }
-                        }
-                    }
+    final List<VirtualFile> fileList = new ArrayList<VirtualFile>();
+    if (!hasDirs) {
+      for (VirtualFile file : files) {
+        addIfWritable(file, project, fileList);
+      }
+    } else {
+      ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable() {
+        public void run() {
+          FileStatusManager statusMgr = FileStatusManager.getInstance(project);
+          for (VirtualFile file : files) {
+            if (file.isDirectory()) {
+              ProjectLevelVcsManager.getInstance(project).iterateVcsRoot(file, new Processor<FilePath>() {
+                public boolean process(final FilePath filePath) {
+                  ProgressManager.checkCanceled();
+                  VirtualFile fileOrDir = filePath.getVirtualFile();
+                  if (fileOrDir != null && !fileOrDir.isDirectory()
+                      && isEnabled(project, activeVcs, fileOrDir)
+                      && !fileList.contains(fileOrDir)) {
+//                        addIfWritable(fileOrDir, project, fileList);
+                    fileList.add(fileOrDir);
+                  }
+                  return true;
                 }
-            }, BzrBundle.message( "progress.searching.for.files.with.conflicts" ), true, project );
+              });
+            } else {
+              if (!fileList.contains(file) && FileStatus.MERGED_WITH_CONFLICTS.equals(statusMgr.getStatus(file))) {
+                fileList.add(file);
+              }
+            }
+          }
         }
-        AbstractVcsHelper.getInstance( project ).showMergeDialog(
-                fileList, BzrVcs.getInstance( project ).getMergeProvider() );
+      }, BzrVcsMessages.message("progress.searching.for.files.with.conflicts"), true, project);
     }
+    AbstractVcsHelper.getInstance(project).showMergeDialog(fileList, buildMergeProvider(project));
+  }
 
-    private void addIfWritable( final VirtualFile fileOrDir, final Project project,
-            final List<VirtualFile> fileList )
-    {
-        final ReadonlyStatusHandler.OperationStatus operationStatus =
-                ReadonlyStatusHandler.getInstance( project ).ensureFilesWritable( fileOrDir );
-        if ( !operationStatus.hasReadonlyFiles() )
-        {
-            fileList.add( fileOrDir );
+  private void addIfWritable(final VirtualFile fileOrDir, final Project project, final List<VirtualFile> fileList) {
+    final ReadonlyStatusHandler.OperationStatus operationStatus =
+        ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(fileOrDir);
+    if (!operationStatus.hasReadonlyFiles()) {
+      fileList.add(fileOrDir);
+    }
+  }
+
+  private MergeProvider buildMergeProvider(final Project project) {
+    return new MergeProvider() {
+      @NotNull
+      public MergeData loadRevisions(final VirtualFile file) throws VcsException {
+        final MergeData data = new MergeData();
+        VcsRunnable runnable = new VcsRunnable() {
+          public void run() throws VcsException {
+            File oldFile = new File(file.getPath() + ".BASE");
+            File newFile = new File(file.getPath() + ".OTHER");
+            File workingFile = new File(file.getPath() + ".THIS");
+            try {
+              data.ORIGINAL = FileUtil.loadFileBytes(oldFile);
+              data.LAST = FileUtil.loadFileBytes(newFile);
+              data.CURRENT = FileUtil.loadFileBytes(workingFile);
+            } catch (IOException e) {
+              throw new VcsException(e);
+            }
+          }
+        };
+        VcsUtil.runVcsProcessWithProgress(runnable,
+            VcsBundle.message("multiple.file.merge.loading.progress.title"), false, project);
+
+        return data;
+      }
+
+      public void conflictResolvedForFile(VirtualFile file) {
+        BzrResolveCommand resolveCommand = new BzrResolveCommand(project);
+        VirtualFile root = VcsUtil.getVcsRootFor(project, file);
+        if (root == null) {
+          return;
         }
-    }
+        resolveCommand.resolve(root, file);
+        final VirtualFile parent = file.getParent();
+        if (parent != null) {
+          parent.refresh(true, false);
+        }
+      }
 
-    protected boolean isBatchAction()
-    {
-        return true;
-    }
+      public boolean isBinary(final VirtualFile file) {
+        try {
+          byte[] bytes = FileUtil.loadFileBytes(new File(file.getPath()));
+          for (byte aByte : bytes) {
+            if (aByte == 0)
+              return true;
+          }
+        } catch (IOException ignored) {
+        }
+        return false;
+      }
+
+    };
+  }
 }

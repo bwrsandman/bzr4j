@@ -1,36 +1,88 @@
 package org.emergent.bzr4j.intellij;
 
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.emergent.bzr4j.core.BazaarRevision;
+import org.emergent.bzr4j.core.IBazaarRevisionSpec;
 import org.emergent.bzr4j.utils.NaturalOrderComparator;
+import org.jetbrains.annotations.NotNull;
 
-public final class BzrRevisionNumber implements VcsRevisionNumber
-{
-    private BazaarRevision m_rev;
+public final class BzrRevisionNumber implements VcsRevisionNumber, IBazaarRevisionSpec {
 
-    public BzrRevisionNumber( BazaarRevision rev )
-    {
-        m_rev = rev;
+  private String m_rev;
+
+  public static BzrRevisionNumber createBzrRevisionNumber(BazaarRevision rev) {
+    return new BzrRevisionNumber(rev.toString());
+  }
+
+  public static BzrRevisionNumber getInstance(String revision, String changeset) {
+    return new BzrRevisionNumber(revision);
+  }
+
+  public static BzrRevisionNumber getLocalInstance(String revision) {
+    return new BzrRevisionNumber(revision);
+  }
+
+  private BzrRevisionNumber(@NotNull String rev) {
+    m_rev = rev;
+    if (rev.length() > 0 && rev.indexOf(':') < 0) {
+      m_rev = "revno:" + m_rev;
+    }
+  }
+
+  public IBazaarRevisionSpec getBazaarRevision() {
+    return this;
+  }
+
+  public String getChangeset() {
+    return "";
+  }
+
+  public String asString() {
+    return m_rev;
+  }
+
+  public int compareTo(VcsRevisionNumber o) {
+    if (this == o) {
+      return 0;
     }
 
-    public BazaarRevision getBazaarRevision()
-    {
-        return m_rev;
+    if (!(o instanceof BzrRevisionNumber)) {
+      return -1;
     }
 
-    public String asString()
-    {
-        return m_rev.toString();
-    }
+//        BzrRevisionNumber hgRevisionNumber = (BzrRevisionNumber)o;
+//        if (changeset.equals(hgRevisionNumber.changeset)) {
+//            return 0;
+//        }
 
-    public int compareTo( VcsRevisionNumber o )
-    {
-        return NaturalOrderComparator.compareObjects( asString(), o.asString() );
-    }
+//        return revision.compareTo(hgRevisionNumber.revision);
 
-    @Override
-    public String toString()
-    {
-        return asString();
+    return NaturalOrderComparator.compareObjects(asString(), o.asString());
+  }
+
+  @Override
+  public String toString() {
+    return asString();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder()
+        .append(m_rev)
+//                .append(changeset)
+        .toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == this) {
+      return true;
     }
+    if (!(object instanceof BzrRevisionNumber)) {
+      return false;
+    }
+    BzrRevisionNumber that = (BzrRevisionNumber)object;
+    return compareTo(that) == 0;
+  }
 }

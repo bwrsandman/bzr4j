@@ -1,7 +1,7 @@
 package org.emergent.bzr4j.commandline.internal;
 
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.utils.LogUtil;
+import org.emergent.bzr4j.debug.LogUtil;
 import org.emergent.bzr4j.utils.StringUtil;
 
 import java.io.ByteArrayOutputStream;

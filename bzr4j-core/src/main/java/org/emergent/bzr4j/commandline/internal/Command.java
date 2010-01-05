@@ -10,7 +10,7 @@ import org.emergent.bzr4j.commandline.commands.options.Option;
 import org.emergent.bzr4j.core.BazaarClientPreferences;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.BazaarPreference;
-import org.emergent.bzr4j.utils.BzrUtil;
+import org.emergent.bzr4j.utils.BzrCoreUtil;
 import static org.emergent.bzr4j.utils.StringUtil.shellQuote;
 
 import java.io.File;
@@ -281,7 +281,7 @@ public abstract class Command implements ICommand
 
     protected File getRelativeToWorkDir( File file )
     {
-        return BzrUtil.getRelativeTo( m_workDir, file );
+        return BzrCoreUtil.getRelativeTo( m_workDir, file );
     }
 
 }

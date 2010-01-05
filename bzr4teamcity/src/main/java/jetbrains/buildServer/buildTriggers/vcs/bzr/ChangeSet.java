@@ -20,115 +20,102 @@ import java.util.Date;
 /**
  * Represents Bazaar change set
  */
-public class ChangeSet
-{
-    private int myRevNumber;
+public class ChangeSet {
 
-    private String myId;
+  private int myRevNumber;
 
-    private String myUser;
+  private String myId;
 
-    private Date myTimestamp;
+  private String myUser;
 
-    private String mySummary;
+  private Date myTimestamp;
 
-    public ChangeSet( final int revNumber, final String id )
-    {
-        myRevNumber = revNumber;
-        myId = id;
-    }
+  private String mySummary;
 
-    /**
-     * Constructor for version in the form revnum:changeset_id or just changeset_id (in this case rev number is set to -1)
-     * @param fullVersion full changeset version as reported by bzr log command
-     */
-    public ChangeSet( final String fullVersion )
-    {
-        try
-        {
+  public ChangeSet(final int revNumber, final String id) {
+    myRevNumber = revNumber;
+    myId = id;
+  }
+
+  /**
+   * Constructor for version in the form revnum:changeset_id or just changeset_id (in this case rev number is set to -1)
+   * @param fullVersion full changeset version as reported by bzr log command
+   */
+  public ChangeSet(final String fullVersion) {
+    try {
 //      int colon = fullVersion.indexOf(":");
 //      if (colon != -1) {
 //        myRevNumber = Integer.parseInt(fullVersion.substring(0, colon));
 //        myId = fullVersion.substring(colon+1);
 //      } else {
 //        myRevNumber = -1;
-            myRevNumber = Integer.parseInt( fullVersion );
-            myId = fullVersion;
+      myRevNumber = Integer.parseInt(fullVersion);
+      myId = fullVersion;
 //      }
-        }
-        catch ( Throwable e )
-        {
-            throw new IllegalArgumentException( e );
-        }
     }
-
-    public void setUser( final String user )
-    {
-        myUser = user;
+    catch (Throwable e) {
+      throw new IllegalArgumentException(e);
     }
+  }
 
-    public void setTimestamp( final Date timestamp )
-    {
-        myTimestamp = timestamp;
-    }
+  public void setUser(final String user) {
+    myUser = user;
+  }
 
-    public void setSummary( final String summary )
-    {
-        mySummary = summary;
-    }
+  public void setTimestamp(final Date timestamp) {
+    myTimestamp = timestamp;
+  }
 
-    /**
-     * Returns changeset revision id
-     * @return changeset revision id
-     */
-    public String getId()
-    {
-        return myId;
-    }
+  public void setSummary(final String summary) {
+    mySummary = summary;
+  }
 
-    /**
-     * Returns changeset revision number
-     * @return changeset revision number
-     */
-    public int getRevNumber()
-    {
-        return myRevNumber;
-    }
+  /**
+   * Returns changeset revision id
+   * @return changeset revision id
+   */
+  public String getId() {
+    return myId;
+  }
 
-    /**
-     * Returns full changeset version as reported by bzr log command: revnum:revid
-     * @return full changeset version as reported by bzr log
-     */
-    public String getFullVersion()
-    {
+  /**
+   * Returns changeset revision number
+   * @return changeset revision number
+   */
+  public int getRevNumber() {
+    return myRevNumber;
+  }
+
+  /**
+   * Returns full changeset version as reported by bzr log command: revnum:revid
+   * @return full changeset version as reported by bzr log
+   */
+  public String getFullVersion() {
 //    return myRevNumber + ":" + myId;
-        return myId;
-    }
+    return myId;
+  }
 
-    /**
-     * Returns user who made changeset
-     * @return user who made changeset
-     */
-    public String getUser()
-    {
-        return myUser;
-    }
+  /**
+   * Returns user who made changeset
+   * @return user who made changeset
+   */
+  public String getUser() {
+    return myUser;
+  }
 
-    /**
-     * Returns changeset timestamp
-     * @return changeset timestamp
-     */
-    public Date getTimestamp()
-    {
-        return myTimestamp;
-    }
+  /**
+   * Returns changeset timestamp
+   * @return changeset timestamp
+   */
+  public Date getTimestamp() {
+    return myTimestamp;
+  }
 
-    /**
-     * Returns changeset summary specified by user
-     * @return changeset summary
-     */
-    public String getSummary()
-    {
-        return mySummary;
-    }
+  /**
+   * Returns changeset summary specified by user
+   * @return changeset summary
+   */
+  public String getSummary() {
+    return mySummary;
+  }
 }

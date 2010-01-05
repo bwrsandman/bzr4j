@@ -19,7 +19,7 @@ public class BazaarUtilitiesTest
     {
         File base = new File( "/home/user/bzr/project/trunk" );
         File file = new File( "/home/user/bzr/project/trunk/src_folder/file" );
-        File relative = BzrUtil.getRelativeTo( base, file );
+        File relative = BzrCoreUtil.getRelativeTo( base, file );
         org.testng.Assert.assertEquals( relative, new File( "src_folder/file" ) );
     }
 
@@ -28,7 +28,7 @@ public class BazaarUtilitiesTest
     {
         File base = new File( "c:\\bzr\\project\\trunk" );
         File file = new File( "c:\\bzr\\project\\trunk\\src_folder\\file" );
-        File relative = BzrUtil.getRelativeTo( base, file );
+        File relative = BzrCoreUtil.getRelativeTo( base, file );
         if ( File.separatorChar == '\\' )
             org.testng.Assert.assertEquals( relative, new File( "src_folder\\file" ) );
         else

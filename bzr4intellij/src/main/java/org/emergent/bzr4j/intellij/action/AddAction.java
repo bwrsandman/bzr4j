@@ -1,25 +1,27 @@
 package org.emergent.bzr4j.intellij.action;
 
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
+import com.intellij.openapi.vcs.FileStatus;
+import com.intellij.openapi.vcs.FileStatusManager;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import static com.intellij.openapi.vcs.VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
+import static com.intellij.openapi.vcs.VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.intellij.BzrBundle;
+import com.intellij.vcsUtil.VcsUtil;
+import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrVcs;
-import org.emergent.bzr4j.intellij.utils.IJUtil;
-import org.emergent.bzr4j.utils.BazaarIOException;
-import org.emergent.bzr4j.utils.BzrUtil;
+import org.emergent.bzr4j.intellij.BzrVcsMessages;
+import org.emergent.bzr4j.intellij.command.BzrAddCommand;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,118 +29,85 @@ import java.util.List;
  *
  * @author Eugeny Schava
  */
-public class AddAction extends BasicAction
-{
-    protected String getActionName( AbstractVcs vcs )
-    {
-        return BzrBundle.message( "action.name.add.files", vcs.getName() );
-    }
+public class AddAction extends BzrAbstractFilesAction {
 
-    protected boolean isEnabled( Project project, BzrVcs vcs, VirtualFile file )
-    {
-//      return SvnStatusUtil.fileCanBeAdded(project, file);
-        return true;
-    }
+  private static final Logger LOG = Logger.getInstance(AddAction.class.getName());
 
-    protected boolean needsFiles()
-    {
-        return true;
-    }
+  protected boolean isEnabled(Project project, BzrVcs vcs, VirtualFile file) {
+    if (file.isDirectory()) return true;
+    final FileStatus fileStatus = FileStatusManager.getInstance(project).getStatus(file);
+//        LOG.debug("AddAction status: " + String.valueOf( fileStatus ));
+    return fileStatus != null && FileStatus.UNKNOWN.equals(fileStatus);
+  }
 
-    protected void batchPerform( final Project project, BzrVcs activeVcs, VirtualFile[] files,
-            DataContext context )
-            throws VcsException
-    {
+  @Override
+  protected void batchPerform(Project project, BzrVcs activeVcs, List<VirtualFile> files, DataContext context)
+      throws VcsException {
 //        Collection<VcsException> cex = new LinkedList<VcsException>();
-        for ( VirtualFile vFile : files )
-        {
+    for (VirtualFile vFile : files) {
 //            try
 //            {
-                doPerform( project, activeVcs, vFile, context );
+      doPerform(project, activeVcs, vFile, context);
 //            }
 //            catch ( VcsException e )
 //            {
 //                cex.add( e );
 //            }
-        }
+    }
 //        if ( !cex.isEmpty() )
 //            throw new CompositeVcsException( cex );
+  }
+
+  private void doPerform(Project project, BzrVcs activeVcs, VirtualFile file, DataContext context)
+      throws VcsException {
+    try {
+      addFileUnderVcsConfirm(project, activeVcs, file);
+    }
+    catch (IOException e) {
+      VcsException ve = new VcsException(e);
+      ve.setVirtualFile(file);
+      throw ve;
+    }
+  }
+
+  private static void addFileUnderVcsConfirm(Project project, BzrVcs vcs, VirtualFile file) throws IOException {
+    if (!VcsUtil.isFileForVcs(file, project, vcs)) {
+      return;
+    }
+    if (!isFileProcessable(file)) {
+      return;
     }
 
-    protected boolean isBatchAction()
-    {
-        return true;
+    Object[] params1 = new Object[] { };
+    String title = BzrVcsMessages.message("bzr4intellij.add.confirmation.title", params1);
+    Object[] params = new Object[] { file.getPath() };
+    String message = BzrVcsMessages.message("bzr4intellij.add.confirmation.body", params);
+
+    VcsShowConfirmationOption option = ProjectLevelVcsManager.getInstance(project)
+        .getStandardConfirmation(VcsConfiguration.StandardConfirmation.ADD, vcs);
+
+    boolean processAdd = false;
+    if (DO_ACTION_SILENTLY == option.getValue()) {
+      processAdd = true;
+    } else if (SHOW_CONFIRMATION == option.getValue()) {
+      AbstractVcsHelper helper = AbstractVcsHelper.getInstance(project);
+      processAdd = null != helper.selectFilesToProcess(
+          Arrays.asList(file), title, null, title, message, option
+      );
     }
-
-    protected void perform( Project project, BzrVcs activeVcs, VirtualFile file,
-            DataContext context )
-            throws VcsException
-    {
-        batchPerform( project, activeVcs, new VirtualFile[] { file }, context );
+    VirtualFile repo = VcsUtil.getVcsRootFor(project, file);
+    if (processAdd && repo != null) {
+      new BzrAddCommand(project).execute(new BzrFile(repo, VfsUtil.virtualToIoFile(file)));
     }
+  }
 
-    private void doPerform( Project project, BzrVcs activeVcs, VirtualFile file,
-            DataContext context )
-            throws VcsException
-    {
-        try
-        {
-            addFileUnderVcsConfirm( activeVcs, new File( file.getPath() ) );
-            VcsDirtyScopeManager.getInstance( project ).fileDirty( file );
-        }
-        catch ( IOException e )
-        {
-            VcsException ve = new VcsException( e );
-            ve.setVirtualFile( file );
-            throw ve;
-        }
+  protected static boolean isFileProcessable(VirtualFile file) {
+    if (file == null) {
+      return false;
     }
-
-    private static void addFileUnderVcsConfirm( BzrVcs bzr, File dstFile ) throws IOException
-    {
-        VcsShowConfirmationOption.Value confirmationValue = bzr.getAddConfirmation().getValue();
-
-        if ( confirmationValue != VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY )
-        {
-            List<VirtualFile> addedVFiles = new LinkedList<VirtualFile>();
-            addedVFiles.add( LocalFileSystem.getInstance().refreshAndFindFileByIoFile( dstFile ) );
-
-            Collection<VirtualFile> filesToProcess;
-
-            if ( confirmationValue == VcsShowConfirmationOption.Value.SHOW_CONFIRMATION )
-            {
-                final AbstractVcsHelper vcsHelper =
-                        AbstractVcsHelper.getInstance( bzr.getProject() );
-
-                filesToProcess = vcsHelper.selectFilesToProcess( addedVFiles,
-                        "Add files",
-                        null,
-                        "Add file",
-                        "Add file {0} to repository?",
-                        bzr.getAddConfirmation() );
-            }
-            else
-            {
-                filesToProcess = addedVFiles;
-            }
-
-            if ( filesToProcess != null )
-            {
-                for ( VirtualFile fileToAdd : filesToProcess )
-                {
-                    File f = new File( fileToAdd.getPath() );
-                    IJUtil.createBzrClient().setWorkDir(
-                            BzrUtil.getRootBranch( f ) );
-                    try
-                    {
-                        IJUtil.createBzrClient().add( new File[]{f} );
-                    }
-                    catch ( BazaarException e )
-                    {
-                        throw new BazaarIOException( e );
-                    }
-                }
-            }
-        }
-    }
+//      ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+//      return !FileTypeManager.getInstance().isFileIgnored(file.getName())
+//        || !changeListManager.isIgnoredFile(file);
+    return true;
+  }
 }
