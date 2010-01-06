@@ -63,6 +63,10 @@ public final class ShellCommandService {
     return execute(repo, shellCommand, operation, arguments);
   }
 
+  ShellCommandResult execute(@NotNull VirtualFile repo, ShellCommand shellCmd, String operation, List<String> args) {
+    return execute(repo, shellCmd, operation, args.toArray(new String[args.size()]));
+  }
+
   ShellCommandResult execute(@NotNull VirtualFile repo, ShellCommand shellCommand, String operation,
       String... arguments) {
     String repoPath = repo.getPath();

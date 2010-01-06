@@ -60,6 +60,10 @@
 
   <change-notes>
   <![CDATA[
+  <h3>Changes since 2.1.0</h3>
+  <ul>
+    <li>[bugfix] Suppress inappropriate error dialog popups when invoking commit or rename actions.
+  </ul>
   <h3>Changes since 2.0.0</h3>
   <ul>
     <li>[enhancement] Better integration with IDEA due to revamp based on the hg4idea plugin (thanks Victor!)

@@ -162,7 +162,7 @@ public class BzrVirtualFileListener extends VirtualFileAdapter {
       return;
     }
     BzrFile source = new BzrFile(repo, new File(oldParent.getPath(), fileName));
-    if (!isVersioned(source) && isVersioned(newParent))
+    if (!isVersioned(source) /* && isVersioned(newParent) */) // todo we should offer to add the parent if unversioned
       return;
     BzrFile target = new BzrFile(repo, new File(newParent.getPath(), fileName));
     BzrMoveCommand command = new BzrMoveCommand(project);
@@ -187,6 +187,8 @@ public class BzrVirtualFileListener extends VirtualFileAdapter {
     }
     BzrMoveCommand command = new BzrMoveCommand(project);
     BzrFile source = new BzrFile(repo, new File(parent.getPath(), oldName));
+    if (!isVersioned(source))
+      return;
     BzrFile target = new BzrFile(repo, new File(parent.getPath(), newName));
     command.execute(source, target);
   }

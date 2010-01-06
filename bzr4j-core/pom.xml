@@ -6,7 +6,7 @@
 
   <groupId>org.emergent.bzr4j</groupId>
   <artifactId>bzr4j-core</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1</version>
   <packaging>jar</packaging>
   <name>Bzr4J Library</name>
   <url>http://code.google.com/p/bzr4j/</url>
