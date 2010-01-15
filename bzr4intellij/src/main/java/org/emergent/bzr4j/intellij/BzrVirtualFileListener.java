@@ -12,6 +12,8 @@
 // limitations under the License.
 package org.emergent.bzr4j.intellij;
 
+import com.intellij.openapi.command.CommandEvent;
+import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
@@ -24,22 +26,27 @@ import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import static com.intellij.openapi.vcs.VcsShowConfirmationOption.Value.DO_ACTION_SILENTLY;
 import static com.intellij.openapi.vcs.VcsShowConfirmationOption.Value.SHOW_CONFIRMATION;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
+import com.intellij.openapi.vfs.LocalFileOperationsHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileMoveEvent;
 import com.intellij.openapi.vfs.VirtualFilePropertyEvent;
+import com.intellij.util.ThrowableConsumer;
 import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.intellij.command.BzrAddCommand;
 import org.emergent.bzr4j.intellij.command.BzrFileIdCommand;
+import org.emergent.bzr4j.intellij.command.BzrMiscCommand;
 import org.emergent.bzr4j.intellij.command.BzrMoveCommand;
 import org.emergent.bzr4j.intellij.command.BzrRemoveCommand;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
-public class BzrVirtualFileListener extends VirtualFileAdapter {
+public class BzrVirtualFileListener extends VirtualFileAdapter
+    implements LocalFileOperationsHandler, CommandListener {
 
   private final Project project;
   private final AbstractVcs vcs;
@@ -209,9 +216,55 @@ public class BzrVirtualFileListener extends VirtualFileAdapter {
     if (file == null) {
       return false;
     }
+    if (FileTypeManager.getInstance().isFileIgnored(file.getName()))
+      return false;
     ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-    return !FileTypeManager.getInstance().isFileIgnored(file.getName())
-        || !changeListManager.isIgnoredFile(file);
+    if (changeListManager.isIgnoredFile(file))
+      return false;
+    if (BzrMiscCommand.isIgnored(project, file))
+      return false;
+    return true;
   }
 
+  public void afterDone(ThrowableConsumer<LocalFileOperationsHandler, IOException> invoker) {
+  }
+
+  public File copy(VirtualFile file, VirtualFile toDir, String copyName) throws IOException {
+    return null;
+  }
+
+  public boolean createDirectory(VirtualFile dir, String name) throws IOException {
+    return false;
+  }
+
+  public boolean createFile(VirtualFile dir, String name) throws IOException {
+    return false;
+  }
+
+  public boolean delete(VirtualFile file) throws IOException {
+    return false;
+  }
+
+  public boolean move(VirtualFile file, VirtualFile toDir) throws IOException {
+    return false;
+  }
+
+  public boolean rename(VirtualFile file, String newName) throws IOException {
+    return false;
+  }
+
+  public void beforeCommandFinished(CommandEvent event) {
+  }
+
+  public void commandStarted(CommandEvent event) {
+  }
+
+  public void commandFinished(CommandEvent event) {
+  }
+
+  public void undoTransparentActionStarted() {
+  }
+
+  public void undoTransparentActionFinished() {
+  }
 }

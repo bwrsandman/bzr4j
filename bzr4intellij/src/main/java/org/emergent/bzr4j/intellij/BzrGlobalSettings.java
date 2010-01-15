@@ -17,8 +17,6 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
-import org.emergent.bzr4j.core.BazaarClientPreferences;
-import org.emergent.bzr4j.core.BazaarPreference;
 
 @State(
     name = "bzr4intellij.settings",
@@ -50,7 +48,6 @@ public class BzrGlobalSettings implements PersistentStateComponent<BzrGlobalSett
 
   public void setBzrExecutable(String bzrExecutable) {
     m_bzrExecutable = bzrExecutable;
-    BazaarClientPreferences.getInstance().set(BazaarPreference.EXECUTABLE, bzrExecutable);
   }
 
   public boolean isAnnotationTrimmingEnabled() {

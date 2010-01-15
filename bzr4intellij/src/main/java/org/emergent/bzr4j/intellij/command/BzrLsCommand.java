@@ -18,6 +18,10 @@ package org.emergent.bzr4j.intellij.command;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang.StringUtils;
+import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.BzrHandlerException;
+import org.emergent.bzr4j.core.IBazaarItemInfo;
+import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.data.BzrChange;
 import org.emergent.bzr4j.intellij.data.BzrFileStatusEnum;
@@ -35,27 +39,27 @@ public class BzrLsCommand extends BzrAbstractCommand {
     super(project);
   }
 
-  public List<BzrChange> execute(VirtualFile repo) {
+  public List<BzrChange> execute(VirtualFile repo, VirtualFile target) {
     if (repo == null) {
       return Collections.emptyList();
     }
 
-    ShellCommandService service = ShellCommandService.getInstance(project);
-
-    List<String> arguments = new LinkedList<String>();
-    arguments.add("--recursive");
-    arguments.add("--ignored");
-
-    ShellCommandResult result = service.execute(repo, "ls", arguments);
     List<BzrChange> changes = new ArrayList<BzrChange>();
-    for (String line : result.getOutputLines()) {
-      if (StringUtils.isBlank(line)) {
-        LOG.warn("Unexpected line in status '" + line + '\'');
-        continue;
+    try {
+      BzrIntellijHandler handler = new BzrIntellijHandler(project,repo,"xmlls");
+      handler.addArguments("--ignored");
+      handler.addRelativePaths(target);
+
+      ShellCommandService service = ShellCommandService.getInstance(project);
+      ShellCommandResult result = service.execute(handler);
+      List<IBazaarItemInfo> infos = XmlOutputUtil.parseXmlLs(result);
+      for (IBazaarItemInfo info : infos) {
+        File ioFile = new File(repo.getPath(), info.getPath());
+        BzrFile change = new BzrFile(repo, ioFile);
+        changes.add(new BzrChange(change, EnumSet.of(BzrFileStatusEnum.IGNORED)));
       }
-      File ioFile = new File(repo.getPath(), line);
-      BzrFile change = new BzrFile(repo, ioFile);
-      changes.add(new BzrChange(change, EnumSet.of(BzrFileStatusEnum.IGNORED)));
+    } catch (BazaarException e) {
+      LOG.error(e);
     }
     return changes;
   }

@@ -4,7 +4,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.emergent.bzr4j.core.BazaarRevision;
 import org.emergent.bzr4j.core.IBazaarRevisionSpec;
-import org.emergent.bzr4j.utils.NaturalOrderComparator;
+import org.emergent.bzr4j.core.utils.NaturalOrderComparator;
 import org.jetbrains.annotations.NotNull;
 
 public final class BzrRevisionNumber implements VcsRevisionNumber, IBazaarRevisionSpec {

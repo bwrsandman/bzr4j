@@ -34,3 +34,22 @@ rem mvn --batch-mode release:clean release:prepare -DdryRun=true
     <level value="debug"/>
     <appender-ref ref="BZR4INTELLIJ_FILE" />
   </logger>
+
+
+
+
+
+  <appender name="BAZAAR.LOG" class="org.apache.log4j.RollingFileAppender">
+    <param name="file" value="${teamcity_logs}teamcity-bazaar.log"/>
+
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="[%d] %6p [%t] - %30.30c - %m %n"/>-->
+      <param name="ConversionPattern" value="[%d{ABSOLUTE}] %6p - %30.30c - %m %n"/>
+    </layout>
+  </appender>
+
+  <category name="jetbrains.buildServer.buildTriggers.vcs.bazaar">
+    <priority value="DEBUG"/>
+    <appender-ref ref="BAZAAR.LOG"/>
+  </category>
+

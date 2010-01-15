@@ -1,0 +1,72 @@
+<project name="bzr4j" basedir=".">
+
+  <dirname property="bzr4j.dir" file="${ant.file.bzr4j}"/>
+  <property file="${bzr4j.dir}/build.properties"/>
+
+  <macrodef name="m-toandfro">
+    <attribute name="dir"/>
+    <element name="copy-elements" optional="true"/>
+    <element name="pattern-elements" optional="true"/>
+    <sequential>
+      <delete dir="${java.io.tmpdir}/toandfro" quiet="true"/>
+      <copy todir="${java.io.tmpdir}/toandfro" overwrite="true" preservelastmodified="false">
+        <fileset dir="@{dir}">
+          <pattern-elements/>
+        </fileset>
+        <copy-elements/>
+      </copy>
+      <fixcrlf srcdir="${java.io.tmpdir}/toandfro" fixlast="true" eol="unix">
+        <patternset>
+          <include name="**"/>
+        </patternset>
+      </fixcrlf>
+      <copy todir="@{dir}" overwrite="true" preservelastmodified="false">
+        <fileset dir="${java.io.tmpdir}/toandfro"/>
+        <filterchain>
+          <tokenfilter>
+            <replaceregex pattern="\s+$" replace="" flags="gi"/>
+          </tokenfilter>
+        </filterchain>
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <target name="updateversion">
+    <fail unless="oldver"/>
+    <fail unless="newver"/>
+    <replace dir="${bzr4j.dir}">
+      <include name="**/pom.xml"/>
+      <replacefilter token="&lt;version&gt;${oldver}&lt;/version&gt;" value="&lt;version&gt;${newver}&lt;/version&gt;"/>
+    </replace>
+    <replace dir="${bzr4j.dir}">
+      <include name="*/src/main/resources/**/*.xml"/>
+      <include name="*/src/main/resources/**/*.properties"/>
+      <include name="*/teamcity-plugin.xml"/>
+      <replacefilter token="${oldver}" value="${newver}"/>
+    </replace>
+  </target>
+
+  <target name="fixws">
+    <m-toandfro dir="${bzr4j.dir}">
+      <pattern-elements>
+        <include name="**/pom.xml"/>
+        <include name="*/testng.xml"/>
+        <include name="*/src/**/*.java"/>
+        <include name="*/src/**/*.jsp"/>
+        <include name="*/src/**/*.properties"/>
+        <include name="*/src/**/*.xml"/>
+        <include name="*/teamcity-plugin.xml"/>
+      </pattern-elements>
+<!--
+      <copy-elements>
+        <filterchain>
+          <tokenfilter>
+            <replacestring from="foo.bar" to="foo.baz"/>
+          </tokenfilter>
+        </filterchain>
+      </copy-elements>
+-->
+    </m-toandfro>
+  </target>
+
+</project>

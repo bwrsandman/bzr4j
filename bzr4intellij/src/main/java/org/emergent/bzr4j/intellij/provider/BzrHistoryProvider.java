@@ -29,6 +29,7 @@ import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrFileRevision;
 import org.emergent.bzr4j.intellij.command.BzrLogCommand;
+import org.emergent.bzr4j.intellij.command.BzrMiscCommand;
 import org.emergent.bzr4j.intellij.command.BzrWorkingCopyRevisionsCommand;
 
 import javax.swing.*;
@@ -76,7 +77,7 @@ public class BzrHistoryProvider implements VcsHistoryProvider {
     return new VcsHistorySession(result) {
       @Override
       protected VcsRevisionNumber calcCurrentRevisionNumber() {
-        return new BzrWorkingCopyRevisionsCommand(project).revno(vcsRoot);
+        return BzrMiscCommand.revno(project,vcsRoot);
       }
     };
   }

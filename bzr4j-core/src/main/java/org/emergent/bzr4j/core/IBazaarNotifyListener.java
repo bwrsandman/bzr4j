@@ -9,49 +9,48 @@ import java.io.File;
  * @author Guillermo Gonzalez
  *
  */
-public interface IBazaarNotifyListener
-{
+public interface IBazaarNotifyListener {
 
-    /**
-     * @param message
-     */
-    void logMessage( String message );
+  /**
+   * @param message
+   */
+  void logMessage(String message);
 
-    /**
-     * @param message
-     */
-    void logError( String message );
+  /**
+   * @param message
+   */
+  void logError(String message);
 
-    /**
-     * @param revision
-     * @param path
-     */
-    void logRevision( long revision, String path );
+  /**
+   * @param revision
+   * @param path
+   */
+  void logRevision(long revision, String path);
 
-    /**
-     *
-     * @param message
-     */
-    void logCommandOutput( String message );
+  /**
+   *
+   * @param message
+   */
+  void logCommandOutput(String message);
 
-    /**
-     * @param message
-     */
-    void logCompleted( String message );
+  /**
+   * @param message
+   */
+  void logCompleted(String message);
 
-    /**
-     * @param command
-     */
-    void setCommand( int command );
+  /**
+   * @param command
+   */
+  void setCommand(int command);
 
-    /**
-     * @param commandLine
-     */
-    void logCommandLine( String wrkDir, String commandLine );
+  /**
+   * @param commandLine
+   */
+  void logCommandLine(String wrkDir, String commandLine);
 
-    /**
-     * @param file
-     */
-    void onNotify( File file );
+  /**
+   * @param file
+   */
+  void onNotify(File file);
 
 }

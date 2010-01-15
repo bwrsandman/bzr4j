@@ -24,6 +24,7 @@ import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.intellij.BzrContentRevision;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
+import org.emergent.bzr4j.intellij.command.BzrMiscCommand;
 import org.emergent.bzr4j.intellij.command.BzrWorkingCopyRevisionsCommand;
 
 public class BzrDiffProvider implements DiffProvider {
@@ -40,8 +41,7 @@ public class BzrDiffProvider implements DiffProvider {
       return null;
     }
 
-    BzrWorkingCopyRevisionsCommand command = new BzrWorkingCopyRevisionsCommand(project);
-    BzrRevisionNumber currentRevision = command.revno(vcsRoot);
+    BzrRevisionNumber currentRevision = BzrMiscCommand.revno(project,vcsRoot);
     if (currentRevision == null) {
       return null;
     }
@@ -70,8 +70,7 @@ public class BzrDiffProvider implements DiffProvider {
       return null;
     }
 
-    BzrWorkingCopyRevisionsCommand command = new BzrWorkingCopyRevisionsCommand(project);
-    BzrRevisionNumber currentRevision = command.revno(vcsRoot);
+    BzrRevisionNumber currentRevision = BzrMiscCommand.revno(project,vcsRoot);
     if (currentRevision == null) {
       return null;
     }
@@ -85,7 +84,7 @@ public class BzrDiffProvider implements DiffProvider {
   }
 
   public VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot) {
-    return new BzrWorkingCopyRevisionsCommand(project).revno(vcsRoot);
+    return BzrMiscCommand.revno(project,vcsRoot);
   }
 
   public ContentRevision createFileContent(VcsRevisionNumber revisionNumber, VirtualFile file) {

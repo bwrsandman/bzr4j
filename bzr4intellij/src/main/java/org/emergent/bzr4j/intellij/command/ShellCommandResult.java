@@ -13,62 +13,38 @@
 package org.emergent.bzr4j.intellij.command;
 
 import com.intellij.openapi.util.text.LineTokenizer;
+import org.emergent.bzr4j.core.BzrHandlerResult;
 
-import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
-public final class ShellCommandResult {
+public final class ShellCommandResult extends BzrHandlerResult {
 
-  static final ShellCommandResult EMPTY = new ShellCommandResult(new StringWriter(), new StringWriter());
-
-  private final StringWriter out;
-  private final StringWriter err;
+  static final ShellCommandResult EMPTY = new ShellCommandResult();
 
   private List<String> outLines;
   private List<String> errLines;
-  private int m_exitValue;
 
-  public ShellCommandResult(StringWriter out, StringWriter err) {
-    this.out = out;
-    this.err = err;
+  public ShellCommandResult() {
+    super();
+  }
+
+  public ShellCommandResult(Charset charset) {
+    super(charset);
   }
 
   public List<String> getOutputLines() {
     if (outLines == null) {
-      outLines = Arrays.asList(LineTokenizer.tokenize(out.getBuffer(), false));
+      outLines = Arrays.asList(LineTokenizer.tokenize(getStdOutAsString(), false));
     }
     return outLines;
   }
 
   public List<String> getErrorLines() {
     if (errLines == null) {
-      errLines = Arrays.asList(LineTokenizer.tokenize(err.getBuffer(), false));
+      errLines = Arrays.asList(LineTokenizer.tokenize(getStdErrAsString(), false));
     }
     return errLines;
-  }
-
-  public String getRawStdOut() {
-    return out.toString();
-  }
-
-  public String getRawStdErr() {
-    return err.toString();
-  }
-
-  public boolean isStdOutEmpty() {
-    return out.getBuffer().length() == 0;
-  }
-
-  public boolean isStdErrEmpty() {
-    return err.getBuffer().length() == 0;
-  }
-
-  public int getExitValue() {
-    return m_exitValue;
-  }
-
-  public void setExitValue(int exitValue) {
-    m_exitValue = exitValue;
   }
 }

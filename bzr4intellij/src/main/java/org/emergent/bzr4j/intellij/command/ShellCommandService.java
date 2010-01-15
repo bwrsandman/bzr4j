@@ -16,7 +16,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
+import org.emergent.bzr4j.core.BzrHandlerException;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
+import org.emergent.bzr4j.intellij.BzrUtil;
 import org.emergent.bzr4j.intellij.BzrVcsMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,10 +27,16 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class ShellCommandService {
 
   static final Logger LOG = Logger.getInstance(ShellCommandService.class.getName());
+
+  private static final ConcurrentMap<String, Lock> sm_workDirLocks = new ConcurrentHashMap<String, Lock>();
 
   private final Project project;
   private final BzrGlobalSettings settings;
@@ -42,57 +50,42 @@ public final class ShellCommandService {
     return project.getComponent(ShellCommandService.class);
   }
 
-  ShellCommandResult execute2(@NotNull VirtualFile repo, String operation, List<String> arguments) {
-    ShellCommand shellCommand = new ShellCommand();
+  ShellCommandResult execute2(@NotNull VirtualFile repo, String op, List<String> args) {
+    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, op);
+    shellCommand.addArguments(args);
     shellCommand.setBad(true);
-    String[] args = arguments == null ? new String[0] : arguments.toArray(new String[arguments.size()]);
-    return execute(repo, shellCommand, operation, args);
+    return execute(shellCommand);
   }
 
-  ShellCommandResult execute(@NotNull VirtualFile repo, String operation, List<String> arguments) {
-    return execute(repo, Charset.defaultCharset(), operation, arguments);
+  ShellCommandResult execute(@NotNull VirtualFile repo, String op, List<String> args) {
+    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, op);
+    shellCommand.addArguments(args);
+    return execute(shellCommand);
   }
 
-  ShellCommandResult execute(@NotNull VirtualFile repo, Charset charset, String operation, List<String> arguments) {
-    ShellCommand shellCommand = new ShellCommand(charset);
-    return execute(repo, shellCommand, operation, arguments.toArray(new String[arguments.size()]));
+  ShellCommandResult execute(@NotNull VirtualFile repo, Charset charset, String op, List<String> args) {
+    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, charset, op);
+    shellCommand.addArguments(args);
+    return execute(shellCommand);
   }
 
-  ShellCommandResult execute(@NotNull VirtualFile repo, String operation, String... arguments) {
-    ShellCommand shellCommand = new ShellCommand();
-    return execute(repo, shellCommand, operation, arguments);
-  }
-
-  ShellCommandResult execute(@NotNull VirtualFile repo, ShellCommand shellCmd, String operation, List<String> args) {
-    return execute(repo, shellCmd, operation, args.toArray(new String[args.size()]));
-  }
-
-  ShellCommandResult execute(@NotNull VirtualFile repo, ShellCommand shellCommand, String operation,
-      String... arguments) {
-    String repoPath = repo.getPath();
-    File repoFile = repoPath != null ? new File(repoPath) : null;
-    return execute(repoFile, shellCommand, operation, arguments);
+  ShellCommandResult execute(@NotNull VirtualFile repo, String op, String... args) {
+    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, op);
+    shellCommand.addArguments(args);
+    return execute(shellCommand);
   }
 
   @SuppressWarnings({ "ThrowableInstanceNeverThrown" })
-  ShellCommandResult execute(File dir, ShellCommand shellCmd, String operation, String... arguments) {
-    List<String> cmdLine = new LinkedList<String>();
-    cmdLine.add(settings.getBzrExecutable());
-    cmdLine.add("--no-aliases");
-    cmdLine.add(operation);
-    if (arguments != null && arguments.length != 0) {
-      cmdLine.addAll(Arrays.asList(arguments));
-    }
+  ShellCommandResult execute(BzrIntellijHandler shellCmd) {
     if (shellCmd.isBad()) {
-      Exception e = new Exception("badcmd: " + cmdLine.toString());
+      Exception e = new Exception("badcmd: " + shellCmd.getCmd());
       LOG.debug(e);
     } else {
       try {
-        LOG.debug(String.format("(%s) : %s", String.valueOf(dir), cmdLine.toString()));
-        return shellCmd.execute(dir, cmdLine);
-      } catch (ShellCommandException e) {
+        return shellCmd.execij();
+      } catch (BzrHandlerException e) {
         showError(e);
-        LOG.error("ShellCommandException", e);
+        LOG.error("BzrHandlerException", e);
       }
     }
     return ShellCommandResult.EMPTY;
@@ -114,4 +107,28 @@ public final class ShellCommandService {
     );
   }
 
+  protected static void lockWorkDir(File lockDir) {
+    String path = lockDir == null ? "." : lockDir.getAbsolutePath();
+    LOG.debug(String.format("Locking   \"%s\"", path));
+    getWorkDirLock(path).lock();
+  }
+
+  protected static void unlockWorkDir(File lockDir) {
+    String path = lockDir == null ? "." : lockDir.getAbsolutePath();
+    LOG.debug(String.format("Unlocking \"%s\"", path));
+    getWorkDirLock(path).unlock();
+  }
+
+  private static Lock getWorkDirLock(String path) {
+//    String path = workDir != null ? workDir.getAbsolutePath() : ".";
+    Lock lock = sm_workDirLocks.get(path);
+    if (lock == null) {
+      lock = new ReentrantLock();
+      Lock curLock = sm_workDirLocks.putIfAbsent(path, lock);
+      if (curLock != null) {
+        lock = curLock;
+      }
+    }
+    return lock;
+  }
 }

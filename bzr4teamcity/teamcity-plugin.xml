@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:noNamespaceSchemaLocation="urn:shemas-jetbrains-com:teamcity-plugin-v1-xml">
+  <info>
+    <name>bzr</name>
+    <display-name>Bazaar VCS</display-name>
+    <version>2.2.0-SNAPSHOT</version>
+  </info>
+  <deployment use-separate-classloader="true"/>
+</teamcity-plugin>

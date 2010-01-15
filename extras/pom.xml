@@ -13,6 +13,38 @@
     <module>maven-scm-provider-bazaar</module>
   </modules>
 
+  <!--
+    <scm>
+      <connection>scm:bazaar:bzr://bzr4j.bzr.sourceforge.net/bzrroot/bzr4j/trunk</connection>
+      <developerConnection>scm:bazaar:bzr+ssh://bzr4j.bzr.sourceforge.net/bzrroot/bzr4j/trunk</developerConnection>
+    </scm>
+
+    <repositories>
+      <repository>
+        <id>local-release-repo</id>
+        <name>Local Release Repo</name>
+        <url>file://${user.home}/.m2/distrepos/releases</url>
+      </repository>
+    </repositories>
+
+    <pluginRepositories>
+      <pluginRepository>
+        <id>local-release-pluginrepo</id>
+        <name>Local Plugin Releases Repo</name>
+        <url>file://${user.home}/.m2/distrepos/plugin-releases</url>
+        <releases>
+          <enabled>true</enabled>
+          <updatePolicy>never</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </releases>
+        <snapshots>
+          <enabled>false</enabled>
+        </snapshots>
+      </pluginRepository>
+    </pluginRepositories>
+  -->
+
+
   <pluginRepositories>
     <pluginRepository>
       <id>local-release-pluginrepo</id>
@@ -64,6 +96,51 @@
           <exclude>target</exclude>
         </configuration>
       </plugin>
+<!--
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-9</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-bazaar</artifactId>
+            <version>1.2-em1</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <skipAssembly>true</skipAssembly>
+        </configuration>
+      </plugin>
+-->
     </plugins>
   </build>
 

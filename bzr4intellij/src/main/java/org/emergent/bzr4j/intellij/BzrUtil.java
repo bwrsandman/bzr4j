@@ -33,16 +33,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import com.intellij.vcsUtil.VcsUtil;
-import org.emergent.bzr4j.commandline.CommandLineClient;
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BazaarStatusKind;
-import org.emergent.bzr4j.core.BazaarTreeStatus;
 import org.emergent.bzr4j.core.BranchLocation;
-import org.emergent.bzr4j.core.IBazaarClient;
-import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.debug.LogUtil;
-import org.emergent.bzr4j.utils.BzrCoreUtil;
-import org.emergent.bzr4j.utils.IOUtil;
+import org.emergent.bzr4j.core.utils.BzrCoreUtil;
+import org.emergent.bzr4j.core.utils.IOUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +52,6 @@ import java.util.List;
 public class BzrUtil {
 
   private static final Logger LOG = Logger.getInstance(BzrUtil.class.getName());
-  private static final LogUtil sm_logger = LogUtil.getLogger(BzrUtil.class);
   private static final String EOL = System.getProperty("line.separator");
 
   /**
@@ -85,10 +78,7 @@ public class BzrUtil {
    */
   @Nullable
   private static VirtualFile getBzrRootOrNull(final FilePath filePath) {
-    File file = filePath.getIOFile();
-    while (file != null && (!file.exists() || !file.isDirectory() || !new File(file, ".bzr").exists())) {
-      file = file.getParentFile();
-    }
+    File file = getBzrRootOrNull(filePath.getIOFile());
     if (file == null) {
       return null;
     }
@@ -109,6 +99,20 @@ public class BzrUtil {
     } else {
       throw new VcsException("The file " + file.getPath() + " is not under bzr.");
     }
+  }
+
+  /**
+   * Return a bzr root for the file path (the parent directory with ".bzr" subdirectory)
+   *
+   * @param file a file path
+   * @return bzr root for the file or null if the file is not under bzr
+   */
+  @Nullable
+  public static File getBzrRootOrNull(File file) {
+    while (file != null && (!file.exists() || !file.isDirectory() || !new File(file, ".bzr").exists())) {
+      file = file.getParentFile();
+    }
+    return file;
   }
 
   /**
@@ -246,10 +250,6 @@ public class BzrUtil {
     return null;
   }
 
-  private static IBazaarClient createBzrClient() {
-    return new CommandLineClient();
-  }
-
   private static File root(FilePath file) {
     File f = file.getIOFile();
     return BzrCoreUtil.getRootBranch(f != null ? f : new File(file.getPath()));
@@ -259,30 +259,16 @@ public class BzrUtil {
     return BzrCoreUtil.getRootBranch(file);
   }
 
-  private static boolean isUnknown(BzrVcs bzr, File file) throws BazaarException {
-    BazaarTreeStatus tstat = createBzrClient().status(new File[] { file });
-    IBazaarStatus[] stats = tstat.getStatusAsArray();
-    sm_logger.debug("status array len: " + stats.length);
-    File root = BzrCoreUtil.getRootBranch(file);
-    File relPath = BzrCoreUtil.getRelativeTo(root, file);
-    String nixRel = BzrCoreUtil.unixFilePath(relPath);
-    for (IBazaarStatus status : stats) {
-      if (nixRel.equals(status.getPath()) && status.contains(BazaarStatusKind.UNKNOWN))
-        return true;
-    }
-    return false;
-  }
-
   private static void refreshFiles(List<VirtualFile> myFilesToRefresh, final Project project,
       boolean async) {
     final List<VirtualFile> toRefreshFiles = new ArrayList<VirtualFile>();
     final List<VirtualFile> toRefreshDirs = new ArrayList<VirtualFile>();
     for (VirtualFile file : myFilesToRefresh) {
       if (file.isDirectory()) {
-        sm_logger.debug("Gonna refresh: " + file.getName());
+        LOG.debug("Gonna refresh: " + file.getName());
         toRefreshDirs.add(file);
       } else {
-        sm_logger.debug("Gonna refresh: " + file.getName());
+        LOG.debug("Gonna refresh: " + file.getName());
         toRefreshFiles.add(file);
       }
     }
@@ -308,7 +294,7 @@ public class BzrUtil {
     for (Iterator<VirtualFile> iterator = files.iterator(); iterator.hasNext();) {
       final VirtualFile file = iterator.next();
       if (!file.isValid()) {
-        sm_logger.info("Refresh root is not valid: " + file.getPath());
+        LOG.info("Refresh root is not valid: " + file.getPath());
         iterator.remove();
       }
     }

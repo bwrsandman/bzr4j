@@ -9,9 +9,9 @@
             </run>
         </groups>
         <packages>
-            <package name="org.emergent.bzr4j.commandline.*"/>
+            <package name="org.emergent.bzr4j.core.commandline.*"/>
             <package name="org.emergent.bzr4j.core.*"/>
-            <package name="org.emergent.bzr4j.utils.*"/>
+            <package name="org.emergent.bzr4j.core.utils.*"/>
         </packages>
     </test>
 </suite>

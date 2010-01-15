@@ -10,15 +10,14 @@ package org.emergent.bzr4j.core;
  * @author Guillermo Gonzalez <guillo.gonzo AT gmail DOT com>
  *
  */
-public interface IPlugin
-{
+public interface IPlugin {
 
-    String getName();
+  String getName();
 
-    String[] getVersion();
+  String[] getVersion();
 
-    String getDescription();
+  String getDescription();
 
-    String getPath();
+  String getPath();
 
 }

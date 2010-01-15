@@ -13,13 +13,12 @@ import java.util.Map;
  * @author Guillermo Gonzalez <guillo.gonzo AT gmail DOT com>
  *
  */
-public interface IBzrError
-{
+public interface IBzrError {
 
-    public String getType();
+  public String getType();
 
-    public Map<String, String> getDict();
+  public Map<String, String> getDict();
 
-    public String getMessage();
+  public String getMessage();
 
 }

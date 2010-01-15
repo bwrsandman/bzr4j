@@ -17,6 +17,7 @@
 package org.emergent.bzr4j.intellij;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
@@ -39,7 +40,6 @@ import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
 import com.intellij.openapi.vcs.update.UpdateEnvironment;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.wm.StatusBar;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
@@ -56,7 +56,7 @@ import org.emergent.bzr4j.intellij.provider.update.BzrIntegrateEnvironment;
 import org.emergent.bzr4j.intellij.provider.update.BzrUpdateEnvironment;
 import org.emergent.bzr4j.intellij.ui.BzrChangesetStatus;
 import org.emergent.bzr4j.intellij.ui.BzrCurrentBranchStatus;
-import org.emergent.bzr4j.utils.BzrCoreUtil;
+import org.emergent.bzr4j.core.utils.BzrCoreUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,7 +104,7 @@ public class BzrVcs extends AbstractVcs implements Disposable {
 
   private Disposable m_activationDisposable;
 
-  private VirtualFileListener virtualFileListener;
+  private BzrVirtualFileListener virtualFileListener;
 
   private final BzrCommitExecutor commitExecutor;
   private final BzrCurrentBranchStatus hgCurrentBranchStatus = new BzrCurrentBranchStatus();
@@ -268,7 +268,10 @@ public class BzrVcs extends AbstractVcs implements Disposable {
       return;
     }
 
-    LocalFileSystem.getInstance().addVirtualFileListener(virtualFileListener);
+    LocalFileSystem lfs = LocalFileSystem.getInstance();
+    lfs.addVirtualFileListener(virtualFileListener);
+    lfs.registerAuxiliaryFileOperationsHandler(virtualFileListener);
+    CommandProcessor.getInstance().addCommandListener(virtualFileListener);
 
     BzrGlobalSettings globalSettings = BzrGlobalSettings.getInstance();
     BzrProjectSettings projectSettings = BzrProjectSettings.getInstance(myProject);
@@ -330,7 +333,10 @@ public class BzrVcs extends AbstractVcs implements Disposable {
       return;
     }
 
-    LocalFileSystem.getInstance().removeVirtualFileListener(virtualFileListener);
+    LocalFileSystem lfs = LocalFileSystem.getInstance();
+    lfs.removeVirtualFileListener(virtualFileListener);
+    lfs.unregisterAuxiliaryFileOperationsHandler(virtualFileListener);
+    CommandProcessor.getInstance().removeCommandListener(virtualFileListener);
 
     StatusBar statusBar = WindowManager.getInstance().getStatusBar(myProject);
     if (messageBusConnection != null) {

@@ -16,10 +16,10 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
+import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrFileRevision;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
-import org.emergent.bzr4j.intellij.data.BzrParserUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class BzrLogCommand {
 
     List<BzrFileRevision> revisions = new LinkedList<BzrFileRevision>();
     try {
-      List<IBazaarLogMessage> protorevs = BzrParserUtil.parseXmlLog(result);
+      List<IBazaarLogMessage> protorevs = XmlOutputUtil.parseXmlLog(result);
       for (IBazaarLogMessage lm : protorevs) {
         BzrRevisionNumber vcsRevisionNumber = BzrRevisionNumber.getLocalInstance(lm.getRevision().getValue());
         Date revisionDate = lm.getDate();

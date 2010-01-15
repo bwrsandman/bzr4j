@@ -20,7 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarInfo;
-import org.emergent.bzr4j.intellij.data.BzrParserUtil;
+import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class BzrInfoCommand extends BzrAbstractCommand {
     ShellCommandResult result = commandService.execute(vcsRoot, "xmlinfo", arguments);
     IBazaarInfo protorevs = null;
     try {
-      protorevs = BzrParserUtil.parseXmlInfo(result);
+      protorevs = XmlOutputUtil.parseXmlInfo(result);
     } catch (BazaarException e) {
       e.printStackTrace();
     }

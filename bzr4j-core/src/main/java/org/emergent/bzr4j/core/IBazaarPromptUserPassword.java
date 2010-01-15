@@ -8,7 +8,6 @@ package org.emergent.bzr4j.core;
  *
  * TODO: how could this can be implemented in the commandLine?
  */
-public interface IBazaarPromptUserPassword
-{
+public interface IBazaarPromptUserPassword {
 
 }

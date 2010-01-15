@@ -55,10 +55,10 @@ public class BzrUpdateCommand {
 //            arguments.add(branch);
 //        }
 
-    ShellCommand shellCommand = new ShellCommand();
+    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, "update");
     shellCommand.setStderrValidationEnabled(false);
     // todo parse the status log found in stderr
-    return ShellCommandService.getInstance(project).execute(repo, shellCommand, "update");
+    return ShellCommandService.getInstance(project).execute(shellCommand);
   }
 
 }

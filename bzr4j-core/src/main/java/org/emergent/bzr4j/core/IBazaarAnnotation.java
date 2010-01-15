@@ -9,22 +9,21 @@ import java.io.File;
  * @author Guillermo Gonzalez
  *
  */
-public interface IBazaarAnnotation
-{
+public interface IBazaarAnnotation {
 
-    public String getAuthor( int lineNumber );
+  public String getAuthor(int lineNumber);
 
-    public String getDate( int lineNumber );
+  public String getDate(int lineNumber);
 
-    public String getRevision( int lineNumber );
+  public String getRevision(int lineNumber);
 
-    public String getline( int lineNumber );
+  public String getline(int lineNumber);
 
-    public String getFileId( int lineNumber );
+  public String getFileId(int lineNumber);
 
-    public int getNumberOfLines();
+  public int getNumberOfLines();
 
-    public File getFile();
+  public File getFile();
 
-    public File getBranchRoot();
+  public File getBranchRoot();
 }

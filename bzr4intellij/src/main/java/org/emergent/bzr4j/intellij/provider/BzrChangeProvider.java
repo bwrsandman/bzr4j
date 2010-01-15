@@ -32,7 +32,9 @@ import org.emergent.bzr4j.intellij.BzrContentRevision;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
 import org.emergent.bzr4j.intellij.BzrRootConverter;
+import org.emergent.bzr4j.intellij.BzrUtil;
 import org.emergent.bzr4j.intellij.command.BzrLsCommand;
+import org.emergent.bzr4j.intellij.command.BzrMiscCommand;
 import org.emergent.bzr4j.intellij.command.BzrStatusCommand;
 import org.emergent.bzr4j.intellij.command.BzrWorkingCopyRevisionsCommand;
 import org.emergent.bzr4j.intellij.data.BzrChange;
@@ -76,25 +78,23 @@ public class BzrChangeProvider implements ChangeProvider {
   }
 
   private void process(ChangelistBuilder builder, FilePath filePath, Set<VirtualFile> processedRoots) {
-    VirtualFile repo = VcsUtil.getVcsRootFor(m_project, filePath);
-    List<VirtualFile> mappedRoots = BzrRootConverter.INSTANCE.convertRoots(Arrays.asList(repo));
-    repo = mappedRoots.size() < 1 ? null : mappedRoots.get(0);
+    VirtualFile vcsRepo = VcsUtil.getVcsRootFor(m_project, filePath);
+    List<VirtualFile> mappedRoots = BzrRootConverter.INSTANCE.convertRoots(Arrays.asList(vcsRepo));
+    VirtualFile repo = mappedRoots.size() < 1 ? null : mappedRoots.get(0);
     if (repo == null || processedRoots.contains(repo)) {
       LOG.debug("no processing: " + String.valueOf(repo));
       return;
-    } else {
-      LOG.debug("is processing: " + String.valueOf(repo));
     }
     Set<BzrChange> hgChanges = new HashSet<BzrChange>();
-    hgChanges.addAll((new BzrStatusCommand(m_project)).execute(repo));
-    hgChanges.addAll((new BzrLsCommand(m_project)).execute(repo));
+    String relpath = BzrUtil.relativePath(repo,vcsRepo);
+    LOG.debug("is processing: " + String.valueOf(repo) + " : " + relpath);
+    hgChanges.addAll((new BzrStatusCommand(m_project)).execute(repo,vcsRepo));
+    hgChanges.addAll((new BzrLsCommand(m_project)).execute(repo,vcsRepo));
 
     if (hgChanges == null || hgChanges.isEmpty()) {
       return;
     }
-    sendChanges(builder, hgChanges,
-        new BzrWorkingCopyRevisionsCommand(m_project).revno(repo)
-    );
+    sendChanges(builder, hgChanges, BzrMiscCommand.revno(m_project,repo));
     processedRoots.add(repo);
   }
 

@@ -37,7 +37,7 @@ public class BzrCatCommand extends BzrAbstractCommand {
 
     ShellCommandService service = ShellCommandService.getInstance(project);
     ShellCommandResult result = service.execute(hgFile.getRepo(), charset, "cat", arguments);
-    return result.getRawStdOut();
+    return result.getStdOutAsString();
   }
 
 }

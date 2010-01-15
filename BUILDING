@@ -1,15 +1,22 @@
 
+Optionally enable building the IntelliJ and/or TeamCity plugins by setting env vars:
+
+  set BZR4J_IDEA_SDK_DIR=C:\Program Files\JetBrains\ideaIU-93.67-jdk15
+  set BZR4J_TEAMCITY_SDK_DIR=C:\TeamCity
+
+Build the custom maven-idea-plugin:
+
+  pushd extras\maven-idea-plugin
+  mvn clean install
+  popd
+
 To build:
 
   mvn clean install
 
 To generate intellij project files:
 
-  mvn idea:idea
-
-To stage the site:
-
-  mvn site:stage -DstagingDirectory=C:\mvnsite
+  mvn idea:idea -DdownloadSources=true
 
 To auto install generated plugins you can create a ~/.m2/settings.xml with the following contents
 
@@ -20,19 +27,39 @@ To auto install generated plugins you can create a ~/.m2/settings.xml with the f
                           http://maven.apache.org/xsd/settings-1.0.0.xsd">
       <profiles>
         <profile>
-          <id>bzr4jprops</id>
+          <id>bzr4ijinstprops</id>
           <activation>
-            <activeByDefault>true</activeByDefault>
+            <property>
+              <name>ijinst</name>
+              <value>true</value>
+            </property>
           </activation>
           <properties>
             <idea.plugins.dir>${user.home}/.IntelliJIdea90/config/plugins</idea.plugins.dir>
+          </properties>
+        </profile>
+        <profile>
+          <id>bzr4jtcinstprops</id>
+          <activation>
+            <property>
+              <name>tcinst</name>
+              <value>true</value>
+            </property>
+          </activation>
+          <properties>
             <teamcity.plugins.dir>${user.home}/.BuildServer/plugins</teamcity.plugins.dir>
           </properties>
         </profile>
       </profiles>
     </settings>
 
-Also note (conflicting change) the intellij project expects you to have defined within your IntelliJ
+Then you can use these profiles to automatically install the IntelliJ or TeamCity plugin by running respectively:
+
+  mvn clean install -Dijinst=true
+
+  mvn clean install -Dtcinst=true
+
+Also note the intellij project expects you to have defined within your IntelliJ
 installation a special kind of JDK named "IDEA_SDK".  You can create this
 special JDK by going to the same location where you would define your other
 locally installed JDKs but then select the "IntelliJ IDEA SDK" option instead

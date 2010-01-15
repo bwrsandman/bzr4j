@@ -13,105 +13,110 @@ import java.util.Date;
  *
  * @author Guillermo Gonzalez
  */
-public interface IBazaarInfo
-{
+public interface IBazaarInfo {
 
-    // info
-    String getLayout();
+  // info
 
-    String[] getFormats();
+  String getLayout();
 
-    // locations
-    Locations getLocations();
+  String[] getFormats();
 
-    RelatedBranches getRelatedBranches();
+  // locations
 
-    // formats
-    String getControlFormat();
+  Locations getLocations();
 
-    String getWorkingTreeFormat();
+  RelatedBranches getRelatedBranches();
 
-    String getBranchFormat();
+  // formats
 
-    String getRepositoryFormat();
+  String getControlFormat();
 
-    // working tree stats
-    WorkingTreeStats getWorkingTreeStats();
+  String getWorkingTreeFormat();
 
-    // branch history
-    BranchHistory getBranchHistory();
+  String getBranchFormat();
 
-    // repo stats
-    RepositoryStats getRepositoryStats();
+  String getRepositoryFormat();
 
-    interface RelatedBranches
-    {
-        String getPublicBranch();
+  // working tree stats
 
-        String getPushBranch();
+  WorkingTreeStats getWorkingTreeStats();
 
-        String getParentBranch();
+  // branch history
 
-        String getSubmitBranch();
-    }
+  BranchHistory getBranchHistory();
 
-    interface WorkingTreeStats
-    {
-        Integer getUnchanged();
+  // repo stats
 
-        Integer getModified();
+  RepositoryStats getRepositoryStats();
 
-        Integer getAdded();
+  interface RelatedBranches {
 
-        Integer getRemoved();
+    String getPublicBranch();
 
-        Integer getRenamed();
+    String getPushBranch();
 
-        Integer getUnknown();
+    String getParentBranch();
 
-        Integer getIgnored();
+    String getSubmitBranch();
+  }
 
-        Integer getVersionedSubdirectories();
-    }
+  interface WorkingTreeStats {
 
-    interface BranchHistory
-    {
-        Integer getRevisions();
+    Integer getUnchanged();
 
-        Integer getCommitters();
+    Integer getModified();
 
-        Integer getDaysOld();
+    Integer getAdded();
 
-        Date getFirstRevisionDate();
+    Integer getRemoved();
 
-        Date getLatestRevisionDate();
-    }
+    Integer getRenamed();
 
-    interface RepositoryStats
-    {
-        Integer getRevisionCount();
+    Integer getUnknown();
 
-        Long getSize();
-    }
+    Integer getIgnored();
 
-    interface Locations
-    {
-        String getLightCheckoutRoot();
+    Integer getVersionedSubdirectories();
+  }
 
-        String getRepositoryCheckoutRoot();
+  interface BranchHistory {
 
-        String getCheckoutRoot();
+    Integer getRevisions();
 
-        String getCheckoutOfBranch();
+    Integer getCommitters();
 
-        String getSharedRepository();
+    Integer getDaysOld();
 
-        String getRepository();
+    Date getFirstRevisionDate();
 
-        String getRepositoryBranch();
+    Date getLatestRevisionDate();
+  }
 
-        String getBranchRoot();
+  interface RepositoryStats {
 
-        String getBoundToBranch();
-    }
+    Integer getRevisionCount();
+
+    Long getSize();
+  }
+
+  interface Locations {
+
+    String getLightCheckoutRoot();
+
+    String getRepositoryCheckoutRoot();
+
+    String getCheckoutRoot();
+
+    String getCheckoutOfBranch();
+
+    String getSharedRepository();
+
+    String getRepository();
+
+    String getRepositoryBranch();
+
+    String getBranchRoot();
+
+    String getBoundToBranch();
+  }
 }

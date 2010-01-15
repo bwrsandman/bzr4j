@@ -1,14 +1,13 @@
 package org.emergent.bzr4j.core;
 
-public interface IBazaarItemInfo
-{
+public interface IBazaarItemInfo {
 
-    BazaarItemKind getKind();
+  BazaarItemKind getKind();
 
-    String getId();
+  String getId();
 
-    String getPath();
+  String getPath();
 
-    BazaarStatusKind getStatusKind();
+  BazaarStatusType getStatusKind();
 
 }

@@ -65,9 +65,10 @@ public class BzrCommitCommand {
       for (BzrFile hgFile : files) {
         parameters.add(hgFile.getRelativePath());
       }
-      ShellCommand shellCommand = new ShellCommand();
+      BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, "commit");
+      shellCommand.addArguments(parameters);
       shellCommand.setStderrValidationEnabled(false);
-      ShellCommandService.getInstance(project).execute(repo, shellCommand, "commit", parameters);
+      ShellCommandService.getInstance(project).execute(shellCommand);
       project.getMessageBus().syncPublisher(BzrVcs.OUTGOING_TOPIC).update(project);
     } catch (IOException e) {
       LOG.error(e);

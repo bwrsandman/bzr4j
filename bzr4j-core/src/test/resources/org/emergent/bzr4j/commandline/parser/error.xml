@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="US-ASCII"?>
-<error>
-	<class>BzrCommandError</class>
-	<dict>
-		<key>msg</key><value>unknown command "versionxml"</value>
-		<key>a second test key</key><value>a second value</value>
-	</dict>
-	<message>unknown command "versionxml"</message>
-</error>

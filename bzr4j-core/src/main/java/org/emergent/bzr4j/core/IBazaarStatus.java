@@ -10,66 +10,65 @@ import java.util.Collection;
  * @author Guillermo Gonzalez
  *
  */
-public interface IBazaarStatus
-{
+public interface IBazaarStatus {
 
-    public String getShortStatus();
+  public String getShortStatus();
 
-    /**
-     * @return a String representing the relative (to branch root) path to the
-     *         file
-     */
-    public String getPath();
+  /**
+   * @return a String representing the relative (to branch root) path to the
+   *         file
+   */
+  public String getPath();
 
-    /**
-     * @return a String representing the relative (to branch root) previous path
-     *         to the file
-     */
-    public String getPreviousPath();
+  /**
+   * @return a String representing the relative (to branch root) previous path
+   *         to the file
+   */
+  public String getPreviousPath();
 
-    public String getOldKind();
+  public BazaarStatusKind getOldKind();
 
-    public String getNewKind();
+  public BazaarStatusKind getNewKind();
 
-    /**
-     * @return a File which stands for the absolute path to the branch
-     */
-    public File getBranchRoot();
+  /**
+   * @return a File which stands for the absolute path to the branch
+   */
+  public File getBranchRoot();
 
-    /**
-     * @return a File binded to this status (which is relative to branch root)
-     */
-    public File getFile();
+  /**
+   * @return a File binded to this status (which is relative to branch root)
+   */
+  public File getFile();
 
-    /**
-     * @return the previous File binded to this status (which is relative to
-     *         branch root)
-     */
-    public File getPreviousFile();
+  /**
+   * @return the previous File binded to this status (which is relative to
+   *         branch root)
+   */
+  public File getPreviousFile();
 
-    /**
-     * @return a String which contains the absolute path to this status file
-     */
-    public String getAbsolutePath();
+  /**
+   * @return a String which contains the absolute path to this status file
+   */
+  public String getAbsolutePath();
 
-    /**
-     *
-     * @param a
-     *            {@link BazaarStatusKind}
-     * @return true if this status conatins the given {@link BazaarStatusKind}
-     */
-    public boolean contains( BazaarStatusKind kind );
+  /**
+   *
+   * @param a
+   *            {@link BazaarStatusType}
+   * @return true if this status conatins the given {@link BazaarStatusType}
+   */
+  public boolean contains(BazaarStatusType kind);
 
-    /**
-     * Return a Collection with all the {@link BazaarStatusKind} that belongs to
-     * this status object
-     *
-     * @return Collection<? extends BazaarStatusKind>
-     */
-    public Collection<? extends BazaarStatusKind> getStatuses();
+  /**
+   * Return a Collection with all the {@link BazaarStatusType} that belongs to
+   * this status object
+   *
+   * @return Collection<? extends BazaarStatusKind>
+   */
+  public Collection<? extends BazaarStatusType> getStatuses();
 
-    public boolean equals( Object obj );
+  public boolean equals(Object obj);
 
-    public int hashCode();
+  public int hashCode();
 
 }

@@ -15,10 +15,10 @@ package org.emergent.bzr4j.intellij.command;
 import com.intellij.openapi.project.Project;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarAnnotation;
+import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
-import org.emergent.bzr4j.intellij.data.BzrParserUtil;
 import org.emergent.bzr4j.intellij.provider.annotate.BzrAnnotationLine;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ public class BzrAnnotateCommand {
 
     List<BzrAnnotationLine> annotations = new ArrayList<BzrAnnotationLine>();
     try {
-      IBazaarAnnotation lm = BzrParserUtil.parseXmlAnnotate(result);
+      IBazaarAnnotation lm = XmlOutputUtil.parseXmlAnnotate(result);
       int lineCount = lm.getNumberOfLines();
       for (int ii = 0; ii < lineCount; ii++) {
         BzrRevisionNumber revision = BzrRevisionNumber.getLocalInstance(lm.getRevision(ii));

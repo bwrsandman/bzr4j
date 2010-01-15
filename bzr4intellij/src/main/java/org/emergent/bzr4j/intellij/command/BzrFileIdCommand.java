@@ -33,13 +33,12 @@ public class BzrFileIdCommand {
   }
 
   public boolean isVersioned(@NotNull BzrFile hgFile) {
-    ShellCommand shellCmd = new ShellCommand();
+    BzrIntellijHandler shellCmd = new BzrIntellijHandler(project, hgFile.getRepo(), "file-id");
+    shellCmd.addArguments(Arrays.asList(hgFile.getRelativePath()));
     shellCmd.setExitValueValidationEnabled(false);
     shellCmd.setStderrValidationEnabled(false);
     ShellCommandService commandService = ShellCommandService.getInstance(project);
-    ShellCommandResult result = commandService.execute(
-        hgFile.getRepo(), shellCmd, "file-id", Arrays.asList(hgFile.getRelativePath())
-    );
+    ShellCommandResult result = commandService.execute(shellCmd);
     if (result.getExitValue() != 0)
       return false;
 //    if (result.getErrorLines().size() > 0)

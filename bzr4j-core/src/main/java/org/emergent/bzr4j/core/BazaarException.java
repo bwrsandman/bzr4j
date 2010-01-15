@@ -15,48 +15,27 @@
  */
 package org.emergent.bzr4j.core;
 
-import org.emergent.bzr4j.commandline.internal.ExecResult;
-import org.emergent.bzr4j.debug.LogUtil;
-
 /**
  * @author Patrick Woodworth
  */
-public class BazaarException extends Exception
-{
-    private static final LogUtil sm_logger = LogUtil.getLogger( BazaarException.class );
+public class BazaarException extends Exception {
 
-    public BazaarException()
-    {
-    }
+  public BazaarException() {
+  }
 
-    public BazaarException( String message )
-    {
-        super( message );
-    }
+  public BazaarException(String message) {
+    super(message);
+  }
 
-    public BazaarException( String message, Throwable cause )
-    {
-        super( message, cause );
+  public BazaarException(String message, Throwable cause) {
+    super(message, cause);
 //        super( message );
 //        initCause( cause );
-    }
+  }
 
-    public BazaarException( Throwable cause )
-    {
-        super( cause );
+  public BazaarException(Throwable cause) {
+    super(cause);
 //        super( cause.getMessage() );
 //        initCause( cause );
-    }
-
-    public BazaarException( ExecResult res )
-    {
-        this( "exitCode==" + res.getExitCode() + " ; stderr: " + res.getStderr() );
-//        sm_logger.error( "Command failed.", this );
-    }
-
-    public BazaarException( ExecResult res, Throwable e )
-    {
-        this( "exitCode==" + res.getExitCode() + " ; stderr: " + res.getStderr(), e );
-//        sm_logger.error( "Command failed.", this );
-    }
+  }
 }
