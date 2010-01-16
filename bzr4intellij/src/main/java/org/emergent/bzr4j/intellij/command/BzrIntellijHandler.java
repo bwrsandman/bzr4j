@@ -21,11 +21,18 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.emergent.bzr4j.core.BzrAbstractHandler;
 import org.emergent.bzr4j.core.BzrHandlerException;
+import org.emergent.bzr4j.core.BzrHandlerResult;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
 import org.emergent.bzr4j.intellij.BzrUtil;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Patrick Woodworth
@@ -33,6 +40,8 @@ import java.nio.charset.Charset;
 public class BzrIntellijHandler extends BzrAbstractHandler {
 
   private static final Logger LOG = Logger.getInstance(BzrIntellijHandler.class.getName());
+
+  private static final ConcurrentMap<String, Lock> sm_workDirLocks = new ConcurrentHashMap<String, Lock>();
 
   private final Project m_project;
 
@@ -61,8 +70,19 @@ public class BzrIntellijHandler extends BzrAbstractHandler {
     m_charset = charset;
   }
 
+  @Override
+  protected BzrHandlerResult exec(BzrHandlerResult result) throws BzrHandlerException {
+    final Lock lock = getWorkDirLock(getDir());
+    lock.lock();
+    try {
+      return super.exec(result);
+    } finally {
+      lock.unlock();
+    }
+  }
+
   public ShellCommandResult execij() throws BzrHandlerException {
-    return (ShellCommandResult)super.exec(new ShellCommandResult(m_charset));
+    return (ShellCommandResult)exec(new ShellCommandResult(m_charset));
   }
 
   public void addRelativePaths(VirtualFile... files) {
@@ -77,6 +97,22 @@ public class BzrIntellijHandler extends BzrAbstractHandler {
 
   public void setBad(boolean bad) {
     m_bad = bad;
+  }
+
+  @Override
+  protected ProcessBuilder createProcessBuilder(List<String> args) {
+    ProcessBuilder retval = super.createProcessBuilder(args);
+    Map<String, String> envVars = retval.environment();
+    for (Map.Entry<String,String> override : BzrGlobalSettings.getInstance().getEnvironmentVariables().entrySet()) {
+      String key = override.getKey();
+      String value = override.getValue();
+      if (value != null && value.trim().length() > 0) {
+        envVars.put(key, value);
+      } else {
+        envVars.remove(key);
+      }
+    }
+    return retval;
   }
 
   @Override
@@ -100,5 +136,19 @@ public class BzrIntellijHandler extends BzrAbstractHandler {
     String repoPath = repo.getPath();
     File repoFile = repoPath != null ? new File(repoPath) : null;
     return BzrUtil.getBzrRootOrNull(repoFile);
+  }
+
+  public static Lock getWorkDirLock(File workDir) {
+    boolean fineGrain = BzrGlobalSettings.getInstance().isGranularExecLockingEnabled();
+    String path = (fineGrain && (workDir != null)) ? workDir.getAbsolutePath() : ".";
+    Lock lock = sm_workDirLocks.get(path);
+    if (lock == null) {
+      lock = new ReentrantLock();
+      Lock curLock = sm_workDirLocks.putIfAbsent(path, lock);
+      if (curLock != null) {
+        lock = curLock;
+      }
+    }
+    return lock;
   }
 }

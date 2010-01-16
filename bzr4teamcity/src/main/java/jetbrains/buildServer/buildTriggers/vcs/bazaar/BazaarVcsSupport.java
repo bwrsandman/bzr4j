@@ -25,7 +25,6 @@ import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.ServerPaths;
 import jetbrains.buildServer.util.FileUtil;
-import jetbrains.buildServer.util.StringUtil;
 import jetbrains.buildServer.vcs.BuildPatchByCheckoutRules;
 import jetbrains.buildServer.vcs.CheckoutRules;
 import jetbrains.buildServer.vcs.CollectChangesPolicy;
@@ -43,7 +42,6 @@ import jetbrains.buildServer.vcs.VcsSupport;
 import jetbrains.buildServer.vcs.VcsSupportUtil;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BzrAbstractHandler;
 import org.emergent.bzr4j.core.BzrHandlerException;
 import org.emergent.bzr4j.core.BzrHandlerResult;
 import org.emergent.bzr4j.core.utils.BzrCoreUtil;
@@ -67,7 +65,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Bazaar VCS plugin for TeamCity works as follows:
@@ -231,7 +228,7 @@ public class BazaarVcsSupport extends VcsSupport
   }
 
   private Lock getWorkDirLock(final File workDir) {
-    String path = workDir.getAbsolutePath();
+//    String path = workDir.getAbsolutePath();
 //    Lock lock = m_workDirLocks.get(path);
 //    if (lock == null) {
 //      lock = new ReentrantLock();
@@ -240,7 +237,7 @@ public class BazaarVcsSupport extends VcsSupport
 //        lock = curLock;
 //      }
 //    }
-    Lock lock = BzrAbstractHandler.getWorkDirLock(path);
+    Lock lock = BzrTeamcityHandler.getWorkDirLock(workDir);
     return lock;
   }
 

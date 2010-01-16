@@ -17,12 +17,15 @@
 package jetbrains.buildServer.buildTriggers.vcs.bazaar;
 
 import com.intellij.openapi.diagnostic.Logger;
-import jetbrains.buildServer.log.Loggers;
 import org.emergent.bzr4j.core.BzrAbstractHandler;
 import org.emergent.bzr4j.core.BzrHandlerException;
 import org.emergent.bzr4j.core.BzrHandlerResult;
 
 import java.io.File;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Patrick Woodworth
@@ -30,6 +33,8 @@ import java.io.File;
 public class BzrTeamcityHandler extends BzrAbstractHandler {
 
   private static final Logger LOG = Logger.getInstance(BzrTeamcityHandler.class.getName());
+
+  private static final ConcurrentMap<String, Lock> sm_workDirLocks = new ConcurrentHashMap<String, Lock>();
 
   private final Settings m_settings;
 
@@ -39,8 +44,19 @@ public class BzrTeamcityHandler extends BzrAbstractHandler {
     addArguments(args);
   }
 
+  @Override
+  protected BzrHandlerResult exec(BzrHandlerResult result) throws BzrHandlerException {
+    final Lock lock = getWorkDirLock(getDir());
+    lock.lock();
+    try {
+      return super.exec(result);
+    } finally {
+      lock.unlock();
+    }
+  }
+
   public BzrHandlerResult exectc(boolean validate) throws BzrHandlerException {
-    return super.exec(new BzrHandlerResult());
+    return exec(new BzrHandlerResult());
   }
 
   public BzrHandlerResult exectc() throws BzrHandlerException {
@@ -64,5 +80,18 @@ public class BzrTeamcityHandler extends BzrAbstractHandler {
 
   private static File getBzrRoot(Settings settings) {
     return settings.getLocalRepositoryDir();
+  }
+
+  public static Lock getWorkDirLock(File workDir) {
+    String path = workDir != null ? workDir.getAbsolutePath() : ".";
+    Lock lock = sm_workDirLocks.get(path);
+    if (lock == null) {
+      lock = new ReentrantLock();
+      Lock curLock = sm_workDirLocks.putIfAbsent(path, lock);
+      if (curLock != null) {
+        lock = curLock;
+      }
+    }
+    return lock;
   }
 }

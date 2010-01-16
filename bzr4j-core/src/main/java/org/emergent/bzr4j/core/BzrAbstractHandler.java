@@ -23,17 +23,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Patrick Woodworth
  */
 public abstract class BzrAbstractHandler {
-
-  private static final ConcurrentMap<String, Lock> sm_workDirLocks = new ConcurrentHashMap<String, Lock>();
 
   private final File m_dir;
 
@@ -62,9 +56,8 @@ public abstract class BzrAbstractHandler {
     ArrayList<String> args = new ArrayList<String>(Arrays.asList(getBzrExecutablePath(),m_cmd,"--no-aliases"));
     args.addAll(m_args);
     Process process = null;
-    acquireLock();
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(args);
+      ProcessBuilder processBuilder = createProcessBuilder(args);
       File workDir = null;
       if (m_dir != null && m_dir.isDirectory()) {
         workDir = m_dir;
@@ -94,7 +87,6 @@ public abstract class BzrAbstractHandler {
     } catch (InterruptedException e) {
       throw new BzrHandlerException(e);
     } finally {
-      releaseLock();
       if (process != null)
         try {
           process.destroy();
@@ -128,32 +120,11 @@ public abstract class BzrAbstractHandler {
     m_exitValueValidationEnabled = exitValueValidationEnabled;
   }
 
+  protected ProcessBuilder createProcessBuilder(List<String> args) {
+    return new ProcessBuilder(args);
+  }
+
   protected abstract String getBzrExecutablePath();
-
-  protected void acquireLock() {
-    String path = getDir() == null ? "." : getDir().getAbsolutePath();
-//    logDebug(String.format("Locking   \"%s\"", path));
-    getWorkDirLock(path).lock();
-  }
-
-  protected void releaseLock() {
-    String path = getDir() == null ? "." : getDir().getAbsolutePath();
-//    logDebug(String.format("Unlocking \"%s\"", path));
-    getWorkDirLock(path).unlock();
-  }
-
-  public static Lock getWorkDirLock(String path) {
-//    String path = workDir != null ? workDir.getAbsolutePath() : ".";
-    Lock lock = sm_workDirLocks.get(path);
-    if (lock == null) {
-      lock = new ReentrantLock();
-      Lock curLock = sm_workDirLocks.putIfAbsent(path, lock);
-      if (curLock != null) {
-        lock = curLock;
-      }
-    }
-    return lock;
-  }
 
   protected void logExec(BzrHandlerResult result, File workDir, ArrayList<String> args) {
     logDebug(String.format("(%s) : %s", String.valueOf(workDir), args.toString()));

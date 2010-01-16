@@ -18,6 +18,9 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 @State(
     name = "bzr4intellij.settings",
     storages = @Storage(id = "bzr4intellij.settings", file = "$OPTIONS$/bzr4intellij.xml")
@@ -27,8 +30,11 @@ public class BzrGlobalSettings implements PersistentStateComponent<BzrGlobalSett
   public static final String DEFAULT_EXECUTABLE = "bzr";
   private static final int FIVE_MINUTES = 300;
 
+  private final TreeMap<String, String> m_environmentVariables = new TreeMap<String, String>();
+
   private String m_bzrExecutable = DEFAULT_EXECUTABLE;
   private boolean m_annotationTrimmingEnabled;
+  private boolean m_granularExecLockingEnabled;
 
   public static BzrGlobalSettings getInstance() {
     return ServiceManager.getService(BzrGlobalSettings.class);
@@ -60,5 +66,39 @@ public class BzrGlobalSettings implements PersistentStateComponent<BzrGlobalSett
 
   public int getIncomingCheckIntervalSeconds() {
     return FIVE_MINUTES;
+  }
+
+  public boolean isGranularExecLockingEnabled() {
+    return m_granularExecLockingEnabled;
+  }
+
+  public void setGranularExecLockingEnabled(boolean granularExecLockingEnabled) {
+    m_granularExecLockingEnabled = granularExecLockingEnabled;
+  }
+
+  public Map<String, String> getEnvironmentVariables() {
+    return (Map<String, String>)m_environmentVariables.clone();
+  }
+
+  public void setEnvironmentVariables(Map<String, String> val) {
+    m_environmentVariables.clear();
+    m_environmentVariables.putAll(val);
+  }
+  
+  public String getBzrEnvVar(String key) {
+    return m_environmentVariables.get(key);
+  }
+
+  public String getBzrEnvVarSafe(String key) {
+    String retval = m_environmentVariables.get(key);
+    return retval != null ? retval : "";
+  }
+
+  public void setBzrEnvVarSafe(String key, String val) {
+    if (val != null) {
+      m_environmentVariables.put(key, val);
+    } else {
+      m_environmentVariables.remove(key);
+    }
   }
 }

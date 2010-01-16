@@ -12,12 +12,14 @@
 // limitations under the License.
 package org.emergent.bzr4j.intellij.ui;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import org.emergent.bzr4j.core.utils.BzrCoreUtil;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
 import org.emergent.bzr4j.intellij.BzrVcsMessages;
 import org.emergent.bzr4j.intellij.command.BzrVersionCommand;
@@ -26,19 +28,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class BzrConfigurationIdePanel {
+
+  private static final Logger LOG = Logger.getInstance(BzrConfigurationIdePanel.class.getName());
 
   private TextFieldWithBrowseButton pathSelector;
 
   private JPanel basePanel;
   private JButton pathDefaultButton;
   private JCheckBox m_trimAnnotationCheckBox;
+  private JTextField m_envBzrEmailTextField;
+  private JTextField m_envBzrHomeTextField;
+  private JCheckBox m_granularExecLockingCheckBox;
+  private JCheckBox m_envBzrEmailCheckBox;
+  private JCheckBox m_envBzrHomeCheckBox;
 
   private final BzrGlobalSettings globalSettings;
 
-  public BzrConfigurationIdePanel(BzrGlobalSettings globalSettings) {
+  private final HashMap<String, EnvVarContainer> m_envWidgets = new HashMap<String, EnvVarContainer>();
+
+  public BzrConfigurationIdePanel(final BzrGlobalSettings globalSettings) {
     this.globalSettings = globalSettings;
     loadSettings();
 
@@ -62,8 +74,13 @@ public class BzrConfigurationIdePanel {
   }
 
   public boolean isModified() {
+    for (EnvVarContainer con : m_envWidgets.values()) {
+      if (con.isModified())
+        return true;
+    }
     return (!pathSelector.getText().equals(globalSettings.getBzrExecutable())
-        || !(m_trimAnnotationCheckBox.isSelected() == globalSettings.isAnnotationTrimmingEnabled()));
+        || !(m_trimAnnotationCheckBox.isSelected() == globalSettings.isAnnotationTrimmingEnabled())
+        || !(m_granularExecLockingCheckBox.isSelected() == globalSettings.isAnnotationTrimmingEnabled()));
   }
 
   public JPanel getBasePanel() {
@@ -84,11 +101,29 @@ public class BzrConfigurationIdePanel {
   public void saveSettings() {
     globalSettings.setBzrExecutable(pathSelector.getText());
     globalSettings.setAnnotationTrimmingEnabled(m_trimAnnotationCheckBox.isSelected());
+    globalSettings.setGranularExecLockingEnabled(m_granularExecLockingCheckBox.isSelected());
+    for (EnvVarContainer con : m_envWidgets.values()) {
+      con.saveEnvVarWidgets();
+    }
   }
 
   public void loadSettings() {
     pathSelector.setText(globalSettings.getBzrExecutable());
     m_trimAnnotationCheckBox.setSelected(globalSettings.isAnnotationTrimmingEnabled());
+    m_granularExecLockingCheckBox.setSelected(globalSettings.isGranularExecLockingEnabled());
+    m_envWidgets.put("BZR_EMAIL", new EnvVarContainer("BZR_EMAIL", m_envBzrEmailCheckBox, m_envBzrEmailTextField));
+    m_envWidgets.put("BZR_HOME", new EnvVarContainer("BZR_HOME", m_envBzrHomeCheckBox, m_envBzrHomeTextField));
+    for (EnvVarContainer con : m_envWidgets.values()) {
+      con.loadEnvVarWidgets();
+    }
+  }
+
+  private String getEnvValue(JCheckBox checkBox, JTextField textField) {
+    if (checkBox.isSelected()) {
+      return textField.getText();
+    } else {
+      return null;
+    }
   }
 
   {
@@ -105,7 +140,7 @@ public class BzrConfigurationIdePanel {
    */
   private void $$$setupUI$$$() {
     basePanel = new JPanel();
-    basePanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+    basePanel.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
     final JPanel panel1 = new JPanel();
     panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
     basePanel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
@@ -136,7 +171,7 @@ public class BzrConfigurationIdePanel {
         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final Spacer spacer1 = new Spacer();
     basePanel.add(spacer1,
-        new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+        new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
             GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -157,6 +192,64 @@ public class BzrConfigurationIdePanel {
     final Spacer spacer2 = new Spacer();
     panel2.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    final JPanel panel3 = new JPanel();
+    panel3.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+    basePanel.add(panel3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    panel3.setBorder(BorderFactory.createTitledBorder(
+        ResourceBundle.getBundle("org/emergent/bzr4j/intellij/BzrVcsMessages").getString(
+            "configpanel.envvars_group.text")));
+    m_envBzrEmailTextField = new JTextField();
+    m_envBzrEmailTextField.setEnabled(true);
+    m_envBzrEmailTextField.setText("");
+    panel3.add(m_envBzrEmailTextField,
+        new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null,
+            0, false));
+    final Spacer spacer3 = new Spacer();
+    panel3.add(spacer3, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    final Spacer spacer4 = new Spacer();
+    panel3.add(spacer4, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    m_envBzrHomeTextField = new JTextField();
+    m_envBzrHomeTextField.setEnabled(true);
+    panel3.add(m_envBzrHomeTextField,
+        new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null,
+            0, false));
+    m_envBzrEmailCheckBox = new JCheckBox();
+    m_envBzrEmailCheckBox.setText("BZR_EMAIL");
+    panel3.add(m_envBzrEmailCheckBox,
+        new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+            GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    m_envBzrHomeCheckBox = new JCheckBox();
+    m_envBzrHomeCheckBox.setText("BZR_HOME");
+    panel3.add(m_envBzrHomeCheckBox,
+        new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+            GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    final JPanel panel4 = new JPanel();
+    panel4.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+    basePanel.add(panel4, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    panel4.setBorder(BorderFactory.createTitledBorder(
+        ResourceBundle.getBundle("org/emergent/bzr4j/intellij/BzrVcsMessages").getString(
+            "configpanel.experimental_group.text")));
+    m_granularExecLockingCheckBox = new JCheckBox();
+    this.$$$loadButtonText$$$(m_granularExecLockingCheckBox,
+        ResourceBundle.getBundle("org/emergent/bzr4j/intellij/BzrVcsMessages").getString(
+            "configpanel.fine_grained_exec_locking.text"));
+    panel4.add(m_granularExecLockingCheckBox,
+        new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+            GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+            GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    final Spacer spacer5 = new Spacer();
+    panel4.add(spacer5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
   }
 
   /** @noinspection ALL */
@@ -212,5 +305,65 @@ public class BzrConfigurationIdePanel {
   /** @noinspection ALL */
   public JComponent $$$getRootComponent$$$() {
     return basePanel;
+  }
+
+  private class EnvVarContainer {
+
+    private String m_key;
+    private JCheckBox m_checkBox;
+    private JTextField m_textField;
+
+    public EnvVarContainer(String key, JCheckBox checkBox, JTextField textField) {
+      m_key = key;
+      m_checkBox = checkBox;
+      m_textField = textField;
+      m_checkBox.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          updateEnvVarWidgets();
+        }
+      });
+    }
+
+    public boolean isModified() {
+      return !(BzrCoreUtil.isEqual(getEnvValue(m_checkBox, m_textField), globalSettings.getBzrEnvVarSafe(m_key)));
+    }
+
+    public void updateEnvVarWidgets() {
+      try {
+        if (m_checkBox.isSelected()) {
+          m_textField.setEditable(true);
+          String val = globalSettings.getBzrEnvVar(m_key);
+          m_textField.setText(val != null ? val : "");
+        } else {
+          m_textField.setEditable(false);
+          String val = System.getenv(m_key);
+          m_textField.setText(val != null ? val : "");
+        }
+      } catch (Throwable e) {
+        LOG.error(e);
+      }
+    }
+
+    public void loadEnvVarWidgets() {
+      try {
+        String val = globalSettings.getBzrEnvVar(m_key);
+        if (val != null) {
+          m_checkBox.setSelected(true);
+          m_textField.setEditable(true);
+          m_textField.setText(val);
+        } else {
+          m_checkBox.setSelected(false);
+          m_textField.setEditable(false);
+          val = System.getenv(m_key);
+          m_textField.setText(val != null ? val : "");
+        }
+      } catch (Throwable e) {
+        LOG.error(e);
+      }
+    }
+
+    public void saveEnvVarWidgets() {
+      globalSettings.setBzrEnvVarSafe(m_key, m_checkBox.isSelected() ? m_textField.getText() : null);
+    }
   }
 }
