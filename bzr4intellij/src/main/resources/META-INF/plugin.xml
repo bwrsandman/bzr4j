@@ -3,7 +3,7 @@
   <name>Bzr4IntelliJ</name>
   <id>bzr4intellij</id>
   <description>Provides integration with Bazaar version control system</description>
-  <version>2.2.0-SNAPSHOT</version>
+  <version>2.2.0</version>
   <category>VCS Integration</category>
   <vendor url="http://emergent.org/" logo="/images/bzr.png" email="bzr4j@emergent.org">Patrick Woodworth</vendor>
   <idea-version since-build="91.13"/>
