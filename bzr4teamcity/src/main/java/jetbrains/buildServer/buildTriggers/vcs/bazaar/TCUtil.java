@@ -5,16 +5,16 @@ import jetbrains.buildServer.log.Loggers;
 import jetbrains.buildServer.vcs.IncludeRule;
 import jetbrains.buildServer.vcs.VcsChange;
 import jetbrains.buildServer.vcs.VcsChangeInfo;
-import org.emergent.bzr4j.core.BazaarStatusKind;
+import org.emergent.bzr4j.core.BazaarItemKind;
 import org.emergent.bzr4j.core.BazaarStatusType;
-import org.emergent.bzr4j.core.BzrHandlerException;
-import org.emergent.bzr4j.core.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrHandlerException;
+import org.emergent.bzr4j.core.cli.BzrHandlerResult;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.commandline.parser.XmlStatusResult;
+import org.emergent.bzr4j.core.xmloutput.XmlOutputParser;
+import org.emergent.bzr4j.core.xmloutput.XmlStatusResult;
 import org.emergent.bzr4j.core.utils.BzrCoreUtil;
-import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class TCUtil {
   public static List<ChangeSet> parseChangeSets(BzrHandlerResult result) {
     List<ChangeSet> retval = new ArrayList<ChangeSet>();
     try {
-      List<IBazaarLogMessage> protorevs = XmlOutputUtil.parseXmlLog(result);
+      List<IBazaarLogMessage> protorevs = XmlOutputParser.parseXmlLog(result,false);
       for (IBazaarLogMessage lm : protorevs) {
         ChangeSet cset = new ChangeSet(lm.getRevision().getValue(),lm.getDate(),lm.getCommiter(),lm.getMessage());
         retval.add(cset);
@@ -69,7 +69,7 @@ public class TCUtil {
 
   public static List<ModifiedFile> parseStatus(BzrHandlerResult result) throws BazaarException {
     List<ModifiedFile> retval = new ArrayList<ModifiedFile>();
-    XmlStatusResult parser = XmlOutputUtil.parseXmlStatus(result);
+    XmlStatusResult parser = XmlOutputParser.parseXmlStatus(result);
     Set<IBazaarStatus> statii = parser.getStatusSet();
     for (IBazaarStatus bzrStatus : statii) {
       if (bzrStatus.contains(BazaarStatusType.DELETED)) {
@@ -108,7 +108,7 @@ public class TCUtil {
 
   private static VcsChangeInfo.Type getChangeType(final ModifiedFile mf) {
     final ModifiedFile.Status status = mf.getStatus();
-    if (BazaarStatusKind.directory.equals(mf.getKind())) {
+    if (BazaarItemKind.directory.equals(mf.getKind())) {
       switch (status) {
         case ADDED:
           return VcsChangeInfo.Type.DIRECTORY_ADDED;

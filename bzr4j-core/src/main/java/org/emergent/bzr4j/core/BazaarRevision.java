@@ -3,8 +3,6 @@
  */
 package org.emergent.bzr4j.core;
 
-import org.emergent.bzr4j.core.utils.BazaarRuntimeException;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,9 +19,7 @@ import java.util.StringTokenizer;
  * @author Guillermo Gonzalez
  *
  */
-public final class BazaarRevision implements IBazaarRevisionSpec {
-
-  public static final BazaarRevision INVALID = new BazaarRevision(Prefix.NONE, null);
+public final class BazaarRevision {
 
   private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
 
@@ -36,7 +32,6 @@ public final class BazaarRevision implements IBazaarRevisionSpec {
   }
 
   private BazaarRevision(Prefix prefix, String value) {
-    super();
     this.prefix = prefix;
     this.value = value != null ? value.trim() : value;
   }
@@ -60,7 +55,7 @@ public final class BazaarRevision implements IBazaarRevisionSpec {
     if (Prefix.isValid(prefixKind)) {
       return new BazaarRevision(prefixKind, value);
     }
-    throw new BazaarRuntimeException("Invalid revision format");
+    throw new IllegalArgumentException("Invalid revision format");
   }
 
   public static BazaarRevision getRevision(Prefix prefix, String value) {
@@ -79,44 +74,6 @@ public final class BazaarRevision implements IBazaarRevisionSpec {
 
   protected synchronized static String format(Date date) {
     return dateFormat.format(date);
-  }
-
-  public enum Prefix {
-    // protected Pattern revidPattern =
-    // Pattern.compile("[a-zA-Z]{4}@[a-zA-Z]{4}-[0-9]{9}");
-    REVNO("revno:"),
-    REVID("revid:"),
-    LAST("last:"),
-    BEFORE("before:"),
-    TAG("tag:"),
-    DATE("date:"),
-    ANCESTOR("ancestor:"),
-    BRANCH("branch:"),
-    NONE(""),;
-
-    private final String value;
-
-    private Prefix(final String value) {
-      this.value = value;
-    }
-
-    protected static boolean isValid(String value) {
-      return fromString(value) != null;
-    }
-
-    public static Prefix fromString(String prefixString) {
-      for (Prefix prefix : values()) {
-        if (prefix.value.equals(prefixString)) {
-          return prefix;
-        }
-      }
-      return null;
-    }
-
-    @Override
-    public String toString() {
-      return value;
-    }
   }
 
   /**
@@ -212,4 +169,41 @@ public final class BazaarRevision implements IBazaarRevisionSpec {
     return result;
   }
 
+  public enum Prefix {
+    // protected Pattern revidPattern =
+    // Pattern.compile("[a-zA-Z]{4}@[a-zA-Z]{4}-[0-9]{9}");
+    REVNO("revno:"),
+    REVID("revid:"),
+    LAST("last:"),
+    BEFORE("before:"),
+    TAG("tag:"),
+    DATE("date:"),
+    ANCESTOR("ancestor:"),
+    BRANCH("branch:"),
+    NONE(""),;
+
+    private final String value;
+
+    private Prefix(final String value) {
+      this.value = value;
+    }
+
+    protected static boolean isValid(String value) {
+      return fromString(value) != null;
+    }
+
+    public static Prefix fromString(String prefixString) {
+      for (Prefix prefix : values()) {
+        if (prefix.value.equals(prefixString)) {
+          return prefix;
+        }
+      }
+      return null;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
+  }
 }

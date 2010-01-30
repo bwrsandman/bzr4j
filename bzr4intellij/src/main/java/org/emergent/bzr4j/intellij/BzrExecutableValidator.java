@@ -13,7 +13,7 @@
 package org.emergent.bzr4j.intellij;
 
 import com.intellij.openapi.project.Project;
-import org.emergent.bzr4j.intellij.command.BzrVersionCommand;
+import org.emergent.bzr4j.intellij.command.ShellCommandService;
 import org.emergent.bzr4j.intellij.ui.BzrSetExecutableDialog;
 
 class BzrExecutableValidator {
@@ -25,8 +25,7 @@ class BzrExecutableValidator {
   }
 
   public boolean check(BzrGlobalSettings globalSettings) {
-    BzrVersionCommand command = new BzrVersionCommand();
-    if (command.isValid(globalSettings.getBzrExecutable())) {
+    if (ShellCommandService.isValid(globalSettings.getBzrExecutable())) {
       return true;
     }
 
@@ -37,7 +36,7 @@ class BzrExecutableValidator {
       dialog = new BzrSetExecutableDialog(project);
       dialog.setBadHgPath(previousHgPath);
       dialog.show();
-      validHgExecutable = dialog.isOK() && command.isValid(dialog.getNewHgPath());
+      validHgExecutable = dialog.isOK() && ShellCommandService.isValid(dialog.getNewHgPath());
       previousHgPath = dialog.getNewHgPath();
     } while (!validHgExecutable && dialog.isOK());
 

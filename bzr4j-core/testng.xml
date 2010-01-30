@@ -1,17 +1,18 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="bzr4jcore" verbose="1">
-    <test name="GroupPrime">
-        <groups>
-            <run>
-                <exclude name="broken"/>
-                <exclude name="obsolete"/>
-                <exclude name="integration"/>
-            </run>
-        </groups>
-        <packages>
-            <package name="org.emergent.bzr4j.core.commandline.*"/>
-            <package name="org.emergent.bzr4j.core.*"/>
-            <package name="org.emergent.bzr4j.core.utils.*"/>
-        </packages>
-    </test>
+  <test name="GroupPrime">
+    <groups>
+      <run>
+        <exclude name="broken"/>
+        <exclude name="obsolete"/>
+        <exclude name="integration"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="org.emergent.bzr4j.core.cli.*"/>
+      <package name="org.emergent.bzr4j.core.*"/>
+      <package name="org.emergent.bzr4j.core.utils.*"/>
+      <package name="org.emergent.bzr4j.core.tests.*"/>
+    </packages>
+  </test>
 </suite>

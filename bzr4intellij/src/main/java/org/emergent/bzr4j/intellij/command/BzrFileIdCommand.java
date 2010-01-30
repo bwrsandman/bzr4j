@@ -33,7 +33,7 @@ public class BzrFileIdCommand {
   }
 
   public boolean isVersioned(@NotNull BzrFile hgFile) {
-    BzrIntellijHandler shellCmd = new BzrIntellijHandler(project, hgFile.getRepo(), "file-id");
+    BzrIntellijHandler shellCmd = ShellCommandService.getInstance(project).createCommand(hgFile.getRepo(), "file-id");
     shellCmd.addArguments(Arrays.asList(hgFile.getRelativePath()));
     shellCmd.setExitValueValidationEnabled(false);
     shellCmd.setStderrValidationEnabled(false);

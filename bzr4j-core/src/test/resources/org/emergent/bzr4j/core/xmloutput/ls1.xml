@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="cp1252"?>
+<list>
+  <item>
+    <id>bzrignore-20100126210441-oqey42au6xgfjowu-1</id>
+    <kind>file</kind>
+    <path>.bzrignore</path>
+    <status_kind>versioned</status_kind>
+  </item>
+  <item>
+    <id>foodir-20100126210441-r2veq1hdxwd058dx-1</id>
+    <kind>directory</kind>
+    <path>foodir</path>
+    <status_kind>versioned</status_kind>
+  </item>
+  <item>
+    <id>foo.txt-20100126210442-bwd4y4l0x4vncij4-1</id>
+    <kind>file</kind>
+    <path>foodir/foo.txt</path>
+    <status_kind>versioned</status_kind>
+  </item>
+</list>

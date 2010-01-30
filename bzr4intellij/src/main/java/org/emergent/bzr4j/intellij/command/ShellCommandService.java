@@ -16,16 +16,13 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
-import org.emergent.bzr4j.core.BzrHandlerException;
+import org.emergent.bzr4j.core.cli.BzrHandlerException;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
-import org.emergent.bzr4j.intellij.BzrUtil;
 import org.emergent.bzr4j.intellij.BzrVcsMessages;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -50,27 +47,53 @@ public final class ShellCommandService {
     return project.getComponent(ShellCommandService.class);
   }
 
+  public static boolean isValid(final String executable) {
+    try {
+      BzrIntellijHandler shellCommand = new BzrIntellijHandler(null, null, "version") {
+        @Override
+        protected String getBzrExecutablePath() {
+          return executable;
+        }
+      };
+      shellCommand.setExitValueValidationEnabled(true);
+      shellCommand.setStderrValidationEnabled(true);
+      shellCommand.execij();
+      return true;
+    } catch (BzrHandlerException e) {
+      BzrAbstractCommand.LOG.error(e.getMessage(), e);
+      return false;
+    }
+  }
+  
+  public BzrIntellijHandler createCommand(@NotNull VirtualFile repo, @NotNull String cmd) {
+    return createCommand(repo, null, cmd);
+  }
+
+  public BzrIntellijHandler createCommand(@NotNull VirtualFile repo, Charset charset, @NotNull String cmd) {
+    return new BzrIntellijHandler(repo, charset, cmd);
+  }
+
   ShellCommandResult execute2(@NotNull VirtualFile repo, String op, List<String> args) {
-    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, op);
+    BzrIntellijHandler shellCommand = getInstance(project).createCommand(repo, op);
     shellCommand.addArguments(args);
     shellCommand.setBad(true);
     return execute(shellCommand);
   }
 
   ShellCommandResult execute(@NotNull VirtualFile repo, String op, List<String> args) {
-    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, op);
+    BzrIntellijHandler shellCommand = getInstance(project).createCommand(repo, op);
     shellCommand.addArguments(args);
     return execute(shellCommand);
   }
 
   ShellCommandResult execute(@NotNull VirtualFile repo, Charset charset, String op, List<String> args) {
-    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, charset, op);
+    BzrIntellijHandler shellCommand = getInstance(project).createCommand(repo, charset, op);
     shellCommand.addArguments(args);
     return execute(shellCommand);
   }
 
   ShellCommandResult execute(@NotNull VirtualFile repo, String op, String... args) {
-    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, op);
+    BzrIntellijHandler shellCommand = getInstance(project).createCommand(repo, op);
     shellCommand.addArguments(args);
     return execute(shellCommand);
   }

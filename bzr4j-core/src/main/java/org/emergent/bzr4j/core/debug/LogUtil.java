@@ -1,6 +1,5 @@
 package org.emergent.bzr4j.core.debug;
 
-import org.emergent.bzr4j.core.utils.BzrConstants;
 import org.emergent.bzr4j.core.utils.BzrCoreUtil;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Properties;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 
 /**
  * @author Patrick Woodworth
@@ -59,15 +57,15 @@ public class LogUtil {
 ////                    formatter.setLogPattern( "%2s - %1s -- %4s#%5s: %3s\n" );
           DebugFormatter formatter = new DebugFormatter();
           fh.setFormatter(formatter);
-          LOG.addHandler(fh);
-          LOG.setLevel(Level.parse(System.getProperty("bzr4j.logging.level", "ALL")));
+//          LOG.addHandler(fh);
+//          LOG.setLevel(Level.parse(System.getProperty("bzr4j.logging.level", "ALL")));
           Properties debugProps = new Properties();
           if (ijprops != null)
             debugProps.putAll(ijprops);
-          debugProps.setProperty("bzr4j.version", BzrConstants.VERSION);
+//          debugProps.setProperty("bzr4j.version", BzrConstants.VERSION);
           String sysPropDump = BzrCoreUtil.dumpSystemProperties(System.getProperties(), "system");
-          LOG.fine(sysPropDump);
-          LOG.info(BzrCoreUtil.dumpSystemProperties(debugProps, "application"));
+          LOG.error(sysPropDump);
+//          LOG.info(BzrCoreUtil.dumpSystemProperties(debugProps, "application"));
         }
       }
       catch (IOException e) {
@@ -101,34 +99,34 @@ public class LogUtil {
   }
 
   public void debug(String msg) {
-    LOG.fine(msg);
+    LOG.error(msg);
   }
 
-  public void error(Object msg, Throwable e) {
-    LOG.log(Level.SEVERE, String.valueOf(msg), e);
-  }
-
-  public void info(Object msg) {
-    LOG.info(String.valueOf(msg));
-  }
-
-  public void warn(Object msg) {
-    LOG.log(Level.WARNING, String.valueOf(msg));
-  }
-
-  public void warn(Object msg, Throwable e) {
-    LOG.log(Level.WARNING, String.valueOf(msg), e);
-  }
-
-  public void fine(Object msg) {
-    LOG.log(Level.FINE, String.valueOf(msg));
-  }
-
-  public boolean isDebugEnabled() {
-    return LOG.isLoggable(Level.FINE);
-  }
-
-  public void debug(Throwable e) {
-    LOG.log(Level.FINE, e.getMessage(), e);
-  }
+//  public void error(Object msg, Throwable e) {
+//    LOG.log(Level.SEVERE, String.valueOf(msg), e);
+//  }
+//
+//  public void info(Object msg) {
+//    LOG.info(String.valueOf(msg));
+//  }
+//
+//  public void warn(Object msg) {
+//    LOG.log(Level.WARNING, String.valueOf(msg));
+//  }
+//
+//  public void warn(Object msg, Throwable e) {
+//    LOG.log(Level.WARNING, String.valueOf(msg), e);
+//  }
+//
+//  public void fine(Object msg) {
+//    LOG.log(Level.FINE, String.valueOf(msg));
+//  }
+//
+//  public boolean isDebugEnabled() {
+//    return LOG.isLoggable(Level.FINE);
+//  }
+//
+//  public void debug(Throwable e) {
+//    LOG.log(Level.FINE, e.getMessage(), e);
+//  }
 }

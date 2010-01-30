@@ -92,7 +92,7 @@ public class BzrUtil {
    * @return bzr root for the file
    * @throws VcsException if the file is not under bzr
    */
-  private static VirtualFile getBzrRoot(@NotNull final VirtualFile file) throws VcsException {
+  public static VirtualFile getBzrRoot(@NotNull final VirtualFile file) throws VcsException {
     final VirtualFile root = bzrRootOrNull(file);
     if (root != null) {
       return root;

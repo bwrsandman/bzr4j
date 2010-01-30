@@ -9,43 +9,19 @@ import java.util.logging.LogRecord;
  */
 public interface DebugLogger {
 
-  public void debug(Object o);
+  String getName();
 
-  public void debug(String msg, Object... params);
+  public void debug(Object o);
 
   public void debug(Throwable e, String msg);
 
-  public void debugf(String msg, Object... params);
-
   public boolean isDebug();
 
-  public void log(Level level, Object o);
+  void error(Object o);
 
-  public void log(Level level, String msg, Object... params);
+  void error(Throwable e, String msg);
 
-  public void log(Level level, Throwable e, String msg);
-
-  public void logf(Level level, String msg, Object... params);
-
-  public void addHandler(Handler handler);
-
-  public void setLevel(Level level) throws SecurityException;
-
-  void fine(Object o);
-
-  void fine(String msg, Object... params);
-
-  void fine(Throwable e, String msg);
-
-  void info(Object o);
-
-  void info(String msg, Object... params);
-
-  void info(Throwable e, String msg);
-
-  boolean isLoggable(Level level);
-
-  void log(LogRecord lr);
-
-  String getName();
+  interface DebugImplFactory {
+    public DebugLogger getDebugLogger(String name);
+  }
 }

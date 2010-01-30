@@ -30,12 +30,10 @@ rem mvn --batch-mode release:clean release:prepare -DdryRun=true
     </layout>
   </appender>
 
-  <logger name="org.emergent.bzr4j.intellij" additivity="false">
+  <logger name="org.emergent.bzr4j" additivity="false">
     <level value="debug"/>
     <appender-ref ref="BZR4INTELLIJ_FILE" />
   </logger>
-
-
 
 
 
@@ -49,6 +47,11 @@ rem mvn --batch-mode release:clean release:prepare -DdryRun=true
   </appender>
 
   <category name="jetbrains.buildServer.buildTriggers.vcs.bazaar">
+    <priority value="DEBUG"/>
+    <appender-ref ref="BAZAAR.LOG"/>
+  </category>
+
+  <category name="org.emergent.bzr4j">
     <priority value="DEBUG"/>
     <appender-ref ref="BAZAAR.LOG"/>
   </category>

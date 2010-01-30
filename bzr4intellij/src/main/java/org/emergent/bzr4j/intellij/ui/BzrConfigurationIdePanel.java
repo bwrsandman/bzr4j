@@ -22,7 +22,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import org.emergent.bzr4j.core.utils.BzrCoreUtil;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
 import org.emergent.bzr4j.intellij.BzrVcsMessages;
-import org.emergent.bzr4j.intellij.command.BzrVersionCommand;
+import org.emergent.bzr4j.intellij.command.ShellCommandService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,12 +89,8 @@ public class BzrConfigurationIdePanel {
 
   public void validate() throws ConfigurationException {
     String bzrCmd = pathSelector.getText();
-    BzrVersionCommand command = new BzrVersionCommand();
-    if (!command.isValid(bzrCmd)) {
-      Object[] params = new Object[] { bzrCmd };
-      throw new ConfigurationException(
-          BzrVcsMessages.message("bzr4intellij.configuration.executable.error", params)
-      );
+    if (!ShellCommandService.isValid(bzrCmd)) {
+      throw new ConfigurationException(BzrVcsMessages.message("bzr4intellij.configuration.executable.error", bzrCmd));
     }
   }
 

@@ -17,11 +17,11 @@
 package org.emergent.bzr4j.intellij.command;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.emergent.bzr4j.core.BzrAbstractHandler;
-import org.emergent.bzr4j.core.BzrHandlerException;
-import org.emergent.bzr4j.core.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrAbstractHandler;
+import org.emergent.bzr4j.core.cli.BzrHandlerException;
+import org.emergent.bzr4j.core.cli.BzrHandlerResult;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
 import org.emergent.bzr4j.intellij.BzrUtil;
 
@@ -43,30 +43,15 @@ public class BzrIntellijHandler extends BzrAbstractHandler {
 
   private static final ConcurrentMap<String, Lock> sm_workDirLocks = new ConcurrentHashMap<String, Lock>();
 
-  private final Project m_project;
-
   private final Charset m_charset;
 
   private final VirtualFile m_repo;
 
   private boolean m_bad;
 
-  public BzrIntellijHandler(VirtualFile repo, String cmd) {
-    this(null, repo, null, cmd);
-  }
-
-  public BzrIntellijHandler(VirtualFile repo, Charset charset, String cmd) {
-    this(null, repo, charset, cmd);
-  }  
-
-  public BzrIntellijHandler(Project project, VirtualFile repo, String cmd) {
-    this(project, repo, null, cmd);
-  }
-
-  public BzrIntellijHandler(Project project, VirtualFile repo, Charset charset, String cmd) {
+  BzrIntellijHandler(VirtualFile repo, Charset charset, String cmd) {
     super(getBzrRoot(repo), cmd);
     m_repo = repo;
-    m_project = project;
     m_charset = charset;
   }
 
@@ -85,9 +70,15 @@ public class BzrIntellijHandler extends BzrAbstractHandler {
     return (ShellCommandResult)exec(new ShellCommandResult(m_charset));
   }
 
+  public void addRelativePaths(FilePath... paths) {
+    for (FilePath path : paths) {
+      addArguments(BzrUtil.relativePath(getDir(),path));
+    }
+  }
+
   public void addRelativePaths(VirtualFile... files) {
     for (VirtualFile file : files) {
-      addArguments(BzrUtil.relativePath(m_repo,file));
+      addArguments(BzrUtil.relativePath(getDir(),file));
     }
   }
 

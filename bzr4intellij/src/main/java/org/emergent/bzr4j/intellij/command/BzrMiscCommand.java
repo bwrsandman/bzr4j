@@ -19,12 +19,11 @@ package org.emergent.bzr4j.intellij.command;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang.StringUtils;
-import org.emergent.bzr4j.core.BzrHandlerException;
+import org.emergent.bzr4j.core.cli.BzrHandlerException;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
 import org.emergent.bzr4j.intellij.BzrUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,7 +47,7 @@ public class BzrMiscCommand {
     VirtualFile repo = BzrUtil.bzrRootOrNull(file);
     if (repo == null)
       return false;
-    BzrIntellijHandler handler = new BzrIntellijHandler(project,repo,"is-ignored");
+    BzrIntellijHandler handler = ShellCommandService.getInstance(project).createCommand(repo, "is-ignored");
     handler.setExitValueValidationEnabled(false);
     handler.addRelativePaths(repo,file);
     try {
@@ -65,7 +64,7 @@ public class BzrMiscCommand {
     VirtualFile repo = BzrUtil.bzrRootOrNull(file);
     if (repo == null)
       return false;
-    BzrIntellijHandler handler = new BzrIntellijHandler(project,repo,"is-versioned");
+    BzrIntellijHandler handler = ShellCommandService.getInstance(project).createCommand(repo, "is-versioned");
     handler.setExitValueValidationEnabled(false);
     handler.addRelativePaths(repo,file);
     try {

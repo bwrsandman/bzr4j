@@ -65,7 +65,7 @@ public class BzrCommitCommand {
       for (BzrFile hgFile : files) {
         parameters.add(hgFile.getRelativePath());
       }
-      BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, "commit");
+      BzrIntellijHandler shellCommand = ShellCommandService.getInstance(project).createCommand(repo, "commit");
       shellCommand.addArguments(parameters);
       shellCommand.setStderrValidationEnabled(false);
       ShellCommandService.getInstance(project).execute(shellCommand);

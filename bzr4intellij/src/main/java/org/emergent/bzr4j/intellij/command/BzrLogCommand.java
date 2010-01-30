@@ -12,11 +12,10 @@
 // limitations under the License.
 package org.emergent.bzr4j.intellij.command;
 
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
-import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
+import org.emergent.bzr4j.core.xmloutput.XmlOutputParser;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrFileRevision;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
@@ -27,9 +26,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BzrLogCommand {
-
-  private static final Logger LOG = Logger.getInstance(BzrLogCommand.class.getName());
+public class BzrLogCommand extends BzrAbstractCommand {
 
   private static final String TEMPLATE =
       "{rev}|{node|short}|{date|isodate}|{author}|{branches}|{desc}\\n";
@@ -38,12 +35,10 @@ public class BzrLogCommand {
 
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm Z");
 
-  private final Project project;
-
   private boolean followCopies;
 
   public BzrLogCommand(Project project) {
-    this.project = project;
+    super(project);
   }
 
   public void setFollowCopies(boolean followCopies) {
@@ -63,7 +58,7 @@ public class BzrLogCommand {
 
     List<BzrFileRevision> revisions = new LinkedList<BzrFileRevision>();
     try {
-      List<IBazaarLogMessage> protorevs = XmlOutputUtil.parseXmlLog(result);
+      List<IBazaarLogMessage> protorevs = XmlOutputParser.parseXmlLog(result);
       for (IBazaarLogMessage lm : protorevs) {
         BzrRevisionNumber vcsRevisionNumber = BzrRevisionNumber.getLocalInstance(lm.getRevision().getValue());
         Date revisionDate = lm.getDate();

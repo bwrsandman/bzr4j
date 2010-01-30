@@ -1,0 +1,164 @@
+<project name="mktestdata" basedir=".">
+
+  <dirname property="mktestdata.dir" file="${ant.file.mktestdata}"/>
+  <property name="testdata.rsrc.dir" location="${mktestdata.dir}/../resources/org/emergent/bzr4j/core/tests"/>
+  <property file="${testdata.rsrc.dir}/testdata.properties"/>
+
+  <fail unless="testdata.root.dir"/>
+  <fail unless="testdata.work.dir"/>
+  <fail unless="testdata.diff.dir"/>
+
+  <macrodef name="m-bzr">
+    <attribute name="cmd"/>
+    <attribute name="dir" default="${testdata.work.dir}"/>
+    <element name="args" optional="true"/>
+    <sequential>
+      <mkdir dir="@{dir}"/>
+      <exec executable="bzr"
+            dir="@{dir}"
+            failonerror="true"
+          >
+        <arg value="@{cmd}"/>
+        <arg value="--no-aliases"/>
+        <args/>
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="m-clone">
+    <attribute name="dir" default="${testdata.work.dir}"/>
+    <attribute name="srcbranch"/>
+    <attribute name="branch"/>
+    <sequential>
+      <delete dir="@{dir}${/}@{branch}" quiet="true"/>
+      <m-bzr cmd="clone" dir="@{dir}">
+        <args>
+          <arg value="@{srcbranch}"/>
+          <arg value="@{branch}"/>
+        </args>
+      </m-bzr>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="m-createpatch">
+    <attribute name="dir" default="${testdata.work.dir}"/>
+    <attribute name="branch"/>
+    <attribute name="message"/>
+    <attribute name="patchname" default="@{branch}"/>
+    <sequential>
+      <m-bzr cmd="commit" dir="@{dir}${/}@{branch}">
+        <args>
+          <arg value="-m"/>
+          <arg value="@{message}"/>
+        </args>
+      </m-bzr>
+      <mkdir dir="${testdata.diff.dir}"/>
+      <delete file="${testdata.diff.dir}${/}@{patchname}.merge"/>
+      <m-bzr cmd="send" dir="@{dir}${/}@{branch}">
+        <args>
+          <arg value="-r-1"/>
+          <arg value="-o"/>
+          <arg value="${testdata.diff.dir}${/}@{patchname}.merge"/>
+        </args>
+      </m-bzr>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="m-dowork-impl">
+    <attribute name="branch"/>
+    <attribute name="dir" default="${testdata.work.dir}${/}@{branch}"/>
+    <element name="work-elements-impl"/>
+    <sequential>
+      <work-elements-impl/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="m-dowork">
+    <attribute name="branch"/>
+    <attribute name="srcbranch" default="empty"/>
+    <attribute name="dir" default="${testdata.work.dir}${/}@{branch}"/>
+    <attribute name="message" default="Creating @{branch}"/>
+    <element name="work-elements"/>
+    <sequential>
+      <m-clone branch="@{branch}" srcbranch="@{srcbranch}"/>
+      <m-dowork-impl branch="@{branch}">
+        <work-elements-impl>
+          <work-elements/>
+        </work-elements-impl>
+      </m-dowork-impl>
+      <m-createpatch branch="@{branch}" message="@{message}"/>
+    </sequential>
+  </macrodef>
+
+  <target name="createempty">
+    <delete dir="${testdata.work.dir}/empty" quiet="true"/>
+    <m-bzr cmd="init">
+      <args>
+        <arg value="--create-prefix"/>
+        <arg value="empty"/>
+      </args>
+    </m-bzr>
+    <touch file="${testdata.work.dir}/empty/.bzrignore"/>
+    <m-bzr cmd="add" dir="${testdata.work.dir}/empty">
+      <args>
+        <arg value="."/>
+      </args>
+    </m-bzr>
+    <m-bzr cmd="commit" dir="${testdata.work.dir}/empty">
+      <args>
+        <arg value="-m"/>
+        <arg value="Adding bzrignore file"/>
+      </args>
+    </m-bzr>
+    <m-bzr cmd="remove-tree">
+      <args>
+        <arg value="empty"/>
+      </args>
+    </m-bzr>
+    <zip destfile="${testdata.rsrc.dir}/empty.zip">
+      <fileset dir="${testdata.work.dir}/empty"/>
+    </zip>
+  </target>
+
+  <target name="unzipempty">
+    <delete dir="${testdata.work.dir}/empty" quiet="true"/>
+    <copy todir="${testdata.work.dir}/empty" preservelastmodified="true">
+      <zipfileset src="${testdata.rsrc.dir}/empty.zip">
+        <patternset>
+          <include name="**"/>
+        </patternset>
+      </zipfileset>
+    </copy>
+    <exec executable="attrib"
+          osfamily="windows"
+          dir="${testdata.work.dir}"
+          failonerror="true"
+        >
+      <arg value="+H"/>
+      <arg file="${testdata.work.dir}/empty/.bzr"/>
+    </exec>
+    <m-bzr cmd="co" dir="${testdata.work.dir}/empty"/>
+  </target>
+
+  <target name="mkbranch1">
+    <m-dowork branch="branch1">
+      <work-elements>
+        <mkdir dir="@{dir}/foodir"/>
+        <mkdir dir="@{dir}/bardir"/>
+        <echo message="foo" file="@{dir}/foodir/foofile.txt"/>
+        <echo message="bar" file="@{dir}/bardir/barfile.txt"/>
+        <copy todir="@{dir}" preservelastmodified="true">
+          <fileset dir="${testdata.rsrc.dir}">
+            <include name="lorem.txt"/>
+          </fileset>
+        </copy>
+        <m-bzr cmd="add" dir="@{dir}">
+          <args>
+            <arg value="."/>
+          </args>
+        </m-bzr>
+      </work-elements>
+    </m-dowork>
+  </target>
+
+</project>

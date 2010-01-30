@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="cp1252"?>
+<logs>
+  <log>
+    <revno>3</revno>
+    <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+    <branch-nick>test4</branch-nick>
+    <timestamp>Tue 2010-01-26 06:36:41 -0800</timestamp>
+    <message><![CDATA[Changing type]]></message>
+    <affected-files>
+      <kind_changed>
+        <directory oldkind="file">bardir/bar.txt</directory>
+      </kind_changed>
+    </affected-files>
+  </log>
+  <log>
+    <revno>2</revno>
+    <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+    <branch-nick>test3</branch-nick>
+    <timestamp>Tue 2010-01-26 06:36:40 -0800</timestamp>
+    <message><![CDATA[Merging in test2 branch]]></message>
+    <affected-files>
+      <removed>
+        <file>.bzrignore</file>
+      </removed>
+      <added>
+        <directory>bardir/</directory>
+        <file>bardir/bar.txt</file>
+        <file>lorem.txt</file>
+      </added>
+      <renamed>
+        <file oldpath="foodir/foo.txt">foodir/zoo.txt</file>
+      </renamed>
+      <modified>
+        <file>foodir/zoo.txt</file>
+      </modified>
+    </affected-files>
+    <merge>
+      <log>
+        <revno>1.1.1</revno>
+        <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+        <branch-nick>test2</branch-nick>
+        <timestamp>Tue 2010-01-26 06:36:39 -0800</timestamp>
+        <message><![CDATA[Adding lorem.txt file]]></message>
+        <affected-files>
+          <removed>
+            <file>.bzrignore</file>
+          </removed>
+          <added>
+            <directory>bardir/</directory>
+            <file>bardir/bar.txt</file>
+            <file>lorem.txt</file>
+          </added>
+          <renamed>
+            <file oldpath="foodir/foo.txt">foodir/zoo.txt</file>
+          </renamed>
+          <modified>
+            <file>foodir/zoo.txt</file>
+          </modified>
+        </affected-files>
+      </log>
+    </merge>
+  </log>
+  <log>
+    <revno>1</revno>
+    <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+    <branch-nick>test1</branch-nick>
+    <timestamp>Tue 2010-01-26 06:36:36 -0800</timestamp>
+    <message><![CDATA[Adding .bzrignore file]]></message>
+    <affected-files>
+      <added>
+        <file>.bzrignore</file>
+        <directory>foodir/</directory>
+        <file>foodir/foo.txt</file>
+      </added>
+    </affected-files>
+  </log>
+</logs>

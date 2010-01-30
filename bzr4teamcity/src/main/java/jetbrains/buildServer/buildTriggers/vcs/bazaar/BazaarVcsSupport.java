@@ -42,8 +42,8 @@ import jetbrains.buildServer.vcs.VcsSupport;
 import jetbrains.buildServer.vcs.VcsSupportUtil;
 import jetbrains.buildServer.vcs.patches.PatchBuilder;
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BzrHandlerException;
-import org.emergent.bzr4j.core.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrHandlerException;
+import org.emergent.bzr4j.core.cli.BzrHandlerResult;
 import org.emergent.bzr4j.core.utils.BzrCoreUtil;
 import org.emergent.bzr4j.core.utils.IOUtil;
 import org.jetbrains.annotations.NotNull;
@@ -417,7 +417,7 @@ public class BazaarVcsSupport extends VcsSupport
     }
 
     for (String p : relPaths) {
-      BzrHandlerResult result = (new BzrTeamcityHandler(settings,"cat","-r",myRevId,IOUtil.deNormalizeSeparator(p))).exectc(true);
+      BzrHandlerResult result = (new BzrTeamcityHandler(settings,"cat","-r",myRevId, IOUtil.deNormalizeSeparator(p))).exectc(true);
       IOUtil.writeToFile(new File(tempDir.getAbsolutePath(), p), result.getByteOut());
     }
     return tempDir;

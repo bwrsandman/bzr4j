@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<status workingtree_root="C:/temp/bzr4j-tests/workng/testws6429559918273708833/test4/">
+  <removed>
+    <file fid="bzrignore-20100126143052-c1qp50xaac8xr23v-1">.bzrignore</file>
+  </removed>
+  <added>
+    <directory suffix="bardir-20100126143054-v9tw7us5nl5eohvf-1">bardir/</directory>
+    <file fid="bar.txt-20100126143054-deu3uedq1dhi37a2-1">bardir/bar.txt</file>
+    <file fid="lorem.txt-20100126143055-1btsz58f81grwwdb-1">lorem.txt</file>
+  </added>
+  <renamed>
+    <file oldpath="foodir/foo.txt" fid="foo.txt-20100126143052-tpdwb52bxdkw16fm-1">foodir/zoo.txt</file>
+  </renamed>
+  <modified>
+    <file fid="foo.txt-20100126143052-tpdwb52bxdkw16fm-1">foodir/zoo.txt</file>
+  </modified>
+</status>
+

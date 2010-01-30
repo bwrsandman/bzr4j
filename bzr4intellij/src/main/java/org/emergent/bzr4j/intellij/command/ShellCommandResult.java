@@ -13,7 +13,7 @@
 package org.emergent.bzr4j.intellij.command;
 
 import com.intellij.openapi.util.text.LineTokenizer;
-import org.emergent.bzr4j.core.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrHandlerResult;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;

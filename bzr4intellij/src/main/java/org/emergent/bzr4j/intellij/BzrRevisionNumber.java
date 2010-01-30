@@ -3,11 +3,10 @@ package org.emergent.bzr4j.intellij;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.emergent.bzr4j.core.BazaarRevision;
-import org.emergent.bzr4j.core.IBazaarRevisionSpec;
 import org.emergent.bzr4j.core.utils.NaturalOrderComparator;
 import org.jetbrains.annotations.NotNull;
 
-public final class BzrRevisionNumber implements VcsRevisionNumber, IBazaarRevisionSpec {
+public final class BzrRevisionNumber implements VcsRevisionNumber {
 
   private String m_rev;
 
@@ -28,10 +27,6 @@ public final class BzrRevisionNumber implements VcsRevisionNumber, IBazaarRevisi
     if (rev.length() > 0 && rev.indexOf(':') < 0) {
       m_rev = "revno:" + m_rev;
     }
-  }
-
-  public IBazaarRevisionSpec getBazaarRevision() {
-    return this;
   }
 
   public String getChangeset() {

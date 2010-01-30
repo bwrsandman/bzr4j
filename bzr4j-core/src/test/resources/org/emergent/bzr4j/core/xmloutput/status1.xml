@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<status workingtree_root="C:/temp/bzr4j-tests/workng/testws6429559918273708833/test4/">
+  <added>
+    <file fid="bzrignore-20100126143052-c1qp50xaac8xr23v-1">.bzrignore</file>
+    <directory suffix="foodir-20100126143052-4fr90dq93wp5kwca-1">foodir/</directory>
+    <file fid="foo.txt-20100126143052-tpdwb52bxdkw16fm-1">foodir/foo.txt</file>
+  </added>
+</status>

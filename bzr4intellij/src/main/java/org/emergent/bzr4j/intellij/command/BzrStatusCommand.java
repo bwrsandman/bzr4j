@@ -15,11 +15,10 @@ package org.emergent.bzr4j.intellij.command;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.apache.commons.lang.StringUtils;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
-import org.emergent.bzr4j.core.commandline.parser.XmlStatusResult;
+import org.emergent.bzr4j.core.xmloutput.XmlOutputParser;
+import org.emergent.bzr4j.core.xmloutput.XmlStatusResult;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.data.BzrChange;
 import org.emergent.bzr4j.intellij.data.BzrFileStatusEnum;
@@ -28,8 +27,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 public class BzrStatusCommand extends BzrAbstractCommand {
@@ -58,13 +55,14 @@ public class BzrStatusCommand extends BzrAbstractCommand {
       return Collections.emptySet();
     }
 
-    BzrIntellijHandler handler = new BzrIntellijHandler(project,repo,"xmlstatus");
-    handler.addRelativePaths(target);
+    BzrIntellijHandler handler = ShellCommandService.getInstance(project).createCommand(repo, "xmlstatus");
+    if (!repo.equals(target))
+      handler.addRelativePaths(target);
     ShellCommandService service = ShellCommandService.getInstance(project);
     ShellCommandResult result = service.execute(handler);
     Set<BzrChange> changes = new HashSet<BzrChange>();
     try {
-      XmlStatusResult parser = XmlOutputUtil.parseXmlStatus(result);
+      XmlStatusResult parser = XmlOutputParser.parseXmlStatus(result);
       Set<IBazaarStatus> statii = parser.getStatusSet();
       for (IBazaarStatus bzrStatus : statii) {
         EnumSet<BzrFileStatusEnum> statusSet = EnumSet.noneOf(BzrFileStatusEnum.class);

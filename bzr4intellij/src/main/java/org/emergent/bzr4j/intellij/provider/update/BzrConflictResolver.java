@@ -22,13 +22,13 @@ import com.intellij.openapi.vcs.update.UpdatedFiles;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
+import org.emergent.bzr4j.core.utils.IOUtil;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
 import org.emergent.bzr4j.intellij.BzrVcs;
 import org.emergent.bzr4j.intellij.command.BzrCatCommand;
 import org.emergent.bzr4j.intellij.command.BzrResolveCommand;
 import org.emergent.bzr4j.intellij.data.BzrResolveStatusEnum;
-import org.emergent.bzr4j.core.utils.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -93,7 +93,7 @@ public final class BzrConflictResolver {
       public MergeData loadRevisions(VirtualFile file) throws VcsException {
         try {
           MergeData mergeData = new MergeData();
-          mergeData.ORIGINAL = IOUtils.toByteArray(new FileReader(file.getPath() + ".orig"));
+          mergeData.ORIGINAL = IOUtil.toByteArray(new FileReader(file.getPath() + ".orig"));
           mergeData.LAST_REVISION_NUMBER = incomingRevision;
 
           BzrFile hgFile = new BzrFile(repo, VfsUtil.virtualToIoFile(file));

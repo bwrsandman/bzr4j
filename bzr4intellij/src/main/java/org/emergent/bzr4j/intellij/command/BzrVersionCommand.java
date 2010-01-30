@@ -12,32 +12,9 @@
 // limitations under the License.
 package org.emergent.bzr4j.intellij.command;
 
-import org.emergent.bzr4j.core.BzrHandlerException;
-
-import java.util.Arrays;
-import java.util.List;
-
 public class BzrVersionCommand extends BzrAbstractCommand {
 
   public BzrVersionCommand() {
     super(null);
-  }
-
-  public boolean isValid(final String executable) {
-    try {
-      BzrIntellijHandler shellCommand = new BzrIntellijHandler(null,"version") {
-        @Override
-        protected String getBzrExecutablePath() {
-          return executable;
-        }
-      };
-      shellCommand.setExitValueValidationEnabled(true);
-      shellCommand.setStderrValidationEnabled(true);
-      shellCommand.execij();
-      return true;
-    } catch (BzrHandlerException e) {
-      LOG.error(e.getMessage(), e);
-      return false;
-    }
   }
 }

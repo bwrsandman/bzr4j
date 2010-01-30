@@ -17,11 +17,9 @@ package org.emergent.bzr4j.intellij.command;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.apache.commons.lang.StringUtils;
 import org.emergent.bzr4j.core.BazaarException;
-import org.emergent.bzr4j.core.BzrHandlerException;
 import org.emergent.bzr4j.core.IBazaarItemInfo;
-import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
+import org.emergent.bzr4j.core.xmloutput.XmlOutputParser;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.data.BzrChange;
 import org.emergent.bzr4j.intellij.data.BzrFileStatusEnum;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
 
 public class BzrLsCommand extends BzrAbstractCommand {
@@ -46,13 +43,14 @@ public class BzrLsCommand extends BzrAbstractCommand {
 
     List<BzrChange> changes = new ArrayList<BzrChange>();
     try {
-      BzrIntellijHandler handler = new BzrIntellijHandler(project,repo,"xmlls");
+      BzrIntellijHandler handler = ShellCommandService.getInstance(project).createCommand(repo, "xmlls");
       handler.addArguments("--ignored");
-      handler.addRelativePaths(target);
+      if (!repo.equals(target))
+        handler.addRelativePaths(target);
 
       ShellCommandService service = ShellCommandService.getInstance(project);
       ShellCommandResult result = service.execute(handler);
-      List<IBazaarItemInfo> infos = XmlOutputUtil.parseXmlLs(result);
+      List<IBazaarItemInfo> infos = XmlOutputParser.parseXmlLs(result);
       for (IBazaarItemInfo info : infos) {
         File ioFile = new File(repo.getPath(), info.getPath());
         BzrFile change = new BzrFile(repo, ioFile);

@@ -17,17 +17,18 @@ package org.emergent.bzr4j.intellij.command;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import org.emergent.bzr4j.core.xmloutput.XmlOutputParser;
 
 /**
  * @author Patrick Woodworth
  */
 public abstract class BzrAbstractCommand {
 
+  protected static final Logger LOG = Logger.getInstance(BzrAbstractCommand.class.getName());
+
   protected final Project project;
 
   public BzrAbstractCommand(Project project) {
     this.project = project;
   }
-
-  protected static final Logger LOG = Logger.getInstance(BzrAbstractCommand.class.getName());
 }

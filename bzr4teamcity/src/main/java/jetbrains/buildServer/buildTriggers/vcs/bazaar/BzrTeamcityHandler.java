@@ -17,9 +17,9 @@
 package jetbrains.buildServer.buildTriggers.vcs.bazaar;
 
 import com.intellij.openapi.diagnostic.Logger;
-import org.emergent.bzr4j.core.BzrAbstractHandler;
-import org.emergent.bzr4j.core.BzrHandlerException;
-import org.emergent.bzr4j.core.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrAbstractHandler;
+import org.emergent.bzr4j.core.cli.BzrHandlerException;
+import org.emergent.bzr4j.core.cli.BzrHandlerResult;
 
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;

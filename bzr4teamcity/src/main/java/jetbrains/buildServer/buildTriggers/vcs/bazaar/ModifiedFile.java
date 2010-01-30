@@ -15,7 +15,7 @@
  */
 package jetbrains.buildServer.buildTriggers.vcs.bazaar;
 
-import org.emergent.bzr4j.core.BazaarStatusKind;
+import org.emergent.bzr4j.core.BazaarItemKind;
 
 /**
  * Represents repository modified file
@@ -47,9 +47,9 @@ public class ModifiedFile {
 
   private String myPath;
 
-  private BazaarStatusKind myKind;
+  private BazaarItemKind myKind;
 
-  public ModifiedFile(final Status status, final String path, BazaarStatusKind kind) {
+  public ModifiedFile(final Status status, final String path, BazaarItemKind kind) {
     myStatus = status;
     myPath = path;
     myKind = kind;
@@ -71,7 +71,7 @@ public class ModifiedFile {
     return myPath;
   }
 
-  public BazaarStatusKind getKind() {
+  public BazaarItemKind getKind() {
     return myKind;
   }
 }

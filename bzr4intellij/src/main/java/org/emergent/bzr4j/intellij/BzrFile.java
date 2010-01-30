@@ -15,6 +15,7 @@ package org.emergent.bzr4j.intellij;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vcs.FilePath;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
@@ -34,7 +35,10 @@ public class BzrFile {
   private String relativePath;
 
   public BzrFile(@NotNull VirtualFile vcsRoot, File file) {
-    this.vcsRoot = vcsRoot;
+    VirtualFile tmpRoot = BzrUtil.bzrRootOrNull(vcsRoot);
+    if (tmpRoot == null)
+      tmpRoot = vcsRoot;
+    this.vcsRoot = tmpRoot;
     this.file = file;
   }
 

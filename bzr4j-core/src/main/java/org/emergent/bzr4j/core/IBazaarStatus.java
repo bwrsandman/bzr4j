@@ -26,9 +26,9 @@ public interface IBazaarStatus {
    */
   public String getPreviousPath();
 
-  public BazaarStatusKind getOldKind();
+  public BazaarItemKind getOldKind();
 
-  public BazaarStatusKind getNewKind();
+  public BazaarItemKind getNewKind();
 
   /**
    * @return a File which stands for the absolute path to the branch
@@ -63,7 +63,7 @@ public interface IBazaarStatus {
    * Return a Collection with all the {@link BazaarStatusType} that belongs to
    * this status object
    *
-   * @return Collection<? extends BazaarStatusKind>
+   * @return Collection<? extends BazaarItemKind>
    */
   public Collection<? extends BazaarStatusType> getStatuses();
 

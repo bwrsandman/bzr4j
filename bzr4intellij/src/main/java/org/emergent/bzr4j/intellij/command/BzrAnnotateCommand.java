@@ -15,7 +15,7 @@ package org.emergent.bzr4j.intellij.command;
 import com.intellij.openapi.project.Project;
 import org.emergent.bzr4j.core.BazaarException;
 import org.emergent.bzr4j.core.IBazaarAnnotation;
-import org.emergent.bzr4j.core.commandline.parser.XmlOutputUtil;
+import org.emergent.bzr4j.core.xmloutput.XmlOutputParser;
 import org.emergent.bzr4j.intellij.BzrFile;
 import org.emergent.bzr4j.intellij.BzrGlobalSettings;
 import org.emergent.bzr4j.intellij.BzrRevisionNumber;
@@ -26,12 +26,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BzrAnnotateCommand {
-
-  private final Project project;
+public class BzrAnnotateCommand extends BzrAbstractCommand {
 
   public BzrAnnotateCommand(Project project) {
-    this.project = project;
+    super(project);
   }
 
   public List<BzrAnnotationLine> execute(@NotNull BzrFile hgFile) {
@@ -42,7 +40,7 @@ public class BzrAnnotateCommand {
 
     List<BzrAnnotationLine> annotations = new ArrayList<BzrAnnotationLine>();
     try {
-      IBazaarAnnotation lm = XmlOutputUtil.parseXmlAnnotate(result);
+      IBazaarAnnotation lm = XmlOutputParser.parseXmlAnnotate(result);
       int lineCount = lm.getNumberOfLines();
       for (int ii = 0; ii < lineCount; ii++) {
         BzrRevisionNumber revision = BzrRevisionNumber.getLocalInstance(lm.getRevision(ii));

@@ -55,7 +55,7 @@ public class BzrUpdateCommand {
 //            arguments.add(branch);
 //        }
 
-    BzrIntellijHandler shellCommand = new BzrIntellijHandler(project, repo, "update");
+    BzrIntellijHandler shellCommand = ShellCommandService.getInstance(project).createCommand(repo, "update");
     shellCommand.setStderrValidationEnabled(false);
     // todo parse the status log found in stderr
     return ShellCommandService.getInstance(project).execute(shellCommand);
