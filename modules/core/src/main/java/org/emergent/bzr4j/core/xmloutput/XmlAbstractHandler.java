@@ -62,7 +62,7 @@ public class XmlAbstractHandler extends DefaultHandler {
 
   @Override
   public void error(SAXParseException e) throws SAXException {
-    LOG.debug(e, "sax error");
+    LOG.warn(e, "sax error");
   }
 
   @Override
