@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Emergent.org
+ * Copyright (c) 2010 Patrick Woodworth
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License. You may
@@ -16,6 +16,11 @@
 package org.apache.maven.plugin.idea;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Patrick Woodworth
@@ -50,4 +55,24 @@ public abstract class AbstractSkipMojo extends AbstractMojo {
      */
     protected boolean skipWorkspace;
 
+    /**
+     * Put the ipr file in a non-standard location.
+     *
+     * @parameter expression="${iprPath}"
+     */
+    protected String iprPath;
+
+    protected File getProjectDir(MavenProject project) throws MojoExecutionException
+    {
+        File projectDir = project.getBasedir().getAbsoluteFile();
+        if (iprPath != null) {
+            File adjustedPath = new File( projectDir, iprPath );
+            try {
+                projectDir = adjustedPath.getCanonicalFile();
+            } catch (IOException e) {
+                throw new MojoExecutionException("Couldn't resolve canonical path of \"" + adjustedPath + "\"", e);
+            }
+        }
+        return projectDir;
+    }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<info>
+  <layout>Repository tree</layout>
+  <formats>
+    <format>unnamed</format>
+  </formats>
+  <location>
+    <shared_repository>E:/working/bzr/bzr4j</shared_repository>
+    <repository_branch>.</repository_branch>
+  </location>
+  <related_branches>
+    <parent_branch>E:/working/bzr/bzr4j/bzr4j.woody.bak</parent_branch>
+    <submit_branch>E:/working/bzr/bzr4j/bzr4j.woody.bak</submit_branch>
+  </related_branches>
+</info>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<annotation workingtree-root="E:/working/bzr/lp/+junk/bzr4j.devel/"
+            file="modules/bzr4intellij/src/main/java/org/emergent/bzr4j/intellij/BzrExecutableValidator.java">
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// Copyright 2009 Victor Iacoban</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">//</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// Licensed under the Apache License, Version 2.0
+    (the "License");
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// you may not use this file except in compliance
+    with the License.
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// You may obtain a copy of the License at</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">//</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// http://www.apache.org/licenses/LICENSE-2.0</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">//</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// Unless required by applicable law or agreed to in
+    writing, software distributed under
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// either express or implied. See the License for the
+    specific language governing permissions and
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">// limitations under the License.</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">package org.emergent.bzr4j.intellij;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">import com.intellij.openapi.project.Project;</entry>
+  <entry revno="17" author="patrick@woodworth.org" date="20100130">import
+    org.emergent.bzr4j.intellij.command.ShellCommandService;
+  </entry>
+  <entry revno="11" author="patrick@woodworth.org" date="20100104">import
+    org.emergent.bzr4j.intellij.ui.BzrSetExecutableDialog;
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="11" author="patrick@woodworth.org" date="20100104">class BzrExecutableValidator {</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">private final Project project;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="11" author="patrick@woodworth.org" date="20100104">public BzrExecutableValidator(Project project) {
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">this.project = project;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">}</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="11" author="patrick@woodworth.org" date="20100104">public boolean check(BzrGlobalSettings
+    globalSettings) {
+  </entry>
+  <entry revno="17" author="patrick@woodworth.org" date="20100130">if
+    (ShellCommandService.isValid(globalSettings.getBzrExecutable())) {
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">return true;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">}</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">String previousHgPath =
+    globalSettings.getBzrExecutable();
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">boolean validHgExecutable;</entry>
+  <entry revno="11" author="patrick@woodworth.org" date="20100104">BzrSetExecutableDialog dialog;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">do {</entry>
+  <entry revno="11" author="patrick@woodworth.org" date="20100104">dialog = new BzrSetExecutableDialog(project);</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">dialog.setBadHgPath(previousHgPath);</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">dialog.show();</entry>
+  <entry revno="17" author="patrick@woodworth.org" date="20100130">validHgExecutable = dialog.isOK() &amp;&amp;
+    ShellCommandService.isValid(dialog.getNewHgPath());
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">previousHgPath = dialog.getNewHgPath();</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">} while (!validHgExecutable &amp;&amp;
+    dialog.isOK());
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">if (validHgExecutable) {</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">
+    globalSettings.setBzrExecutable(dialog.getNewHgPath());
+  </entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">return true;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">}</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">return false;</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">}</entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210"></entry>
+  <entry revno="10" author="patrick@woodworth.org" date="20091210">}</entry>
+</annotation>

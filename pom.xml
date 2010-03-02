@@ -8,10 +8,10 @@
   <version>2.3.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Bzr4J Aggregator Project</name>
-  <url>http://code.google.com/p/bzr4j/</url>
+  <url>http://launchpad.net/bzr4j</url>
 
   <modules>
-    <module>bzr4j-core</module>
+    <module>modules/core</module>
   </modules>
 
   <distributionManagement>
@@ -40,12 +40,35 @@
         <version>2.3-bzr4j</version>
         <configuration>
           <jdkLevel>1.5</jdkLevel>
-          <jdkName>1.6</jdkName>
+          <jdkName>${java.specification.version}</jdkName>
+          <downloadSources>true</downloadSources>
           <exclude>target</exclude>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>Emergent.org</name>
+    <url>http://www.emergent.org/</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <id>plw</id>
+      <name>Patrick Woodworth</name>
+      <email>patrick@woodworth.org</email>
+      <timezone>-8</timezone>
+    </developer>
+  </developers>
 
   <profiles>
     <profile>
@@ -56,7 +79,7 @@
         </property>
       </activation>
       <modules>
-        <module>bzr4intellij</module>
+        <module>modules/intellij</module>
       </modules>
     </profile>
     <profile>
@@ -67,7 +90,7 @@
         </property>
       </activation>
       <modules>
-        <module>bzr4teamcity</module>
+        <module>modules/teamcity</module>
       </modules>
     </profile>
   </profiles>

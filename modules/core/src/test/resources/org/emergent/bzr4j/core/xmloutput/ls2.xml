@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="cp1252"?>
+<list>
+  <item>
+    <kind>directory</kind>
+    <path>bzr.tmp</path>
+    <status_kind>ignored</status_kind>
+    <pattern>*.tmp</pattern>
+  </item>
+  <item>
+    <kind>file</kind>
+    <path>foo.tmp</path>
+    <status_kind>ignored</status_kind>
+    <pattern>*.tmp</pattern>
+  </item>
+</list>

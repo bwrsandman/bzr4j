@@ -1,0 +1,60 @@
+
+
+----------- Debug Logging XML Configuration Snippets -------------
+
+
+<!--
+  <logger name="org.emergent.bzr4j.intellij.provider.BzrChangeProvider.CHANGES" additivity="false">
+    <level value="info"/>
+  </logger>
+-->
+
+  <appender name="BZR4INTELLIJ_FILE" class="org.apache.log4j.RollingFileAppender">
+    <param name="MaxFileSize" value="1Mb"/>
+    <param name="MaxBackupIndex" value="12"/>
+    <param name="file" value="$LOG_DIR$/bzr4intellij.log"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="%d [%7r] %6p - %30.30c - %m \n"/>-->
+      <param name="ConversionPattern" value="%d{ABSOLUTE} %6p - %30.30c - %m \n"/>
+    </layout>
+  </appender>
+
+  <logger name="org.emergent.bzr4j" additivity="false">
+    <level value="debug"/>
+    <appender-ref ref="BZR4INTELLIJ_FILE" />
+  </logger>
+
+
+
+  <appender name="BAZAAR.LOG" class="org.apache.log4j.RollingFileAppender">
+    <param name="file" value="${teamcity_logs}teamcity-bazaar.log"/>
+
+    <layout class="org.apache.log4j.PatternLayout">
+      <!--<param name="ConversionPattern" value="[%d] %6p [%t] - %30.30c - %m %n"/>-->
+      <param name="ConversionPattern" value="[%d{ABSOLUTE}] %6p - %30.30c - %m %n"/>
+    </layout>
+  </appender>
+
+  <category name="jetbrains.buildServer.buildTriggers.vcs.bazaar">
+    <priority value="DEBUG"/>
+    <appender-ref ref="BAZAAR.LOG"/>
+  </category>
+
+  <category name="org.emergent.bzr4j">
+    <priority value="DEBUG"/>
+    <appender-ref ref="BAZAAR.LOG"/>
+  </category>
+
+
+
+----------- Mac OS X notes -------------
+
+look to Info.plist instead of idea.properties, basic defaults are:
+
+user.home = /Users/${user.name}/
+idea.home = /Applications/IntelliJ IDEA 9.0.1.app/
+idea.config.path = ${user.home}/Library/Preferences/IntelliJIdea90/
+idea.system.path = ?
+idea.plugins.path = ${user.home}/Library/Application\ Support/IntelliJIdea90/
+
+idea.logs.path = ${user.home}/Library/Logs/IntelliJIdea90/

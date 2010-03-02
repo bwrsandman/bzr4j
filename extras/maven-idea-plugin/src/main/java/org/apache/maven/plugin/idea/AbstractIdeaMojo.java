@@ -70,8 +70,7 @@ import java.util.regex.Pattern;
 /**
  * @author Edwin Punzalan
  */
-public abstract class AbstractIdeaMojo
-    extends AbstractSkipMojo
+public abstract class AbstractIdeaMojo extends AbstractSkipMojo
 {
     /**
      * The Maven Project.
@@ -269,33 +268,11 @@ public abstract class AbstractIdeaMojo
      *
      * @parameter default-value="false"
      */
-    protected boolean ideaPlugin;    
+    protected boolean ideaPlugin;
 
     private Set macros;
 
-    public void initParam( MavenProject project, ArtifactFactory artifactFactory, ArtifactRepository localRepo,
-                           ArtifactResolver artifactResolver, ArtifactMetadataSource artifactMetadataSource, Log log,
-                           boolean overwrite, boolean skip )
-    {
-        this.executedProject = project;
-
-        this.log = log;
-
-        this.artifactFactory = artifactFactory;
-
-        this.localRepo = localRepo;
-
-        this.artifactResolver = artifactResolver;
-
-        this.artifactMetadataSource = artifactMetadataSource;
-
-        this.overwrite = overwrite;
-
-        this.skip = skip;
-    }
-
-    protected Document readXmlDocument( File file, String altFilename )
-        throws DocumentException
+    protected Document readXmlDocument( File file, String altFilename ) throws DocumentException
     {
         SAXReader reader = new SAXReader();
         if ( file.exists() && !overwrite )
@@ -705,10 +682,14 @@ public abstract class AbstractIdeaMojo
         return log;
     }
 
-    public void rewriteProject()
-        throws MojoExecutionException
+    public void rewriteProject() throws MojoExecutionException
     {
-        File projectFile = new File( executedProject.getBasedir(), executedProject.getArtifactId() + ".ipr" );
+        if ( skip || skipProject )
+            return;
+
+        File projectDir = getProjectDir(executedProject);
+
+        File projectFile = new File( projectDir, executedProject.getArtifactId() + ".ipr" );
 
         try
         {
@@ -745,36 +726,16 @@ public abstract class AbstractIdeaMojo
 
             removeOldElements( modules, "module" );
 
-            if ( executedProject.getCollectedProjects().size() > 0 )
-            {
-                Element m = createElement( modules, "module" );
-                String projectPath =
-                    new File( executedProject.getBasedir(),
-                              executedProject.getArtifactId() + ".iml" ).getAbsolutePath();
-                m.addAttribute( "filepath",
-                                "$PROJECT_DIR$/" + toRelative( executedProject.getBasedir().getAbsolutePath(),
-                                                               projectPath ) );
+            Element m = createElement( modules, "module" );
+            String modulePath = new File(executedProject.getBasedir(), executedProject.getArtifactId() + ".iml" ).getAbsolutePath();
+            m.addAttribute( "filepath", "$PROJECT_DIR$/" + toRelative(projectDir.getAbsolutePath(), modulePath));
 
-                for ( Iterator i = executedProject.getCollectedProjects().iterator(); i.hasNext(); )
-                {
-                    MavenProject p = (MavenProject) i.next();
-
-                    m = createElement( modules, "module" );
-                    String modulePath = new File( p.getBasedir(), p.getArtifactId() + ".iml" ).getAbsolutePath();
-                    m.addAttribute( "filepath",
-                                    "$PROJECT_DIR$/" + toRelative( executedProject.getBasedir().getAbsolutePath(),
-                                                                   modulePath ) );
-                }
-            }
-            else
+            for (Iterator i = executedProject.getCollectedProjects().iterator(); i.hasNext(); )
             {
-                Element m = createElement( modules, "module" );
-                String modulePath =
-                    new File( executedProject.getBasedir(),
-                              executedProject.getArtifactId() + ".iml" ).getAbsolutePath();
-                m.addAttribute( "filepath",
-                                "$PROJECT_DIR$/" + toRelative( executedProject.getBasedir().getAbsolutePath(),
-                                                               modulePath ) );
+                MavenProject p = (MavenProject) i.next();
+                m = createElement( modules, "module" );
+                modulePath = new File( p.getBasedir(), p.getArtifactId() + ".iml" ).getAbsolutePath();
+                m.addAttribute( "filepath", "$PROJECT_DIR$/" + toRelative(projectDir.getAbsolutePath(), modulePath));
             }
 
             // add any PathMacros we've come across
@@ -860,9 +821,11 @@ public abstract class AbstractIdeaMojo
     }
 
 
-    public void rewriteModule()
-        throws MojoExecutionException
+    public void rewriteModule() throws MojoExecutionException
     {
+        if ( skip || skipModule )
+            return;
+
         File moduleFile = new File( executedProject.getBasedir(), executedProject.getArtifactId() + ".iml" );
         try
         {

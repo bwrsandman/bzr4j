@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="cp1252"?>
+<plugins>
+  <plugin>
+    <name>svn</name>
+    <version>1.0.0</version>
+    <path>C:\Program Files\Bazaar\plugins\svn</path>
+    <doc>Support for Subversion branches
+
+      Bazaar can be used with Subversion branches through the bzr-svn plugin.
+
+      Most Bazaar commands should work fine with Subversion branches.
+
+      bzr-svn also adds new commands to Bazaar:
+
+      - bzr svn-import
+      - bzr svn-layout
+
+      For more information about bzr-svn, see the bzr-svn FAQ.
+    </doc>
+  </plugin>
+  <plugin>
+    <name>launchpad</name>
+    <version>2.0.4</version>
+    <path>C:\Program Files\Bazaar\plugins\launchpad</path>
+    <doc>Launchpad.net integration plugin for Bazaar.</doc>
+  </plugin>
+  <plugin>
+    <name>check_pre_commit</name>
+    <version>unknown</version>
+    <path>C:\Documents and Settings\pwoodworth\Application Data\bazaar\2.0\plugins\check_pre_commit.py</path>
+    <doc>this is a plugin/hook for bazaar. just add this file to ~/.bazaar/plugins/</doc>
+  </plugin>
+  <plugin>
+    <name>rebase</name>
+    <version>0.5.4</version>
+    <path>C:\Program Files\Bazaar\plugins\rebase</path>
+    <doc>Rebase support.
+
+      The Bazaar rebase plugin adds support for rebasing branches to Bazaar.
+      It adds the command 'rebase' to Bazaar. When conflicts occur when replaying
+      patches, the user can resolve the conflict and continue the rebase using the
+      'rebase-continue' command or abort using the 'rebase-abort' command.
+    </doc>
+  </plugin>
+  <plugin>
+    <name>upload</name>
+    <version>1.0.0dev</version>
+    <path>C:\Program Files\Bazaar\plugins\upload</path>
+    <doc>Upload a working tree, incrementally.
+
+      The only bzr-related info uploaded with the working tree is the corresponding
+      revision id. The uploaded working tree is not linked to any other bzr data.
+
+      The intended use is for web developers which keep their web sites versioned
+      with bzr, can can use either FTP or SFTP to upload their site.
+
+      Known limitations:
+      - Symlinks are ignored,
+
+      - chmod bits (other than the owner's execution bit) are not supported.
+    </doc>
+  </plugin>
+  <plugin>
+    <name>qbzr</name>
+    <version>0.14.6</version>
+    <path>C:\Program Files\Bazaar\plugins\qbzr</path>
+    <doc>QBzr - Qt-based frontend for Bazaar
+
+      QBzr provided GUI frontend for many core bzr commands and several universal
+      dialogs and helper commands. Equivalents for core bzr commands
+      has the same names as CLI commands but with prefix "q".
+
+      Basic q-commands:
+
+      * qadd - GUI for adding files or directories.
+      * qannotate - Show the origin of each line in a file.
+      * qbind - Convert the current branch into a checkout of the supplied branch.
+      * qbranch - Create a new copy of a branch.
+      * qcat - View the contents of a file as of a given revision.
+      * qcommit - GUI for committing revisions.
+      * qconflicts - Show conflicts.
+      * qdiff - Show differences in working tree in a GUI window.
+      * qexport - Export current or past revision to a destination directory or archive.
+      * qinfo - Shows information about the current location.
+      * qinit - Initializes a new branch or shared repository.
+      * qlog - Show log of a repository, branch, file, or directory in a Qt window.
+      * qmerge - Perform a three-way merge.
+      * qplugins - Display information about installed plugins.
+      * qpull - Turn this branch into a mirror of another branch.
+      * qpush - Update a mirror of this branch.
+      * qrevert - Revert changes files.
+      * qsend - Mail or create a merge-directive for submitting changes.
+      * qswitch - Set the branch of a checkout and update.
+      * qtag - Edit tags.
+      * qunbind - Convert the current checkout into a regular branch.
+      * quncommit - Move the tip of a branch to an earlier revision.
+      * qupdate - Update working tree with latest changes in the branch.
+      * qversion - Show version/system information.
+
+      Hybrid dialogs:
+
+      * qgetnew - Creates a new working tree (either a checkout or full branch).
+      * qgetupdates - Fetches external changes into the working tree.
+
+      Additional commands:
+
+      * qbrowse - Show inventory or working tree.
+      * qconfig - Configure Bazaar and QBzr.
+      * qviewer - Simple file viewer.
+
+      Miscellaneous:
+
+      * bug-url - print full URL to a specific bug, or open it in your browser.
+    </doc>
+  </plugin>
+  <plugin>
+    <name>bzrtools</name>
+    <version>2.0.1</version>
+    <path>C:\Program Files\Bazaar\plugins\bzrtools</path>
+    <doc>Various useful commands for working with bzr.</doc>
+  </plugin>
+  <plugin>
+    <name>xmloutput</name>
+    <version>0.8.5</version>
+    <path>C:\Program Files\Bazaar\plugins\xmloutput</path>
+    <doc>This plugin provides xml output for status, log, annotate, missing, info,
+      version and plugins adding a --xml option to each
+    </doc>
+  </plugin>
+  <plugin>
+    <name>diff_revid</name>
+    <version>unknown</version>
+    <path>C:\Documents and Settings\pwoodworth\Application Data\bazaar\2.0\plugins\diff_revid</path>
+    <doc>Generate diffs that include revids in the header instead of dates, where possible.</doc>
+  </plugin>
+  <plugin>
+    <name>netrc_credential_store</name>
+    <version>2.0.4</version>
+    <path>C:\Program Files\Bazaar\plugins\netrc_credential_store</path>
+    <doc>Use ~/.netrc as a credential store for authentication.conf.</doc>
+  </plugin>
+  <plugin>
+    <name>explorer</name>
+    <version>0.8.3</version>
+    <path>C:\Program Files\Bazaar\plugins\explorer</path>
+    <doc>Version Control for Human Beings.
+
+      Bazaar Explorer is a desktop application providing an easy-to-use
+      interface to the Bazaar version control system. It is designed to
+      be simple enough for casual users of version control, yet powerful
+      enough for experts to use as their primary interface to Bazaar.
+
+      Please visit the home page, http://doc.bazaar-vcs.org/explorer/en/,
+      for more information.
+    </doc>
+  </plugin>
+</plugins>

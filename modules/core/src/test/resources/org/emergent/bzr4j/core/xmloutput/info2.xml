@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<info>
+  <layout>Repository tree</layout>
+  <formats>
+    <format>unnamed</format>
+  </formats>
+  <location>
+    <shared_repository>E:/working/bzr/bzr4j</shared_repository>
+    <repository_branch>.</repository_branch>
+  </location>
+  <related_branches>
+    <parent_branch>E:/working/bzr/bzr4j/bzr4j.woody.bak</parent_branch>
+    <submit_branch>E:/working/bzr/bzr4j/bzr4j.woody.bak</submit_branch>
+  </related_branches>
+  <format>
+    <control>Meta directory format 1</control>
+    <working_tree>Working tree format 6</working_tree>
+    <branch>Branch format 6</branch>
+    <repository>Repository format 2a - rich roots, group compression and chk inventories</repository>
+  </format>
+  <working_tree_stats>
+    <unchanged>401</unchanged>
+    <modified>7</modified>
+    <added>0</added>
+    <removed>2</removed>
+    <renamed>0</renamed>
+    <unknown>0</unknown>
+    <ignored>0</ignored>
+    <versioned_subdirectories>144</versioned_subdirectories>
+  </working_tree_stats>
+  <branch_history>
+    <revisions>57</revisions>
+    <committers>1</committers>
+    <days_old>322</days_old>
+    <first_revision>Fri 2009-03-13 17:23:42 -0700</first_revision>
+    <latest_revision>Thu 2010-01-28 11:47:46 -0800</latest_revision>
+  </branch_history>
+  <repository_stats>
+    <revisions>163</revisions>
+  </repository_stats>
+</info>

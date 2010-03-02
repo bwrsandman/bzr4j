@@ -39,11 +39,32 @@
       <replacefilter token="&lt;version&gt;${oldver}&lt;/version&gt;" value="&lt;version&gt;${newver}&lt;/version&gt;"/>
     </replace>
     <replace dir="${bzr4j.dir}">
-      <include name="*/src/main/resources/**/*.xml"/>
-      <include name="*/src/main/resources/**/*.properties"/>
-      <include name="*/teamcity-plugin.xml"/>
+      <include name="modules/*/src/main/resources/**/*.xml"/>
+      <include name="modules/*/src/main/resources/**/*.properties"/>
+      <include name="modules/*/teamcity-plugin.xml"/>
       <replacefilter token="${oldver}" value="${newver}"/>
     </replace>
+  </target>
+
+  <target name="makesubpom">
+    <copy file="${bzr4j.dir}/pom.xml" todir="${bzr4j.dir}/modules" overwrite="true">
+      <filterchain>
+        <tokenfilter>
+          <replaceregex pattern="modules/" replace="" flags="gi"/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="makesrc">
+    <property name="srcbundle.location" location="${java.io.tmpdir}/bzr4j-src.zip"/>
+    <echo message="srcbundle.location=${srcbundle.location}"/>
+    <delete file="${srcbundle.location}" quiet="true"/>
+    <zip destfile="${srcbundle.location}" update="false">
+      <fileset dir="${bzr4j.dir}">
+        <exclude name=".bzr/**"/>
+      </fileset>
+    </zip>
   </target>
 
   <target name="fixws">
@@ -56,6 +77,12 @@
         <include name="*/src/**/*.properties"/>
         <include name="*/src/**/*.xml"/>
         <include name="*/teamcity-plugin.xml"/>
+        <include name="*/*/testng.xml"/>
+        <include name="*/*/src/**/*.java"/>
+        <include name="*/*/src/**/*.jsp"/>
+        <include name="*/*/src/**/*.properties"/>
+        <include name="*/*/src/**/*.xml"/>
+        <include name="*/*/teamcity-plugin.xml"/>
       </pattern-elements>
 <!--
       <copy-elements>

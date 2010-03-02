@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<status workingtree_root="C:/temp/bzr4j-tests/workng/testws6429559918273708833/test4/">
+  <kind_changed>
+    <directory oldkind="file" suffix="bar.txt-20100126143054-deu3uedq1dhi37a2-1">bardir/bar.txt</directory>
+  </kind_changed>
+  <pending_merges>
+    <log>
+      <revisionid>patrick@woodworth.org-20100129005927-fjla7t8qgt0nj1e0</revisionid>
+      <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+      <timestamp>Thu 2010-01-28 16:59:27 -0800</timestamp>
+      <message><![CDATA[Stuff]]></message>
+    </log>
+    <log>
+      <revisionid>patrick@woodworth.org-20100128231745-dh0fdlxfpwthgcco</revisionid>
+      <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+      <timestamp>Thu 2010-01-28 15:17:45 -0800</timestamp>
+      <message><![CDATA[Getting rid of BzrLsCommand and BzrStatusCommand]]></message>
+    </log>
+  </pending_merges>
+</status>

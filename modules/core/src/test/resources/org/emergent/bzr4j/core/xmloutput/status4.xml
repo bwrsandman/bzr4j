@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<status workingtree_root="E:/working/bzr/lp/+junk/testdata.branch1/">
+  <renamed>
+    <directory oldpath="bar1" suffix="bar-20100201230250-xxsp518b3sxyim04-2">bar2</directory>
+    <file oldpath="foo/foo1.txt" fid="foo.txt-20100201230250-xxsp518b3sxyim04-6">foo/foo2.txt</file>
+  </renamed>
+  <modified>
+    <file fid="lorem.txt-20100201230250-xxsp518b3sxyim04-4">lorem.txt</file>
+  </modified>
+  <unknown>
+    <file>lorem.txt.BASE</file>
+    <file>lorem.txt.OTHER</file>
+    <file>lorem.txt.THIS</file>
+  </unknown>
+  <conflicts>
+    <conflict type="path conflict">bar1</conflict>
+    <conflict type="path conflict">foo/foo1.txt</conflict>
+    <conflict type="text conflict">lorem.txt</conflict>
+  </conflicts>
+  <pending_merges>
+    <log>
+      <revisionid>parick@woodworth.org-20100201233902-ikztmnvi5m3mrrds</revisionid>
+      <committer>Patrick Woodworth &lt;parick@woodworth.org&gt;</committer>
+      <timestamp>Mon 2010-02-01 15:39:02 -0800</timestamp>
+      <message><![CDATA[Renames and edits to conflict with branch1]]></message>
+    </log>
+  </pending_merges>
+</status>
