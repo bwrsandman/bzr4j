@@ -878,8 +878,14 @@ public abstract class AbstractIdeaMojo extends AbstractSkipMojo
             {
                 Resource resource = (Resource) i.next();
                 String directory = resource.getDirectory();
-                if ( resource.getTargetPath() == null && !resource.isFiltering() )
+                if ( resource.getTargetPath() == null )
                 {
+                    if (resource.isFiltering())
+                    {
+                        getLog().info(
+                            "Adding resource directory with incompatible filtering: "
+                                + directory );
+                    }
                     addSourceFolder( content, directory, false );
                 }
                 else
