@@ -67,6 +67,29 @@
     </zip>
   </target>
 
+  <target name="copyrel">
+    <property name="release.location" location="${java.io.tmpdir}/bzr4j-release"/>
+    <delete dir="${release.location}" quiet="true"/>
+    <copy overwrite="true" preservelastmodified="true"
+          todir="${release.location}" 
+          file="${java.io.tmpdir}/bzr4j-src.zip"/>
+    <copy overwrite="true" preservelastmodified="true"
+          todir="${release.location}" 
+          file="${bzr4j.dir}/modules/teamcity/target/install-bundles/bzr.zip"/>
+    <copy overwrite="true" preservelastmodified="true"
+          tofile="${release.location}/bzr4intellij.zip" 
+          file="${bzr4j.dir}/modules/intellij/target/install-bundles/bzr4intellij-zipbundle.zip"/>
+<!--
+    <copy todir="${java.io.tmpdir}/bzr4j-release" overwrite="true" preservelastmodified="true">
+      <fileset file="${java.io.tmpdir}/bzr4j-src.zip"/>
+      <fileset dir="${bzr4j.dir}/modules">
+        <include name="intellij/target/install-bundles/bzr4j-zipbundle.zip"/>
+        <include name="teamcity/target/install-bundles/bzr.zip"/>
+      </fileset>
+    </copy>
+-->
+  </target>
+
   <target name="fixws">
     <m-toandfro dir="${bzr4j.dir}">
       <pattern-elements>

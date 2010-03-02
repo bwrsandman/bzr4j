@@ -4,7 +4,7 @@
   <info>
     <name>bzr</name>
     <display-name>Bazaar VCS</display-name>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>${project.version}</version>
   </info>
   <deployment use-separate-classloader="true"/>
 </teamcity-plugin>
