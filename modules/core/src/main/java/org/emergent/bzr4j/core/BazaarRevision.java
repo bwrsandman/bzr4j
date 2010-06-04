@@ -6,6 +6,7 @@ package org.emergent.bzr4j.core;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -21,7 +22,7 @@ import java.util.StringTokenizer;
  */
 public final class BazaarRevision {
 
-  private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss");
+  private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss", Locale.US);
 
   private final Prefix prefix;
 

@@ -24,6 +24,7 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 
 /**
+ * TODO PatternFormatter class is not used.
  * @author Rohit B. Rai
  * @author Patrick Woodworth
  */
@@ -94,12 +95,12 @@ public class PatternFormatter extends Formatter {
     logMessageFormat = new MessageFormat(logPattern);
     exceptionMessageFormat = new MessageFormat(exceptionPattern);
 
-    dateFormat = new SimpleDateFormat(timeFormat);
+    dateFormat = new SimpleDateFormat(timeFormat); // Locale.US seems to be not necessary here
   }
 
   public void setTimeFormat(String timeFormat) {
     this.timeFormat = timeFormat;
-    dateFormat = new SimpleDateFormat(timeFormat);
+    dateFormat = new SimpleDateFormat(timeFormat); // Locale.US seems to be not necessary here
   }
 
   public void setLogPattern(String logFormat) {

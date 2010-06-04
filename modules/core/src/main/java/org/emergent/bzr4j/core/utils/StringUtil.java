@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -107,7 +108,7 @@ public class StringUtil {
    * workaround to the problem (see method parseLogDate)
    */
   private static final SimpleDateFormat DATE_FORMAT =
-      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
   public synchronized static Date parseDate(String date) throws ParseException {
     return DATE_FORMAT.parse(date);
