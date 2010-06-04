@@ -25,11 +25,12 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 public abstract class XmlOutputHandler extends XmlAbstractHandler {
 
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE yyyy-MM-dd HH:mm:ss Z");
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
   private final static String BRANCH_ROOT = "workingtree_root";
 
@@ -42,9 +43,13 @@ public abstract class XmlOutputHandler extends XmlAbstractHandler {
   public void handleAnnotationEntry(String content, String revno, String author, String date) {
   }
 
+  public static Date parseBzrTimeStamp(String timestamp) throws ParseException {
+    return DATE_FORMAT.parse(timestamp);
+  }
+
   public void handleLog(String revno, String committer, String branchNick, String timestamp, String message) {
     try {
-      Date tstamp = DATE_FORMAT.parse(timestamp);
+      Date tstamp = parseBzrTimeStamp(timestamp);
       handleLog(revno, committer, branchNick, tstamp, message);
     } catch (ParseException e) {
       LOG.error(e, "failed to parse: " + timestamp);
