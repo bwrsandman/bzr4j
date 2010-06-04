@@ -5,3 +5,4 @@
 ./user.properties
 ./modules/pom.xml
 target
+./test-output
