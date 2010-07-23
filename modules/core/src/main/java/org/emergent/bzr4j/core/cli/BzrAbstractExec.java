@@ -104,7 +104,7 @@ public abstract class BzrAbstractExec {
     m_bazaarRoot = root;
     m_cmd = cmd;
     File dir = root.getFile();
-    m_workingDir = dir != null ? dir : DEFAULT_WORKDIR;
+    m_workingDir = (dir != null && dir.exists()) ? dir : DEFAULT_WORKDIR;
   }
 
   public BzrAbstractExec addArguments(String... args) {

@@ -205,6 +205,7 @@ public class BazaarVcsSupport extends VcsSupport
   public String testConnection(@NotNull final VcsRoot vcsRoot) throws VcsException {
     Settings settings = createSettings(vcsRoot);
     try {
+      //syncClonedRepository(vcsRoot);
       BzrTeamcityExec handler = new BzrTeamcityExec(settings,"info");
       handler.addArguments(settings.getRepositoryUrl());
       BzrStandardResult result = handler.exectc();
@@ -344,7 +345,7 @@ public class BazaarVcsSupport extends VcsSupport
     try {
       if (fromVersion == null) {
         LOG.debug("building full patch: " + toVersion);
-        buildFullPatch(settings, new ChangeRev(toVersion), builder);
+        buildFullPatch(settings, new ChangeRev(toVersion), builder, checkoutRules);
       } else {
         LOG.debug("building delta patch: " + fromVersion + " " + toVersion);
         buildIncrementalPatch(settings, new ChangeRev(fromVersion), new ChangeRev(toVersion), builder);
@@ -434,8 +435,9 @@ public class BazaarVcsSupport extends VcsSupport
 
   // builds patch by exporting files using specified version
 
-  private void buildFullPatch(final Settings settings, @NotNull final ChangeRev toVer,
-      final PatchBuilder builder)
+  private void buildFullPatch(
+      final Settings settings, @NotNull final ChangeRev toVer,
+      final PatchBuilder builder, CheckoutRules checkoutRules)
       throws IOException, VcsException, BazaarException, BzrExecException {
     File tempDir = FileUtil.createTempDirectory("bazaar", toVer.getId());
     try {
@@ -447,35 +449,40 @@ public class BazaarVcsSupport extends VcsSupport
         public boolean accept(final File file) {
           return !(file.isDirectory() && ".bzr".equals(file.getName()));
         }
-      });
+      }, checkoutRules);
     }
     finally {
       FileUtil.delete(tempDir);
     }
   }
 
-  private void buildPatchFromDirectory(final PatchBuilder builder, final File repRoot,
-      final FileFilter filter) throws IOException {
-    buildPatchFromDirectory(repRoot, builder, repRoot, filter);
+  private void buildPatchFromDirectory(
+      final PatchBuilder builder, final File repRoot,
+      final FileFilter filter, CheckoutRules checkoutRules) throws IOException {
+    buildPatchFromDirectory(repRoot, builder, repRoot, filter, checkoutRules);
   }
 
-  private void buildPatchFromDirectory(File curDir, final PatchBuilder builder,
-      final File repRoot, final FileFilter filter) throws IOException {
+  private void buildPatchFromDirectory(
+      File curDir, final PatchBuilder builder,
+      final File repRoot, final FileFilter filter, CheckoutRules checkoutRules) throws IOException {
     File[] files = curDir.listFiles(filter);
     if (files != null) {
       for (File realFile : files) {
         String relPath = realFile.getAbsolutePath().substring(repRoot.getAbsolutePath().length());
-        final File virtualFile = new File(relPath);
-        if (realFile.isDirectory()) {
-          builder.createDirectory(virtualFile);
-          buildPatchFromDirectory(realFile, builder, repRoot, filter);
-        } else {
-          final FileInputStream is = new FileInputStream(realFile);
-          try {
-            builder.createBinaryFile(virtualFile, null, is, realFile.length());
-          }
-          finally {
-            is.close();
+        String mappedPath = checkoutRules.map(relPath);
+        if (mappedPath != null) {
+          final File virtualFile = new File(mappedPath);
+          if (realFile.isDirectory()) {
+            builder.createDirectory(virtualFile);
+            buildPatchFromDirectory(realFile, builder, repRoot, filter, checkoutRules);
+          } else {
+            final FileInputStream is = new FileInputStream(realFile);
+            try {
+              builder.createBinaryFile(virtualFile, null, is, realFile.length());
+            }
+            finally {
+              is.close();
+            }
           }
         }
       }
