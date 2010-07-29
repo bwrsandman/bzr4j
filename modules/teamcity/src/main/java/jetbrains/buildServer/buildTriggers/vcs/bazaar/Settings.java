@@ -77,10 +77,10 @@ public class Settings {
    */
   public String getRepositoryUrl() {
     String retval = myRepository;
-    int fragIdx = retval.lastIndexOf('#');
-    if (fragIdx > 0) {
-      retval = retval.substring(0,fragIdx);
-    }
+//    int fragIdx = retval.lastIndexOf('#');
+//    if (fragIdx > 0) {
+//      retval = retval.substring(0,fragIdx);
+//    }
     return retval;
   }
 

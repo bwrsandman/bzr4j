@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logs>
+  <log>
+    <revno>2029</revno>
+    <revisionid>plw@tripwire.com-20100727211357-r7tlltu8gn9067em</revisionid>
+    <parents>
+      <parent>bbatchelder@tripwire.com-20100701184442-387fplh3amkpqo10</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+    <branch-nick>space.woody.alt</branch-nick>
+    <timestamp>Tue 2010-07-27 14:13:57 -0700</timestamp>
+    <message><![CDATA[Fix setting of java.io.tmpdir when running ant junit target.]]></message>
+    <affected-files>
+      <modified>
+        <file fid="4@6e0737a0-4ead-4477-ba22-0b29a3188a59:trunk:modules%2Fteserver-bundle%2Fdevserver%2Fbuild.xml">
+          modules/teserver-bundle/devserver/build.xml
+        </file>
+      </modified>
+    </affected-files>
+  </log>
+  <log>
+    <revno>2030</revno>
+    <revisionid>plw@tripwire.com-20100728014704-4216oi2s1c3zoecj</revisionid>
+    <parents>
+      <parent>plw@tripwire.com-20100727211357-r7tlltu8gn9067em</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+    <branch-nick>space.woody</branch-nick>
+    <timestamp>Tue 2010-07-27 18:47:04 -0700</timestamp>
+    <message>
+      <![CDATA[Removing teconfig-test source tree to test whether the bzr4teamcity plugin correctly removes it too.]]></message>
+    <affected-files>
+      <removed>
+        <directory suffix="4@6e0737a0-4ead-4477-ba22-0b29a3188a59:trunk:modules%2Fspace-boot%2Fsrc%2Fteconfig-test">
+          modules/space-boot/src/teconfig-test/
+        </directory>
+      </removed>
+      <modified>
+        <file
+            fid="4@6e0737a0-4ead-4477-ba22-0b29a3188a59:trunk:modules%2Fserver%2Fcore%2Ftest%2Fcom%2Ftripwire%2Fspace%2Fcore%2FTester.java">
+          modules/space-server/core/test/com/tripwire/space/core/Tester.java
+        </file>
+      </modified>
+    </affected-files>
+  </log>
+</logs>

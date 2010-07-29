@@ -33,7 +33,7 @@ import java.util.ListIterator;
  */
 public class XmlAbstractHandler extends DefaultHandler {
 
-  protected final static DebugLogger LOG = DebugManager.getLogger(XmlAbstractHandler.class.getName());
+  private final static DebugLogger LOG = DebugManager.getLogger(XmlAbstractHandler.class.getName());
 
   protected final LinkedList<StackEntry> m_elStack = new LinkedList<StackEntry>();
 

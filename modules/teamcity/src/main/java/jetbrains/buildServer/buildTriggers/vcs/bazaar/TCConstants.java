@@ -35,4 +35,5 @@ public class TCConstants {
   public static final String PASSWORD = VcsRoot.SECURE_PROPERTY_PREFIX + "password";
 
   public static final String SERVER_CLONE_PATH_PROP = "serverClonePath";
+  static final long OLD_WORK_DIRS_CLEANUP_PERIOD = 600;
 }
