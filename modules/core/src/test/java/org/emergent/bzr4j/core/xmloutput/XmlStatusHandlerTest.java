@@ -53,7 +53,6 @@ public class XmlStatusHandlerTest extends QuickExecTest {
     final ArrayList<String> conflicts = new ArrayList<String>();
     XmlOutputHandler resultHandler = new XmlOutputHandler() {
 
-      @Override
       public void handleConflicts(String path, String type) {
         System.out.println("conflict: " + type + " " + path );
         conflicts.add(path);
@@ -75,7 +74,6 @@ public class XmlStatusHandlerTest extends QuickExecTest {
     changes.add(new String[] { "directory", "lorem.txt", "file" });
     XmlOutputHandler resultHandler = new XmlOutputHandler() {
 
-      @Override
       public void handleKindChanged(BazaarItemKind kind, String path, String oldKind) {
         for (Iterator<String[]> iter = changes.iterator(); iter.hasNext();) {
           String[] expected = iter.next();
