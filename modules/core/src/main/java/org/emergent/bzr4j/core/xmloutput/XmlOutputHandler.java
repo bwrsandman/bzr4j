@@ -16,10 +16,13 @@
 
 package org.emergent.bzr4j.core.xmloutput;
 
+import org.emergent.bzr4j.core.debug.DebugLogger;
+import org.emergent.bzr4j.core.debug.DebugManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import static org.emergent.bzr4j.core.xmloutput.XmlAbstractHandler.ParseMode.*;
+import org.xml.sax.helpers.AttributesImpl;
 
 import java.io.File;
 import java.text.ParseException;
@@ -29,6 +32,8 @@ import java.util.Locale;
 import java.util.Properties;
 
 public abstract class XmlOutputHandler extends XmlAbstractHandler {
+
+  private final static DebugLogger LOG = DebugManager.getLogger(XmlOutputHandler.class.getName());
 
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE yyyy-MM-dd HH:mm:ss Z", Locale.US);
 
@@ -75,51 +80,34 @@ public abstract class XmlOutputHandler extends XmlAbstractHandler {
         );
   }
 
-
-  public void handleAdded(String kind, String path) {
-
-  }
-
-  public void handleModified(String kind, String path) {
-
-  }
-
-  public void handleRemoved(String kind, String path) {
-
-  }
-
-  public void handleRenamed(String kind, String path, String oldPath) {
-
-  }
-
-  public void handleUnknown(String kind, String path) {
-
-  }
-
-  public void handleConflicts(String path, String type) {
-
-  }
-
-  public void handleKindChanged(String kind, String path, String oldKind) {
-
-  }
-
   public void handleGenericChange(String changeType, String kind, String path, Attributes attributes) {
-    if ("added".equals(changeType)) {
-      handleAdded(kind, path);
-    } else if ("modified".equals(changeType)) {
-      handleModified(kind, path);
-    } else if ("removed".equals(changeType)) {
-      handleRemoved(kind, path);
-    } else if ("renamed".equals(changeType)) {
-      handleRenamed(kind, path, attributes.getValue("oldpath"));
-    } else if ("unknown".equals(changeType)) {
-      handleUnknown(kind, path);
-    } else if ("conflicts".equals(changeType)) {
-      handleConflicts(path, attributes.getValue("type"));
-    } else if ("kind_changed".equals(changeType)) {
-      handleKindChanged(kind, path, attributes.getValue("oldkind"));
-    }
+    handleGenericChange(new GenericChange(changeType, kind, path, new AttributesImpl(attributes)));
+  }
+
+  public void handleGenericChange(GenericChange change) {
+//    switch (change.m_changeType) {
+//      case added:
+//        handleAdded(change.m_kind, change.m_path);
+//        break;
+//      case modified:
+//        handleModified(change.m_kind, change.m_path);
+//        break;
+//      case removed:
+//        handleRemoved(change.m_kind, change.m_path);
+//        break;
+//      case renamed:
+//        handleRenamed(change.m_kind, change.m_path, change.getOldPath());
+//        break;
+//      case unknown:
+//        handleUnknown(change.m_kind, change.m_path);
+//        break;
+//      case conflicts:
+//        handleConflicts(change.m_path, change.getConflictType());
+//        break;
+//      case kind_changed:
+//        handleKindChanged(change.m_kind, change.m_path, change.getOldKind());
+//        break;
+//    }
   }
 
   public void handleStatusGroupEntry(String changeType, SimpleElement simpleEl) {
@@ -240,4 +228,5 @@ public abstract class XmlOutputHandler extends XmlAbstractHandler {
         break;
     }
   }
+
 }

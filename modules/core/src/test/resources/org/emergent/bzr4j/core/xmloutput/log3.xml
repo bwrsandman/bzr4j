@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logs>
+  <log>
+    <revno>44</revno>
+    <revisionid>patrick@woodworth.org-20100727101810-cnx9xie5funa8a7h</revisionid>
+    <parents>
+      <parent>patrick@woodworth.org-20100727100415-o452h6w2eauhpywo</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+    <branch-nick>trunk</branch-nick>
+    <timestamp>Tue 2010-07-27 03:18:10 -0700</timestamp>
+    <message><![CDATA[Safety]]></message>
+    <affected-files>
+      <modified>
+        <file fid="bazaarservervcssuppo-20090314002314-jwsgeizbkaafmjig-432">
+          modules/teamcity/src/main/java/jetbrains/buildServer/buildTriggers/vcs/bazaar/BazaarVcsSupport.java
+        </file>
+      </modified>
+    </affected-files>
+  </log>
+  <log>
+    <revno>45</revno>
+    <revisionid>patrick@woodworth.org-20100727211804-b2lptxtbsfn0eirn</revisionid>
+    <parents>
+      <parent>patrick@woodworth.org-20100727101810-cnx9xie5funa8a7h</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;patrick@woodworth.org&gt;</committer>
+    <branch-nick>trunk</branch-nick>
+    <timestamp>Tue 2010-07-27 14:18:04 -0700</timestamp>
+    <message><![CDATA[Use --no-tree when cloning local cache repo in bzr4teamcity]]></message>
+    <affected-files>
+      <modified>
+        <file fid="bazaarservervcssuppo-20090314002314-jwsgeizbkaafmjig-432">
+          modules/teamcity/src/main/java/jetbrains/buildServer/buildTriggers/vcs/bazaar/BazaarVcsSupport.java
+        </file>
+      </modified>
+    </affected-files>
+  </log>
+  <log>
+    <revno>46</revno>
+    <revisionid>plw@tripwire.com-20100727231243-wgb6u2lrmgrfyb2j</revisionid>
+    <parents>
+      <parent>patrick@woodworth.org-20100727211804-b2lptxtbsfn0eirn</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+    <branch-nick>bzr4j.fixup</branch-nick>
+    <timestamp>Tue 2010-07-27 16:12:43 -0700</timestamp>
+    <message><![CDATA[Misc changes.]]></message>
+    <affected-files>
+      <removed>
+        <file fid="building-20090602101157-kmuojfmni7uaml8n-1">BUILDING.txt</file>
+      </removed>
+      <added>
+        <directory suffix="foo-20100727231207-gwlfepm81bar0os5-1">extras/foo/</directory>
+      </added>
+      <renamed>
+        <file oldpath="extras/foo.sh" fid="foo.sh-20100727100407-q67uziiahfd31yp1-1">modules/foo.sh</file>
+      </renamed>
+    </affected-files>
+  </log>
+  <log>
+    <revno>47</revno>
+    <revisionid>plw@tripwire.com-20100728001518-z9vgd27pvfhqdqoh</revisionid>
+    <parents>
+      <parent>plw@tripwire.com-20100727231243-wgb6u2lrmgrfyb2j</parent>
+      <parent>plw@tripwire.com-20100728001438-z8gcejalq10caltu</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+    <branch-nick>bzr4j</branch-nick>
+    <timestamp>Tue 2010-07-27 17:15:18 -0700</timestamp>
+    <message><![CDATA[Merging in the barX.txt submerges]]></message>
+    <affected-files>
+      <added>
+        <file fid="bar1.txt-20100728001339-l99i4zva22vn5r4u-1">modules/core/bar1.txt</file>
+        <file fid="bar3.txt-20100728001410-czr3796ruaggr1zx-1">modules/teamcity/bar3.txt</file>
+      </added>
+    </affected-files>
+    <merge>
+      <log>
+        <revno>46.1.1</revno>
+        <revisionid>plw@tripwire.com-20100728001353-n3vh5pxr7oin1uz4</revisionid>
+        <parents>
+          <parent>plw@tripwire.com-20100727231243-wgb6u2lrmgrfyb2j</parent>
+        </parents>
+        <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+        <branch-nick>bzr4j.fixup</branch-nick>
+        <timestamp>Tue 2010-07-27 17:13:53 -0700</timestamp>
+        <message><![CDATA[Sub merge A with bar1.txt and bar2.txt]]></message>
+        <affected-files>
+          <added>
+            <file fid="bar1.txt-20100728001339-l99i4zva22vn5r4u-1">modules/core/bar1.txt</file>
+            <file fid="bar2.txt-20100728001339-l99i4zva22vn5r4u-2">modules/intellij/bar2.txt</file>
+          </added>
+        </affected-files>
+      </log>
+      <log>
+        <revno>46.1.2</revno>
+        <revisionid>plw@tripwire.com-20100728001438-z8gcejalq10caltu</revisionid>
+        <parents>
+          <parent>plw@tripwire.com-20100728001353-n3vh5pxr7oin1uz4</parent>
+        </parents>
+        <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+        <branch-nick>bzr4j.fixup</branch-nick>
+        <timestamp>Tue 2010-07-27 17:14:38 -0700</timestamp>
+        <message><![CDATA[Sub merge B with bar3.txt and removal of bar2.txt]]></message>
+        <affected-files>
+          <removed>
+            <file fid="bar2.txt-20100728001339-l99i4zva22vn5r4u-2">modules/intellij/bar2.txt</file>
+          </removed>
+          <added>
+            <file fid="bar3.txt-20100728001410-czr3796ruaggr1zx-1">modules/teamcity/bar3.txt</file>
+          </added>
+        </affected-files>
+      </log>
+    </merge>
+  </log>
+  <log>
+    <revno>48</revno>
+    <revisionid>plw@tripwire.com-20100728002044-g3wlw3vbh5cak3ry</revisionid>
+    <parents>
+      <parent>plw@tripwire.com-20100728001518-z9vgd27pvfhqdqoh</parent>
+      <parent>plw@tripwire.com-20100728002018-9r7552z5erxw3e9o</parent>
+    </parents>
+    <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+    <branch-nick>bzr4j</branch-nick>
+    <timestamp>Tue 2010-07-27 17:20:44 -0700</timestamp>
+    <message><![CDATA[Merging in the zodX.txt submerges]]></message>
+    <affected-files>
+      <removed>
+        <file fid="bar1.txt-20100728001339-l99i4zva22vn5r4u-1">modules/core/bar1.txt</file>
+      </removed>
+      <added>
+        <file fid="zod1.txt-20100728001903-1kgh16s7c9hzmdce-1">modules/core/zod1.txt</file>
+        <file fid="zod2.txt-20100728002014-cmq2whn1rmck0x9v-1">modules/intellij/zod2.txt</file>
+      </added>
+    </affected-files>
+    <merge>
+      <log>
+        <revno>46.1.3</revno>
+        <revisionid>plw@tripwire.com-20100728001933-97qj7ml6syf8krzg</revisionid>
+        <parents>
+          <parent>plw@tripwire.com-20100728001438-z8gcejalq10caltu</parent>
+        </parents>
+        <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+        <branch-nick>bzr4j.fixup</branch-nick>
+        <timestamp>Tue 2010-07-27 17:19:33 -0700</timestamp>
+        <message><![CDATA[Sub merge C with zodX.txt files]]></message>
+        <affected-files>
+          <removed>
+            <file fid="bar1.txt-20100728001339-l99i4zva22vn5r4u-1">modules/core/bar1.txt</file>
+          </removed>
+          <added>
+            <file fid="zod1.txt-20100728001903-1kgh16s7c9hzmdce-1">modules/core/zod1.txt</file>
+            <file fid="zod3.txt-20100728001903-1kgh16s7c9hzmdce-2">modules/teamcity/zod3.txt</file>
+          </added>
+        </affected-files>
+      </log>
+      <log>
+        <revno>46.1.4</revno>
+        <revisionid>plw@tripwire.com-20100728002018-9r7552z5erxw3e9o</revisionid>
+        <parents>
+          <parent>plw@tripwire.com-20100728001933-97qj7ml6syf8krzg</parent>
+        </parents>
+        <committer>Patrick Woodworth &lt;plw@tripwire.com&gt;</committer>
+        <branch-nick>bzr4j.fixup</branch-nick>
+        <timestamp>Tue 2010-07-27 17:20:18 -0700</timestamp>
+        <message><![CDATA[Sub merge D with zodX.txt files]]></message>
+        <affected-files>
+          <removed>
+            <file fid="zod3.txt-20100728001903-1kgh16s7c9hzmdce-2">modules/teamcity/zod3.txt</file>
+          </removed>
+          <added>
+            <file fid="zod2.txt-20100728002014-cmq2whn1rmck0x9v-1">modules/intellij/zod2.txt</file>
+          </added>
+        </affected-files>
+      </log>
+    </merge>
+  </log>
+</logs>

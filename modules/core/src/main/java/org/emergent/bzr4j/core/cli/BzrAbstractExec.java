@@ -43,10 +43,12 @@ public abstract class BzrAbstractExec {
 
   private static final DebugLogger LOG = DebugManager.getLogger(BzrAbstractExec.class);
 
+  private static final int WORK_DIR_LOG_FIELD_SIZE = 25;
+
   private static final File DEFAULT_WORKDIR = (new File(System.getProperty("user.dir"))).getAbsoluteFile();
 
   private static final Set<String> ROOTLESS_WHITELIST = new HashSet<String>(
-      Arrays.asList("help", "plugins", "version", "xmlplugins", "xmlversion")
+      Arrays.asList("clone", "help", "plugins", "revno", "version", "xmlplugins", "xmlversion")
   );
 
   private static final HashMap<String,Long> sm_timings = new HashMap<String, Long>();
@@ -104,7 +106,7 @@ public abstract class BzrAbstractExec {
     m_bazaarRoot = root;
     m_cmd = cmd;
     File dir = root.getFile();
-    m_workingDir = dir != null ? dir : DEFAULT_WORKDIR;
+    m_workingDir = (dir != null && dir.exists()) ? dir : DEFAULT_WORKDIR;
   }
 
   public BzrAbstractExec addArguments(String... args) {
@@ -201,8 +203,8 @@ public abstract class BzrAbstractExec {
 
   protected void logExec(BzrAbstractResult result, File workDir, ArrayList<String> args) {
     String workPath = String.valueOf(workDir);
-    if (workPath.length() > 40)
-      workPath = workPath.substring(workPath.length() - 40);
-    LOG.debug(String.format("(%40s) : %s", workPath, args.toString()));
+    if (workPath.length() > WORK_DIR_LOG_FIELD_SIZE)
+      workPath = workPath.substring(workPath.length() - WORK_DIR_LOG_FIELD_SIZE);
+    LOG.debug(String.format("(%" + WORK_DIR_LOG_FIELD_SIZE + "s) : %s", workPath, args.toString()));
   }
 }

@@ -16,6 +16,8 @@
 
 package org.emergent.bzr4j.core.xmloutput;
 
+import org.emergent.bzr4j.core.BazaarChangeType;
+import org.emergent.bzr4j.core.BazaarItemKind;
 import org.emergent.bzr4j.core.cli.BzrAbstractResult;
 import org.emergent.bzr4j.core.cli.BzrXmlResult;
 import org.emergent.bzr4j.core.testutil.BzrTestExec;
@@ -74,7 +76,7 @@ public class XmlStatusHandlerTest extends QuickExecTest {
     XmlOutputHandler resultHandler = new XmlOutputHandler() {
 
       @Override
-      public void handleKindChanged(String kind, String path, String oldKind) {
+      public void handleKindChanged(BazaarItemKind kind, String path, String oldKind) {
         for (Iterator<String[]> iter = changes.iterator(); iter.hasNext();) {
           String[] expected = iter.next();
           if (kind.equals(expected[0]) && path.equals(expected[1]) && oldKind.equals(expected[2])) {

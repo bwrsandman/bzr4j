@@ -21,7 +21,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Writer;
 
 /**
  * @author Patrick Woodworth
@@ -156,5 +158,37 @@ public class IOUtil {
       System.arraycopy(chars, 0, newChars, 0, count);
       return newChars;
     }
+  }
+
+  public static void close(InputStream closeable) {
+    if (closeable != null)
+      try {
+        closeable.close();
+      } catch (IOException ignored) {
+      }
+  }
+
+  public static void close(OutputStream closeable) {
+    if (closeable != null)
+      try {
+        closeable.close();
+      } catch (IOException ignored) {
+      }
+  }
+
+  public static void close(Reader closeable) {
+    if (closeable != null)
+      try {
+        closeable.close();
+      } catch (IOException ignored) {
+      }
+  }
+
+  public static void close(Writer closeable) {
+    if (closeable != null)
+      try {
+        closeable.close();
+      } catch (IOException ignored) {
+      }
   }
 }
