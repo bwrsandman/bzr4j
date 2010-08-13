@@ -196,7 +196,7 @@ public class BazaarVcsSupport extends ServerVcsSupport {
 
   @Override
   public boolean allowSourceCaching() {
-    return false; // todo what's best? depends on whether we have local cache clone maybe?
+    return true; // todo what's best? depends on whether we have local cache clone maybe?
   }
 
   public boolean sourcesUpdatePossibleIfChangesNotFound(@NotNull VcsRoot root) {
@@ -545,6 +545,9 @@ public class BazaarVcsSupport extends ServerVcsSupport {
   }
 
   private class MyBuildPatchByCheckoutRules implements BuildPatchByCheckoutRules {
+
+    private static final int EXPORT_INSTEAD_OF_CAT_CUTOFF_SIZE = 30;
+
     public void buildPatch(@NotNull final VcsRoot root,
                            @Nullable final String fromVersion,
                            @NotNull final String toVersion,
@@ -601,7 +604,12 @@ public class BazaarVcsSupport extends ServerVcsSupport {
         }
       }
 
-      File parentDir = TCUtil.doCat(settings, toVer.getId(), notDeletedFiles);
+      File parentDir = FileUtil.createTempDirectory("bzr4j-", "-" + toVer.getId());
+      if (notDeletedFiles.size() < EXPORT_INSTEAD_OF_CAT_CUTOFF_SIZE) {
+        TCUtil.doCat(settings, toVer.getId(), parentDir, notDeletedFiles);
+      } else {
+        exportFullRevision(settings, parentDir, toVer);
+      }
 
       try {
         for (ModifiedFile modified : modifiedFiles) {
@@ -644,19 +652,24 @@ public class BazaarVcsSupport extends ServerVcsSupport {
 
     // builds patch by exporting files using specified version
 
+    private void exportFullRevision(final Settings settings, final File repRoot, @NotNull final ChangeRev toVer)
+        throws IOException, VcsException, BazaarException {
+      String deNorm = IOUtil.deNormalizeSeparator(repRoot.getAbsolutePath());
+      BzrTeamcityExec handler = new BzrTeamcityExec(settings,"export","-q","--format=dir","-r", toVer.getId(), deNorm, "." );
+      handler.exectc(true);
+    }
+
     private void buildFullPatch(
         final Settings settings,
         @NotNull final ChangeRev toVer,
         final PatchBuilder builder,
         CheckoutRules checkoutRules) throws IOException, VcsException, BazaarException {
 
-      File tempDir = FileUtil.createTempDirectory("bazaar", toVer.getId());
+      File tempDir = FileUtil.createTempDirectory("bzr4j-", "-" + toVer.getId());
       try {
-        final File repRoot = new File(tempDir, "rep");
-        String deNorm = IOUtil.deNormalizeSeparator(repRoot.getAbsolutePath());
-        BzrTeamcityExec handler = new BzrTeamcityExec(settings,"export","-q","--format=dir","-r", toVer.getId(), deNorm, "." );
-        handler.exectc(true);
-        buildPatchFromDirectory(repRoot, repRoot, builder, checkoutRules, new FileFilter() {
+//        final File repRoot = new File(tempDir, "rep");
+        exportFullRevision(settings, tempDir, toVer);
+        buildPatchFromDirectory(tempDir, tempDir, builder, checkoutRules, new FileFilter() {
           public boolean accept(final File file) {
             return !(file.isDirectory() && ".bzr".equals(file.getName()));
           }
