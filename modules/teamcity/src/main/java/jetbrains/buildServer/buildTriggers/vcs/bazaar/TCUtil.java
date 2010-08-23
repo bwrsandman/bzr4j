@@ -210,15 +210,12 @@ public class TCUtil {
     return retval;
   }
 
-  public static File doCat(Settings settings, String myRevId, List<String> relPaths) throws IOException,
+  public static void doCat(Settings settings, String myRevId, File tempDir, List<String> relPaths) throws IOException,
       BazaarException {
 
-    File tempDir = IOUtil.createTempDirectory("bazaar", "catresult");
     for (String path : relPaths) {
       doCat(settings, myRevId, tempDir, path);
     }
-
-    return tempDir;
   }
 
   public static File doCat(Settings settings, String myRevId, File tempDir, String path) throws IOException, BazaarException {
