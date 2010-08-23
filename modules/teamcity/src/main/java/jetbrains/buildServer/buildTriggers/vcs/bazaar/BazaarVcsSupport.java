@@ -497,7 +497,7 @@ public class BazaarVcsSupport extends ServerVcsSupport {
 
             String fromId = new ChangeRev(fromVersion).getId();
             BzrTeamcityExec handler = new BzrTeamcityExec(
-                settings, "xmllog", "--forward", "-r", fromVersion + ".." + currentVersion);
+                settings, "xmllog", "--forward", "-r", fromVersion + ".." + currentVersion, "-n", "1");
 
             final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
 
