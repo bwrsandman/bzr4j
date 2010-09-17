@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -108,11 +109,23 @@ public class BazaarRoot implements Comparable<BazaarRoot>, Serializable {
 
     String retval = null;
     try {
-      retval = String.valueOf(IOUtil.loadFileText(new File(getFile(), ".bzr/branch/last-revision")));
+      File lastRevisionFileDir = getFile();
+      File locationFile = new File(getFile(), ".bzr/branch/location");
+      if( locationFile.isFile() ) {
+        //we have a lightweight checkout, so branch location is separate to
+        //the working tree. let's find out where the branch dir is so we can
+        //find the last revision file
+        String uri = String.valueOf(IOUtil.loadFileText(locationFile));
+        lastRevisionFileDir = new File(new URI(uri));
+      }
+      
+      retval = String.valueOf(IOUtil.loadFileText(new File(lastRevisionFileDir, ".bzr/branch/last-revision")));
       int sepIdx = retval.indexOf(' ');
       if (sepIdx > 0) {
         retval = retval.substring(0, sepIdx);
       }
+    } catch (URISyntaxException e) {
+      LOG.debug(e);
     } catch (IOException e) {
       LOG.debug(e);
     }

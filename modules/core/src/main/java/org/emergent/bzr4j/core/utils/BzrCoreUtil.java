@@ -5,9 +5,9 @@ package org.emergent.bzr4j.core.utils;
 
 import org.emergent.bzr4j.core.BazaarRevision;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.TreeMap;
 
@@ -49,6 +49,10 @@ public final class BzrCoreUtil {
       file = file.getParentFile();
     }
     while (file != null) {
+      //maybe we have a lightweight checkout
+      File locationFile = new File(file, ".bzr/branch/location");
+      if (locationFile.isFile())
+        return file;
       if ((new File(file, ".bzr/branch/last-revision")).isFile())
         return file;
       file = file.getParentFile();
