@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -153,15 +154,18 @@ public abstract class BzrAbstractExec {
     m_exitValueValidationEnabled = exitValueValidationEnabled;
   }
 
+  private static AtomicLong execCount = new AtomicLong(0);
+
   protected BzrAbstractResult exec(BzrAbstractResult result) throws BzrExecException {
     long startTime = System.currentTimeMillis();
+    long execId = execCount.incrementAndGet();
     ArrayList<String> args = new ArrayList<String>(Arrays.asList(getBzrExecutablePath(),m_cmd,"--no-aliases"));
     args.addAll(m_args);
     Process process = null;
     try {
       ProcessBuilder processBuilder = createProcessBuilder(args);
       processBuilder = processBuilder.directory(m_workingDir);
-      logExec(result, m_workingDir,args);
+      logExec(result, execId, m_workingDir, args);
       process = processBuilder.start();
       Thread stdOutThread = result.startOutRelay(process.getInputStream());
       Thread stdErrThread = result.startErrRelay(process.getErrorStream());
@@ -186,8 +190,8 @@ public abstract class BzrAbstractExec {
         } catch (Exception ignored) {
         }
     }
-    long endTime = System.currentTimeMillis();
-    long deltaTime = endTime - startTime;
+    long deltaTime = System.currentTimeMillis() - startTime;
+    logExec(result, execId, deltaTime, m_workingDir, args);
     synchronized (sm_timings) {
       Long aggregate = sm_timings.get(m_cmd);
       sm_timings.put(m_cmd, deltaTime + (aggregate == null ? 0 : aggregate.longValue()));
@@ -201,10 +205,18 @@ public abstract class BzrAbstractExec {
 
   protected abstract String getBzrExecutablePath();
 
-  protected void logExec(BzrAbstractResult result, File workDir, ArrayList<String> args) {
+  protected void logExec(BzrAbstractResult result, long execId, File workDir, ArrayList<String> args) {
+    logExec(result, execId, -1, m_workingDir, args);
+  }
+
+  protected void logExec(BzrAbstractResult result, long execId, long deltaTime, File workDir, ArrayList<String> args) {
     String workPath = String.valueOf(workDir);
     if (workPath.length() > WORK_DIR_LOG_FIELD_SIZE)
       workPath = workPath.substring(workPath.length() - WORK_DIR_LOG_FIELD_SIZE);
-    LOG.debug(String.format("(%" + WORK_DIR_LOG_FIELD_SIZE + "s) : %s", workPath, args.toString()));
+    if (deltaTime >= 0) {
+        LOG.debug(String.format("(%" + WORK_DIR_LOG_FIELD_SIZE + "s) : %d : %s : %d", workPath, execId, args.toString(), deltaTime));
+    } else {
+        LOG.debug(String.format("(%" + WORK_DIR_LOG_FIELD_SIZE + "s) : %d : %s", workPath, execId, args.toString()));
+    }
   }
 }
