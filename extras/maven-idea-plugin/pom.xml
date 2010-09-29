@@ -39,6 +39,19 @@ under the License.
     <maven>2.0.1</maven>
   </prerequisites>
 
+  <distributionManagement>
+    <repository>
+      <id>internal-releases</id>
+      <name>Internal Releases</name>
+      <url>${internal.release.repo.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>internal-snapshots</id>
+      <name>Internal Snapshots</name>
+      <url>${internal.snapshot.repo.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-idea-plugin/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/trunk/maven-idea-plugin/</developerConnection>
