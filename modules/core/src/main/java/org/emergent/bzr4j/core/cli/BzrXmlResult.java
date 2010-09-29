@@ -39,6 +39,7 @@ public class BzrXmlResult extends BzrAbstractResult {
   static {
     try {
       sm_saxParserFactory.setFeature("http://apache.org/xml/features/allow-java-encodings",true);
+      sm_saxParserFactory.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true);
     } catch (ParserConfigurationException e) {
       e.printStackTrace();
     } catch (SAXNotRecognizedException e) {
