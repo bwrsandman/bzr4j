@@ -52,7 +52,7 @@ public class TCUtil {
       final List<GenericChange> retval = new ArrayList<GenericChange>();
 
       BzrTeamcityExec handler = new BzrTeamcityExec(
-          settings, "xmllog", "--forward", "-v", "--show-ids", "-r", prev.getId() + ".." + cur.getId(), ".");
+          settings, "xmllog", "--forward", "-v", "--show-ids", "-n", "1", "-r", prev.getId() + ".." + cur.getId(), ".");
 
 //    final List<ChangeSet> changeSets = new ArrayList<ChangeSet>();
 
