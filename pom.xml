@@ -5,7 +5,7 @@
 
   <groupId>org.emergent.bzr4j</groupId>
   <artifactId>bzr4j</artifactId>
-  <version>2.4.3-SNAPSHOT</version>
+  <version>2.4.3</version>
   <packaging>pom</packaging>
   <name>Bzr4J Aggregator Project</name>
   <url>http://launchpad.net/bzr4j</url>
