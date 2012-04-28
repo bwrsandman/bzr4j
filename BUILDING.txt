@@ -4,6 +4,9 @@ Optionally enable building the IntelliJ and/or TeamCity plugins by setting env v
   set BZR4J_IDEA_SDK_DIR=C:\Program Files\JetBrains\ideaIU-93.67-jdk15
   set BZR4J_TEAMCITY_SDK_DIR=C:\TeamCity
 
+or:
+  export BZR4J_IDEA_SDK_DIR=/Applications/IntelliJ\ IDEA\ 11\ CE.app/
+
 Build the custom maven-idea-plugin:
 
   pushd extras\maven-idea-plugin
