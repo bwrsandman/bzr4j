@@ -5,7 +5,7 @@
 
   <groupId>org.emergent.bzr4j</groupId>
   <artifactId>bzr4j</artifactId>
-  <version>2.6.2-SNAPSHOT</version>
+  <version>2.6.3-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Bzr4J Aggregator Project</name>
   <url>http://launchpad.net/bzr4j</url>
@@ -39,7 +39,7 @@
         <artifactId>maven-idea-plugin</artifactId>
         <version>2.3-bzr4j</version>
         <configuration>
-          <jdkLevel>1.5</jdkLevel>
+          <jdkLevel>1.6</jdkLevel>
           <jdkName>${java.specification.version}</jdkName>
           <downloadSources>true</downloadSources>
           <exclude>target</exclude>
