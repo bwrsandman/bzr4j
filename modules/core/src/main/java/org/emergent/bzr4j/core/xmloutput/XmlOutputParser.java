@@ -21,7 +21,7 @@ import org.emergent.bzr4j.core.IBazaarInfo;
 import org.emergent.bzr4j.core.IBazaarItemInfo;
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarPlugin;
-import org.emergent.bzr4j.core.cli.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrStandardResult;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -97,39 +97,39 @@ public class XmlOutputParser {
     return parseXmlVersion(new StringReader(stdOut));
   }
 
-  public static IBazaarAnnotation parseXmlAnnotate(BzrHandlerResult result) throws BazaarException {
+  public static IBazaarAnnotation parseXmlAnnotate(BzrStandardResult result) throws BazaarException {
     return parseXmlAnnotate(result.getStdOutAsString());
   }
 
-  public static IBazaarInfo parseXmlInfo(BzrHandlerResult result) throws BazaarException {
+  public static IBazaarInfo parseXmlInfo(BzrStandardResult result) throws BazaarException {
     return parseXmlInfo(result.getStdOutAsString());
   }
 
-  public static List<IBazaarLogMessage> parseXmlLog(BzrHandlerResult result) throws BazaarException {
+  public static List<IBazaarLogMessage> parseXmlLog(BzrStandardResult result) throws BazaarException {
     return parseXmlLog(result,true);
   }
 
-  public static List<IBazaarLogMessage> parseXmlLog(BzrHandlerResult result, boolean merges) throws BazaarException {
+  public static List<IBazaarLogMessage> parseXmlLog(BzrStandardResult result, boolean merges) throws BazaarException {
     return parseXmlLog(result.getStdOutAsString(),merges);
   }
 
-  public static List<IBazaarItemInfo> parseXmlLs(BzrHandlerResult result) throws BazaarException {
+  public static List<IBazaarItemInfo> parseXmlLs(BzrStandardResult result) throws BazaarException {
     return parseXmlLs(result.getStdOutAsString());
   }
 
-  public static Map<String,List<IBazaarLogMessage>> parseXmlMissing(BzrHandlerResult result) throws BazaarException {
+  public static Map<String,List<IBazaarLogMessage>> parseXmlMissing(BzrStandardResult result) throws BazaarException {
     return parseXmlMissing(result.getStdOutAsString());
   }
 
-  public static Set<IBazaarPlugin> parseXmlPlugin(BzrHandlerResult result) throws BazaarException {
+  public static Set<IBazaarPlugin> parseXmlPlugin(BzrStandardResult result) throws BazaarException {
     return parseXmlPlugin(result.getStdOutAsString());
   }
 
-  public static XmlStatusResult parseXmlStatus(BzrHandlerResult result) throws BazaarException {
+  public static XmlStatusResult parseXmlStatus(BzrStandardResult result) throws BazaarException {
     return parseXmlStatus(result.getStdOutAsString());
   }
 
-  public static Properties parseXmlVersion(BzrHandlerResult result) throws BazaarException {
+  public static Properties parseXmlVersion(BzrStandardResult result) throws BazaarException {
     return parseXmlVersion(result.getStdOutAsString());
   }
 }

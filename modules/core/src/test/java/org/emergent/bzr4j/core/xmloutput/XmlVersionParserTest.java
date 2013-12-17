@@ -16,7 +16,7 @@
 
 package org.emergent.bzr4j.core.xmloutput;
 
-import org.emergent.bzr4j.core.BazaarException;
+import org.emergent.bzr4j.core.cli.BzrStandardResult;
 import org.emergent.bzr4j.core.testutil.QuickExec;
 import org.emergent.bzr4j.core.testutil.QuickExecTest;
 import org.emergent.bzr4j.core.utils.PropertyExpander;
@@ -37,7 +37,7 @@ public class XmlVersionParserTest extends QuickExecTest {
   @Test
   public void testXmlVersionParsingFromStdout() throws Exception {
     QuickExec qexec = getQuickExec();
-    Properties versionProps = XmlOutputParser.parseXmlVersion(qexec.createCommand("xmlversion").exectest());
+    Properties versionProps = XmlOutputParser.parseXmlVersion((BzrStandardResult)qexec.createCommand("xmlversion").exectest());
     PropertyExpander.dumpProps(versionProps);
     for (String key : XmlVersionParser.KNOWN_TEXT_ELEM_KEYS) {
       assertNotNull(versionProps.getProperty(key), String.format("version property \"%s\" was null",key));

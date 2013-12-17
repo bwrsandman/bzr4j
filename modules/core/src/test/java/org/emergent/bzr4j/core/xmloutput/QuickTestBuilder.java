@@ -18,6 +18,7 @@ package org.emergent.bzr4j.core.xmloutput;
 
 import org.apache.commons.io.FileUtils;
 import org.emergent.bzr4j.core.BazaarItemKind;
+import org.emergent.bzr4j.core.IBazaarStatus;
 import org.emergent.bzr4j.core.cli.BzrExecException;
 import org.emergent.bzr4j.core.tests.ResourceTestHelper;
 import org.emergent.bzr4j.core.testutil.QuickExec;
@@ -25,6 +26,7 @@ import org.emergent.bzr4j.core.testutil.QuickExec;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * @author Patrick Woodworth
@@ -148,6 +150,7 @@ public class QuickTestBuilder {
   public class CommitData {
 
     private String message;
+    Set<IBazaarStatus> statusSet;
 
     public CommitData() {
     }
@@ -158,6 +161,10 @@ public class QuickTestBuilder {
 
     public void setMessage(String message) {
       this.message = message;
+    }
+
+    public Set<IBazaarStatus> getStatusSet() {
+      return statusSet;
     }
 
     public void finish() {

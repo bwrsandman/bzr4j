@@ -17,11 +17,10 @@
 package org.emergent.bzr4j.core.xmloutput;
 
 import org.emergent.bzr4j.core.IBazaarItemInfo;
-import org.emergent.bzr4j.core.cli.BzrHandlerResult;
+import org.emergent.bzr4j.core.cli.BzrStandardResult;
+import org.emergent.bzr4j.core.testutil.BzrTestExec;
 import org.emergent.bzr4j.core.testutil.QuickExecTest;
-import org.emergent.bzr4j.core.testutil.BzrTestHandler;
 import org.emergent.bzr4j.core.testutil.QuickExec;
-import org.emergent.bzr4j.core.xmloutput.QuickTestBuilder;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 
@@ -45,9 +44,8 @@ public class XmlLsParserTest extends QuickExecTest {
   @Test
   public void testXmlLs() throws Exception {
     QuickExec qexec = getQuickExec();
-//    qexec.pushd("test1");
-    BzrTestHandler handler = qexec.createCommand("xmlls");
-    BzrHandlerResult result = handler.exectest();
+    BzrTestExec handler = qexec.createCommand("xmlls");
+    BzrStandardResult result = (BzrStandardResult)handler.exectest();
     List<IBazaarItemInfo> itemInfos = XmlOutputParser.parseXmlLs(result);
     assertEquals(itemInfos.size(),3);
   }

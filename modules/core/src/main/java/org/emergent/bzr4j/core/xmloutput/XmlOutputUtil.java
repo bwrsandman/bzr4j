@@ -16,6 +16,7 @@
 
 package org.emergent.bzr4j.core.xmloutput;
 
+import javax.xml.stream.XMLInputFactory;
 import java.io.File;
 
 /**
@@ -29,4 +30,21 @@ class XmlOutputUtil {
     }
     return null;
   }
+
+  static XMLInputFactory getXMLInputFactory() {
+    return _xmlInputFactory;
+  }
+
+
+  private static XMLInputFactory _createXMLInputFactory() {
+    XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+
+    xmlInputFactory.setProperty(
+            XMLInputFactory.IS_COALESCING, Boolean.TRUE);
+
+    return xmlInputFactory;
+  }
+
+  private static XMLInputFactory _xmlInputFactory = _createXMLInputFactory();
+
 }

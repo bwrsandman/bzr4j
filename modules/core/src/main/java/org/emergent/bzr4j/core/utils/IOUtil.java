@@ -16,6 +16,8 @@
 
 package org.emergent.bzr4j.core.utils;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -191,4 +193,13 @@ public class IOUtil {
       } catch (IOException ignored) {
       }
   }
+
+  public static void closeQuietly(XMLStreamReader closable) {
+    if (closable != null)
+      try {
+        closable.close();
+      } catch (XMLStreamException ignored) {
+      }
+  }
+
 }

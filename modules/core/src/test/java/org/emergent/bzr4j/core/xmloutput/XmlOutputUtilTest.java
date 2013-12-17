@@ -18,12 +18,10 @@ package org.emergent.bzr4j.core.xmloutput;
 
 import org.emergent.bzr4j.core.IBazaarLogMessage;
 import org.emergent.bzr4j.core.IBazaarStatus;
-import org.emergent.bzr4j.core.cli.BzrHandlerResult;
-import org.emergent.bzr4j.core.testutil.BzrTestHandler;
+import org.emergent.bzr4j.core.cli.BzrStandardResult;
+import org.emergent.bzr4j.core.testutil.BzrTestExec;
 import org.emergent.bzr4j.core.testutil.QuickExec;
 import org.emergent.bzr4j.core.testutil.QuickExecTest;
-import org.emergent.bzr4j.core.xmloutput.QuickTestBuilder;
-import org.emergent.bzr4j.core.xmloutput.XmlStatusResult;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 
@@ -42,7 +40,7 @@ public class XmlOutputUtilTest extends QuickExecTest {
   public void setupWorkspaces(QuickTestBuilder qbuilder) throws Exception {
     QuickExec qexec = qbuilder.getQexec();
     qbuilder.initBranch("test1");
-    List<IBazaarLogMessage> logMsgs = XmlOutputParser.parseXmlLog(qexec.createCommand("xmllog").exectest());
+    List<IBazaarLogMessage> logMsgs = XmlOutputParser.parseXmlLog((BzrStandardResult)qexec.createCommand("xmllog").exectest());
     assertEquals(logMsgs.size(), 0);
 
     qbuilder.addFileFromResource("empty.txt",".bzrignore");
@@ -54,7 +52,6 @@ public class XmlOutputUtilTest extends QuickExecTest {
     qbuilder.addFileFromString("bar","bardir/bar.txt");
     qbuilder.addFileFromResource("lorem.txt","lorem.txt");
     qbuilder.remove(".bzrignore");
-//    qbuilder.editFileFromString("zoo","foodir/foo.txt");
     qbuilder.move("foodir/foo.txt","foodir/zoo.txt");
     qbuilder.editFileFromString("zoo","foodir/zoo.txt");
     qbuilder.commit("Adding lorem.txt file");
@@ -71,8 +68,8 @@ public class XmlOutputUtilTest extends QuickExecTest {
   @Test
   public void testXmlLog() throws Exception {
     QuickExec qexec = getQuickExec();
-    BzrTestHandler handler = qexec.createCommand("xmllog");
-    BzrHandlerResult result = handler.exectest();
+    BzrTestExec handler = qexec.createCommand("xmllog");
+    BzrStandardResult result = (BzrStandardResult)handler.exectest();
     List<IBazaarLogMessage> logMsgs = XmlOutputParser.parseXmlLog(result);
     assertEquals(logMsgs.size(), 4);
     String lastRev = "0";
@@ -98,9 +95,9 @@ public class XmlOutputUtilTest extends QuickExecTest {
   @Test(groups = "normal")
   public void testXmlLogWithoutMerges() throws Exception {
     QuickExec qexec = getQuickExec();
-    BzrTestHandler handler = qexec.createCommand("xmllog");
+    BzrTestExec handler = qexec.createCommand("xmllog");
     handler.addArguments("-v");
-    BzrHandlerResult result = handler.exectest();
+    BzrStandardResult result = (BzrStandardResult)handler.exectest();
     List<IBazaarLogMessage> logMsgs = XmlOutputParser.parseXmlLog(result,false);
     assertEquals(logMsgs.size(), 3);
     String lastRev = "0";
@@ -132,13 +129,11 @@ public class XmlOutputUtilTest extends QuickExecTest {
         commitDatum = commitData.get(1);
         List<IBazaarStatus> affectedSansMerges = lm.getAffectedFiles(false);
         List<IBazaarStatus> affectedWithMerges = lm.getAffectedFiles(true);
-//        assertFalse(affectedSansMerges.size() == affectedWithMerges.size(), "affected sizes match: " + affectedSansMerges.size());
         checkXmlStatus(commitDatum.getStatusSet(),affectedSansMerges);
       } else {
         commitDatum = commitData.get(3);
         List<IBazaarStatus> affectedSansMerges = lm.getAffectedFiles(false);
         List<IBazaarStatus> affectedWithMerges = lm.getAffectedFiles(true);
-//        assertFalse(affectedSansMerges.size() == affectedWithMerges.size(), "affected sizes match: " + affectedSansMerges.size());
         checkXmlStatus(commitDatum.getStatusSet(),affectedSansMerges);
       }
       lastRev = revno;
@@ -149,11 +144,11 @@ public class XmlOutputUtilTest extends QuickExecTest {
   public void testXmlStatus() throws Exception {
     QuickTestBuilder qbuilder = getQuickBuilder();
     QuickExec qexec = qbuilder.getQexec();
-    BzrTestHandler xmlStatusCmd = qexec.createCommand("xmlstatus");
+    BzrTestExec xmlStatusCmd = qexec.createCommand("xmlstatus");
     String lastRev = "0";
     String curRev = "1";
     xmlStatusCmd.addArguments("-r", lastRev + ".." + curRev);
-    BzrHandlerResult result = xmlStatusCmd.exectest();
+    BzrStandardResult result = (BzrStandardResult)xmlStatusCmd.exectest();
     XmlStatusResult parser = XmlOutputParser.parseXmlStatus(result);
     Set<IBazaarStatus> statii = parser.getStatusSet();
     assertEquals(statii.size(),3);
@@ -167,11 +162,11 @@ public class XmlOutputUtilTest extends QuickExecTest {
   public void testXmlStatusMergeRev() throws Exception {
     QuickTestBuilder qbuilder = getQuickBuilder();
     QuickExec qexec = qbuilder.getQexec();
-    BzrTestHandler xmlStatusCmd = qexec.createCommand("xmlstatus");
+    BzrTestExec xmlStatusCmd = qexec.createCommand("xmlstatus");
     String lastRev = "1";
     String curRev = "2";
     xmlStatusCmd.addArguments("-r", lastRev + ".." + curRev);
-    BzrHandlerResult result = xmlStatusCmd.exectest();
+    BzrStandardResult result = (BzrStandardResult)xmlStatusCmd.exectest();
     XmlStatusResult parser = XmlOutputParser.parseXmlStatus(result);
     Set<IBazaarStatus> statii = parser.getStatusSet();
     assertEquals(statii.size(),5);
@@ -185,11 +180,11 @@ public class XmlOutputUtilTest extends QuickExecTest {
   public void testXmlStatusTypeChange() throws Exception {
     QuickTestBuilder qbuilder = getQuickBuilder();
     QuickExec qexec = qbuilder.getQexec();
-    BzrTestHandler xmlStatusCmd = qexec.createCommand("xmlstatus");
+    BzrTestExec xmlStatusCmd = qexec.createCommand("xmlstatus");
     String lastRev = "2";
     String curRev = "3";
     xmlStatusCmd.addArguments("-r", lastRev + ".." + curRev);
-    BzrHandlerResult result = xmlStatusCmd.exectest();
+    BzrStandardResult result = (BzrStandardResult)xmlStatusCmd.exectest();
     XmlStatusResult parser = XmlOutputParser.parseXmlStatus(result);
     Set<IBazaarStatus> statii = parser.getStatusSet();
     assertEquals(statii.size(),1);
