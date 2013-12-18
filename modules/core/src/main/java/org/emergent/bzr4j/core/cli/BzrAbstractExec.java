@@ -15,11 +15,11 @@
  */
 package org.emergent.bzr4j.core.cli;
 
-import org.apache.commons.io.IOUtils;
 import org.emergent.bzr4j.core.BazaarRoot;
 import org.emergent.bzr4j.core.debug.DebugLogger;
 import org.emergent.bzr4j.core.debug.DebugManager;
 import org.emergent.bzr4j.core.utils.BzrCoreUtil;
+import org.emergent.bzr4j.core.utils.IOUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,7 +76,7 @@ public abstract class BzrAbstractExec {
             os.flush();
           } catch (Exception ignored) {
           } finally {
-            IOUtils.closeQuietly(os);
+            IOUtil.close(os);
           }
         }
       }, 5000, 5000);
